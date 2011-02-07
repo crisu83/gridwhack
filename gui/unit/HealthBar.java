@@ -2,9 +2,9 @@ package gridwhack.gui.unit;
 
 import java.awt.*;
 
-import gridwhack.CEvent;
 import gridwhack.entity.unit.NonPlayerUnit;
 import gridwhack.entity.unit.Unit;
+import gridwhack.entity.unit.event.UnitEvent;
 
 /**
  * Health bar class.
@@ -27,48 +27,57 @@ public class HealthBar extends StatusBar
 	}
 	
 	/**
-	 * Handles incoming events.
-	 * @param e the event.
+	 * Updates the bar.
 	 */
-	public void handleEvent(CEvent e) 
+	private void update()
 	{
-		String type = e.getType();
-		Object source = e.getSource();
+		// calculate how many percent the units current health is of its maximum health.
+		float healthPercent = (float)owner.getCurrentHealth() / (float)owner.getMaximumHealth();
 		
-		// handle unit events.
-		if( source instanceof Unit )
-		{
-			Unit unit = (Unit)source;
-			
-			// actions to be taken when unit gains or loses health.
-			if( type=="healthGain" || type=="healthLoss" )
-			{
-				// calculate how many percent the units current health is of its maximum health.
-				float healthPercent = (float)unit.getCurrentHealth() / (float)unit.getMaximumHealth();
-				
-				// calculate the new width for the health bar.
-				float barWidth = healthPercent * width;
-				
-				// set the new current value.
-				setBarWidth(Math.round(barWidth));
-			}
-		}
+		// calculate the new width for the health bar.
+		float barWidth = healthPercent * width;
 		
-		// handle non-player unit events.
-		if( source instanceof NonPlayerUnit )
+		// set the new current value.
+		setBarWidth(Math.round(barWidth));
+	}
+	
+	/**
+	 * Moves the bar.
+	 */
+	private void move()
+	{
+		// calculate the new position for the bar.
+		int x = (int)Math.round(owner.getX()+1);
+		int y = (int)Math.round(owner.getY()+1);
+		
+		// move the bar with the unit.
+		super.move(x, y);
+	}
+
+	@Override
+	public void onUnitDeath(UnitEvent e) {}
+
+	@Override
+	public void onUnitSpawn(UnitEvent e) {}
+
+	@Override
+	public void onUnitHealthGain(UnitEvent e) 
+	{
+		update();
+	}
+
+	@Override
+	public void onUnitHealthLoss(UnitEvent e) 
+	{
+		update();
+	}
+
+	@Override
+	public void onUnitMove(UnitEvent e) 
+	{		
+		if( owner instanceof NonPlayerUnit )
 		{
-			NonPlayerUnit unit = (NonPlayerUnit)source;
-			
-			// actions to be taken when unit moves.
-			if( type=="move" )
-			{
-				// calculate the new position for the bar.
-				int x = (int)Math.round(unit.getX()+1);
-				int y = (int)Math.round(unit.getY()+1);
-				
-				// move the bar with the unit.
-				move(x, y);
-			}
+			move();
 		}
 	}
 }

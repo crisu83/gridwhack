@@ -3,8 +3,8 @@ package gridwhack.gui;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
-import gridwhack.CEvent;
-import gridwhack.IEventListener;
+import gridwhack.event.CEvent;
+import gridwhack.event.IEventListener;
 
 /**
  * Graphical user interface class.
@@ -77,25 +77,6 @@ public class Gui implements IEventListener
 		for( GuiPanel panel : Gui.getPanels() )
 		{
 			panel.render(g);
-		}
-	}
-
-	/**
-	 * Handles incoming events.
-	 * @param e the event.
-	 */
-	public void handleEvent(CEvent e) 
-	{
-		String type = e.getType();
-		Object source = e.getSource();
-		
-		// Handle panel events.
-		if( source instanceof GuiPanel )
-		{
-			if( type=="remove" )
-			{
-				removePanel((GuiPanel)source);
-			}
 		}
 	}
 }

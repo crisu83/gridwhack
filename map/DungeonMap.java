@@ -10,7 +10,7 @@ public class DungeonMap extends GridMap
 	{
 		super();
 		
-		grid = new Grid(60, 30);
+		grid = new Grid(90, 60);
 		
 		init();
 	}
@@ -18,17 +18,29 @@ public class DungeonMap extends GridMap
 	public void init()
 	{
 		// create some terrain.
-		grid.createTileRect(0, 0, 120, 60, TileFactory.TileType.FLOOR);
+		grid.createTileRect(0, 0, 90, 60, TileFactory.TileType.FLOOR);
 		
 		// create some hostiles.
 		grid.createUnit(UnitFactory.UnitType.ORC);
 		grid.createUnit(UnitFactory.UnitType.ORC);
 		grid.createUnit(UnitFactory.UnitType.ORC);
 		grid.createUnit(UnitFactory.UnitType.ORC);
+		grid.createUnit(UnitFactory.UnitType.ORC);
+		grid.createUnit(UnitFactory.UnitType.ORC);
+		grid.createUnit(UnitFactory.UnitType.ORC);
+		grid.createUnit(UnitFactory.UnitType.ORC);
 		grid.createUnit(UnitFactory.UnitType.KOBOLD);
 		grid.createUnit(UnitFactory.UnitType.KOBOLD);
 		grid.createUnit(UnitFactory.UnitType.KOBOLD);
 		grid.createUnit(UnitFactory.UnitType.KOBOLD);
+		grid.createUnit(UnitFactory.UnitType.KOBOLD);
+		grid.createUnit(UnitFactory.UnitType.KOBOLD);
+		grid.createUnit(UnitFactory.UnitType.KOBOLD);
+		grid.createUnit(UnitFactory.UnitType.KOBOLD);
+		grid.createUnit(UnitFactory.UnitType.SKELETON);
+		grid.createUnit(UnitFactory.UnitType.SKELETON);
+		grid.createUnit(UnitFactory.UnitType.SKELETON);
+		grid.createUnit(UnitFactory.UnitType.SKELETON);
 		grid.createUnit(UnitFactory.UnitType.SKELETON);
 		grid.createUnit(UnitFactory.UnitType.SKELETON);
 		grid.createUnit(UnitFactory.UnitType.SKELETON);

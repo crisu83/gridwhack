@@ -8,13 +8,13 @@ import gridwhack.entity.unit.Unit.Directions;
 
 public class KeyboardHandler extends KeyAdapter
 {
-	private Game game;
+	private GridWhack game;
 	
 	/**
 	 * Constructs the keyboard handler.
 	 * @param game the game.
 	 */
-	public KeyboardHandler(Game game)
+	public KeyboardHandler(GridWhack game)
 	{
 		this.game = game;
 	}
@@ -28,31 +28,27 @@ public class KeyboardHandler extends KeyAdapter
 		
 		switch( e.getKeyCode() )
 		{
-		case KeyEvent.VK_LEFT:
-		case KeyEvent.VK_NUMPAD4:
-			player.move(Directions.LEFT);
-			break;
+			case KeyEvent.VK_LEFT:
+			case KeyEvent.VK_NUMPAD4:
+				player.move(Directions.LEFT);
+				break;
+				
+			case KeyEvent.VK_RIGHT:
+			case KeyEvent.VK_NUMPAD6:
+				player.move(Directions.RIGHT);
+				break;
 			
-		case KeyEvent.VK_RIGHT:
-		case KeyEvent.VK_NUMPAD6:
-			player.move(Directions.RIGHT);
-			break;
-		
-		case KeyEvent.VK_UP:
-		case KeyEvent.VK_NUMPAD8:
-			player.move(Directions.UP);
-			break;
-			
-		case KeyEvent.VK_DOWN:
-		case KeyEvent.VK_NUMPAD2:
-			player.move(Directions.DOWN);
-			break;
-			
-		case KeyEvent.VK_ESCAPE:
-			game.stopGame();
-			break;
-			
-		default:
+			case KeyEvent.VK_UP:
+			case KeyEvent.VK_NUMPAD8:
+				player.move(Directions.UP);
+				break;
+				
+			case KeyEvent.VK_DOWN:
+			case KeyEvent.VK_NUMPAD2:
+				player.move(Directions.DOWN);
+				break;
+				
+			default:
 		}
 		
 		e.consume();

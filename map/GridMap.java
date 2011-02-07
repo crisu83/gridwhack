@@ -11,7 +11,6 @@ public class GridMap
 {	
 	protected Grid grid;
 	protected Random rand;
-	protected Player p;
 	
 	public GridMap()
 	{

@@ -1,171 +1,238 @@
 package gridwhack;
 
 import java.awt.*;
-import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
+
 import javax.swing.JFrame;
 
+/**
+ * Screen manager class file.
+ * Allows for running applications in full-screen mode. 
+ */
 public class CScreenManager
 {
+	private JFrame app;
+	
 	private GraphicsDevice gd;
 	
 	/**
-	 * Constructs the screen manager.
+	 * Creates the screen manager.
 	 */
-	public CScreenManager()
+	public CScreenManager(JFrame app)
 	{
-		GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		gd = env.getDefaultScreenDevice();
-	}
-	
-	/**
-	 * @return all the compatible display modes for the graphics card.
-	 */
-	public DisplayMode[] getCompatibleDisplayModes()
-	{
-		return gd.getDisplayModes();
-	}
-	
-	/**
-	 * Returns the first display mode that is compatible with the graphics card.
-	 * @param modes the display modes.
-	 * @return the compatible display mode.
-	 */
-	public DisplayMode getCompatibleDisplayMode(DisplayMode modes[])
-	{
-		// get the modes supported by the graphics card.
-		DisplayMode compatibleModes[] = gd.getDisplayModes();
+		this.app = app;
 		
-		// loop through the modes and return the first compatible mode.
+		// Get the graphics environment.
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		
+		// Get the graphics device.
+		gd = ge.getDefaultScreenDevice();
+	}
+	
+	/**
+	 * Initializes the full screen mode.
+	 * @param app the application that this screen manager belongs to.
+	 * @param bufferCount the amount of buffers to use with the buffer strategy.
+	 */
+	public void initFullScreen(int bufferCount) 
+	{
+		app.setUndecorated(true);
+		app.setIgnoreRepaint(true); // repaint is not needed due to active rendering
+		app.setResizable(false);
+		
+		// Make sure the full screen mode is supported.
+		if( !gd.isFullScreenSupported() )
+		{
+			System.out.println("Full-screen exclusive mode not supported!");
+			System.exit(0);
+		}
+		
+		// Change to full-screen.
+		gd.setFullScreenWindow(app);
+		
+		showCurrentMode(); // show the current display modes
+		
+		// Create the buffer strategy.
+		setBufferStrategy(bufferCount);
+	}
+	
+	/**
+	 * Creates the buffer strategy for the application.
+	 * @param bufferCount the desired amount of buffers.
+	 */
+	public void setBufferStrategy(int bufferCount) 
+	{
+		try
+		{
+			// Create a buffer strategy with the desired amount of buffers.
+			app.createBufferStrategy(bufferCount);
+		}
+		catch( Exception e )
+		{
+			// Could not create buffer strategy.
+			System.out.println("Error while creating buffer strategy");
+		}
+		
+		try
+		{
+			// Sleep a bit to allow for creating the buffer strategy.
+			Thread.sleep(500); // 0.5 seconds
+		}
+		catch( InterruptedException e ) {}
+	}
+
+	/**
+	 * Shows the current display mode.
+	 */
+	private void showCurrentMode()
+	{
+		// Get the current display mode.
+		DisplayMode dm = gd.getDisplayMode();
+		
+		System.out.println("Current display mode: (" +
+				dm.getWidth() + "," + dm.getHeight() + "," +
+				dm.getBitDepth() + "," + dm.getRefreshRate() + ")");
+	}
+	
+	/**
+	 * Changes the display mode.
+	 * @param width the desired width.
+	 * @param height the desired height.
+	 * @param bitDepth the desired bit depth.
+	 */
+	public void setDisplayMode(int width, int height, int bitDepth)
+	{
+		// Make sure that changing of display mode is supported.
+		if( !gd.isDisplayChangeSupported() )
+		{
+			System.out.println("Changing of display mode not supported");
+			return;
+		}
+		
+		// Make sure that the desired display mode is available.
+		if( !isDisplayModeAvailable(width, height, bitDepth) )
+		{
+			System.out.println("Display mode (" + width + "," + 
+					height + "," + bitDepth + ") not supported");
+		}
+		
+		// Create the display mode.
+		DisplayMode dm = new DisplayMode(width, height, bitDepth,
+				DisplayMode.REFRESH_RATE_UNKNOWN); // default refresh rate will do
+		
+		try
+		{
+			// Change the current display mode.
+			gd.setDisplayMode(dm);
+			
+			System.out.println("Display mode set to: (" + width + "," +
+					height + "," + bitDepth + ")");
+		}
+		catch( IllegalArgumentException e )
+		{
+			// Could not change the display mode.
+			System.out.println("Error setting display mode (" + width + "," +
+					height + "," + bitDepth + ")");
+		}
+		
+		try
+		{
+			// Sleep a bit to allow for changing of the display mode.
+			Thread.sleep(1000); // 1 second
+		}
+		catch( InterruptedException e ) {}
+	}
+
+	/**
+	 * Returns whether the given display mode is available.
+	 * @param width the desired width.
+	 * @param height the desired height.
+	 * @param bitDepth the desired bit depth.
+	 * @return boolean whether the display mode is available.
+	 */
+	private boolean isDisplayModeAvailable(int width, int height, int bitDepth) 
+	{
+		DisplayMode[] modes = gd.getDisplayModes();
+		
+		// For debugging purposes only.
+		//printModes(modes);
+		
+		// Loop through the display modes and attempt 
+		// to find the desired display mode.
 		for( int i=0; i<modes.length; i++ )
 		{
-			for( int j=0; i<compatibleModes.length; j++ )
+			if( width==modes[i].getWidth() 
+					&& height==modes[i].getHeight()
+					&& bitDepth==modes[i].getBitDepth() )
 			{
-				if( displayModesMatch(modes[i], compatibleModes[j]) )
-				{
-					// compatible mode found, return it.
-					return modes[i];
-				}
+				return true; // mode is available
 			}
 		}
 		
-		// no compatible display mode is available.
-		return null;
+		return false; // mode is not available
 	}
-	
+
 	/**
-	 * @return the current display mode.
+	 * Displays the given display modes.
+	 * Used for debugging purposes only.
+	 * @param modes the modes.
 	 */
-	public DisplayMode getCurrentDisplayMode()
+	private void printModes(DisplayMode[] modes) 
 	{
-		return gd.getDisplayMode();
-	}
-	
-	/**
-	 * Compares two display modes.
-	 * @param m1 the first display mode to compare.
-	 * @param m2 the second display mode to compare.
-	 * @return whether the display modes match.
-	 */
-	public boolean displayModesMatch(DisplayMode m1, DisplayMode m2)
-	{
-		// compare the resolution.
-		if( m1.getWidth()!=m2.getWidth() && m1.getHeight()!=m2.getHeight() )
-		{
-			// resolutions do not match.
-			return false;
-		}
+		System.out.println("Modes");
 		
-		// compare the bit depth.
-		if( m1.getBitDepth()!=DisplayMode.BIT_DEPTH_MULTI 
-			&& m1.getBitDepth()!=DisplayMode.BIT_DEPTH_MULTI 
-			&& (m1.getBitDepth()!=m2.getBitDepth()) )
+		// Loop through the display modes and print them.
+		for( int i=0; i<modes.length; i++ )
 		{
-			// bit depths do not match.
-			return false;
-		}
-		
-		// compare the refresh rates.
-		if( m1.getRefreshRate()!=DisplayMode.REFRESH_RATE_UNKNOWN 
-			&& m2.getRefreshRate()!=DisplayMode.REFRESH_RATE_UNKNOWN
-			&& m1.getRefreshRate()!=m2.getRefreshRate() )
-		{
-			// refresh rates do not match.
-			return false;
-		}
+			System.out.print("(" + modes[i].getWidth() + "," + modes[i].getHeight() + "," + 
+					modes[i].getBitDepth() + "," + modes[i].getRefreshRate() + ") ");
 			
-		// display modes match.
-		return true;
-	}
-	
-	/**
-	 * Sets the application to full screen mode.
-	 * @param dm the display mode.
-	 */
-	public void setFullScreen(DisplayMode dm)
-	{
-		DisplayMode originalDisplayMode = getCurrentDisplayMode();
-		
-		// create a new frame and set it to full screen.
-		JFrame f = new JFrame();
-		f.setUndecorated(true);
-		f.setIgnoreRepaint(true);
-		f.setResizable(false);
-		gd.setFullScreenWindow(f);
-		
-		// make sure that we have a display mode
-		// and that we actually can change it.
-		if( dm!=null && gd.isDisplayChangeSupported() )
-		{
-			try
+			// We display four display modes on each row.
+			if( (i+1)%4==0 )
 			{
-				gd.setDisplayMode(dm);
+				System.out.println();
 			}
-			finally
-			{
-				gd.setDisplayMode(originalDisplayMode);
-			}
-			
-			f.createBufferStrategy(2);
 		}
+		
+		System.out.println();
 	}
 	
 	/**
-	 * @return the graphics object.
+	 * Exits full-screen mode and restores the screen to the OS.
 	 */
-	public Graphics2D getGraphics()
+	public void restoreScreen() 
 	{
-		Window w = gd.getFullScreenWindow();
+		Window w = getFullScreenWindow();
 		
-		// make sure that we have a window.
+		// Dispose of the window if necessary.
 		if( w!=null )
 		{
-			BufferStrategy s = w.getBufferStrategy();
-			return (Graphics2D)s.getDrawGraphics();
+			w.dispose();
 		}
-		else
-		{
-			return null;
-		}
+		
+		// Exit full-screen mode.
+		gd.setFullScreenWindow(null);
 	}
 	
 	/**
-	 * Updates the display.
+	 * Returns the screen width.
+	 * @return the width.
 	 */
-	public void update()
+	public int getWidth()
 	{
-		Window w = gd.getFullScreenWindow();
+		Window w = getFullScreenWindow();
 		
-		if( w!=null )
-		{
-			BufferStrategy s = w.getBufferStrategy();
-			
-			// make sure that we have contents to display.
-			if( !s.contentsLost() )
-			{
-				s.show();
-			}
-		}
+		return w!=null ? w.getWidth() : 0;
+	}
+	
+	/**
+	 * Returns the screen height.
+	 * @return the height.
+	 */
+	public int getHeight()
+	{
+		Window w = getFullScreenWindow();
+		
+		return w!=null ? w.getHeight() : 0;
 	}
 	
 	/**
@@ -176,79 +243,4 @@ public class CScreenManager
 		return gd.getFullScreenWindow();
 	}
 	
-	/**
-	 * @return the width of the window.
-	 */
-	public int getWidth()
-	{
-		Window w = gd.getFullScreenWindow();
-	
-		// make sure that we have a window.
-		if( w!=null )
-		{
-			return w.getWidth();
-		}
-		else
-		{
-			return 0;
-		}
-	}
-	
-	/**
-	 * @return the height of the window.
-	 */
-	public int getHeight()
-	{
-		Window w = gd.getFullScreenWindow();
-		
-		// make sure that we have a window.
-		if( w!=null )
-		{
-			return w.getHeight();
-		}
-		else
-		{
-			return 0;
-		}
-	}
-	
-	/**
-	 * Exits from full screen mode.
-	 */
-	public void restoreScreen()
-	{
-		Window w = gd.getFullScreenWindow();
-		
-		// make sure that we have a window and dispose of it.
-		if( w!=null )
-		{
-			w.dispose();
-		}
-		
-		gd.setFullScreenWindow(null);
-	}
-	
-	/**
-	 * Creates a compatible image.
-	 * @param width image width.
-	 * @param height image height.
-	 * @param transparency image transparency.
-	 * @return the compatible image.
-	 */
-	public BufferedImage createCompatibleImage(int width, int height, int transparency)
-	{
-		Window w = gd.getFullScreenWindow();
-		
-		// make sure that we have a window.
-		if( w!=null )
-		{
-			GraphicsConfiguration gc = w.getGraphicsConfiguration();
-			return gc.createCompatibleImage(width, height, transparency);
-		}
-		// window is null.
-		else
-		{
-			return null;
-		}
-	}
 }

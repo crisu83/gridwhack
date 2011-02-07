@@ -187,7 +187,7 @@ public abstract class NonPlayerUnit extends GridUnit
 	/**
 	 * Marks the unit dead.
 	 */
-	public void markDead()
+	public synchronized void markDead()
 	{
 		this.createLoot();
 		

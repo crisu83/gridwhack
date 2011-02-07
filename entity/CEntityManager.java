@@ -2,108 +2,89 @@ package gridwhack.entity;
 
 import java.awt.Graphics2D;
 import java.util.ArrayList;
-import java.util.HashMap;
 
-/**
- * Entity manager class.
- * Provides functionality to manage entities.
- */
-public class CEntityManager
+import gridwhack.entity.event.EntityEvent;
+import gridwhack.entity.event.IEntityListener;
+
+public class CEntityManager implements IEntityListener 
 {
-	public static enum LayerType {
-		TILE,
-		ITEM,
-		UNIT,
-	}
-	
-	private ArrayList<CEntityLayer> layers;
+	private ArrayList<CEntity> entities;
 	
 	/**
 	 * Constructs the entity manager.
 	 */
 	public CEntityManager()
 	{
-		layers = new ArrayList<CEntityLayer>();
-		
-		// we need to initialize all the entity layers.
-		for( LayerType type : LayerType.values() )
-		{
-			layers.add(new CEntityLayer());
-		}
+		entities = new ArrayList<CEntity>();
 	}
 	
 	/**
 	 * Returns a specific entity.  
-	 * @param index the index of the entity to get.
+	 * @param index the index of the entity.
 	 * @return the entity.
 	 */
-	public CEntity getEntity(int index, int type)
+	public CEntity getEntity(int index)
 	{
-		return (CEntity)layers.get(type).getEntity(index);
+		return (CEntity) entities.get(index);
 	}
 	
 	/**
 	 * Adds an entity to the manager.
 	 * @param entity the entity to add.
 	 */
-	public synchronized void addEntity(CEntity entity, int type)
+	public synchronized void addEntity(CEntity entity)
 	{
-		layers.get(type).addEntity(entity);
+		entity.addListener(this);
+		entities.add(entity);
 	}
 	
 	/**
 	 * Removes an entity from the manager.
 	 * @param entity the entity to remove.
 	 */
-	public void removeEntity(CEntity entity, int type)
+	public synchronized void removeEntity(CEntity entity)
 	{
-		layers.get(type).removeEntity(entity);
+		entity.removeListener(this);
+		entities.remove(entity);
 	}
 	
 	/**
-	 * @return all the entities on a specific layer.
+	 * @return all the entities in the manager.
 	 */
-	public ArrayList<CEntity> getEntities(int type)
+	public ArrayList<CEntity> getEntities()
 	{
-		return layers.get(type).getEntities();
+		return entities;
 	}
 	
 	/**
-	 * Removes all entities.
-	 */
-	public void empty()
-	{
-		// loop through all the entity layers and empty them.
-		for( CEntityLayer layer : layers )
-		{
-			layer.empty();
-		}
-	}
-	
-	/**
-	 * Updates the position of all entities
-	 * accross the different layers.
+	 * Updates the position of all entities.
 	 * @param timePassed the time that has passed.
 	 */
 	public synchronized void update(long timePassed)
 	{
-		// loop through all the entity layers and update them.
-		for( CEntityLayer layer : layers ) 
+		// loop through all the entities and update them.
+		for( CEntity entity : entities )
 		{
-			layer.update(timePassed);
+			entity.update(timePassed);
 		}
 	}
 	
 	/**
-	 * Renders the entity layers.
+	 * Renders the entities.
 	 * @param g the 2D graphics object.
 	 */
 	public synchronized void render(Graphics2D g)
 	{
-		// loop through all the entity layers and render them.
-		for( CEntityLayer layer : layers ) 
+		// loop through all the entities and render them.
+		for( CEntity entity : entities )
 		{
-			layer.render(g);
+			entity.render(g);
 		}
+	}
+
+	@Override
+	public synchronized void onEntityRemove(EntityEvent e) 
+	{
+		removeEntity( (CEntity) e.getSource() );
 	}
 }

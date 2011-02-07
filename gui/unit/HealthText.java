@@ -2,8 +2,8 @@ package gridwhack.gui.unit;
 
 import java.awt.Color;
 
-import gridwhack.CEvent;
 import gridwhack.entity.unit.Unit;
+import gridwhack.entity.unit.event.UnitEvent;
 
 /**
  * Health status text class.
@@ -29,28 +29,6 @@ public class HealthText extends StatusText
 		
 		color = Color.white;
 	}
-
-	/**
-	 * Handles incoming events.
-	 * @param e the event.
-	 */
-	public void handleEvent(CEvent e) 
-	{
-		String type = e.getType();
-		Object source = e.getSource();
-		
-		// handle unit events.
-		if( source instanceof Unit )
-		{
-			Unit unit = (Unit)source;
-			
-			// actions to be taken when unit gains or loses health.
-			if( type=="healthGain" || type=="healthLoss" )
-			{
-				current = unit.getCurrentHealth();
-			}
-		}
-	}
 	
 	/**
 	 * @return the health text.
@@ -59,4 +37,30 @@ public class HealthText extends StatusText
 	{
 		return current + " / " + maximum;
 	}
+	
+	private void update()
+	{
+		current = owner.getCurrentHealth();
+	}
+
+	@Override
+	public void onUnitDeath(UnitEvent e) {}
+
+	@Override
+	public void onUnitSpawn(UnitEvent e) {}
+
+	@Override
+	public void onUnitHealthGain(UnitEvent e) 
+	{
+		update();
+	}
+
+	@Override
+	public void onUnitHealthLoss(UnitEvent e) 
+	{
+		update();		
+	}
+
+	@Override
+	public void onUnitMove(UnitEvent e) {}
 }

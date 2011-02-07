@@ -4,14 +4,14 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 
-import gridwhack.IEventListener;
 import gridwhack.entity.unit.Unit;
+import gridwhack.entity.unit.event.IUnitListener;
 
 /**
  * Base status text class.
  * Provides functionality for displaying unit values.
  */
-public abstract class StatusText implements IEventListener 
+public abstract class StatusText implements IUnitListener
 {
 	protected int x;
 	protected int y;

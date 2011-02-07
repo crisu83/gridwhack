@@ -4,13 +4,11 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Random;
 
-import gridwhack.CEvent;
-import gridwhack.IEventListener;
 import gridwhack.RandomProvider;
 import gridwhack.entity.*;
-import gridwhack.entity.CEntityManager.LayerType;
 import gridwhack.entity.unit.*;
 import gridwhack.entity.unit.UnitFactory.UnitType;
+import gridwhack.entity.unit.event.*;
 import gridwhack.entity.item.Item;
 import gridwhack.entity.item.Loot;
 import gridwhack.entity.tile.*;
@@ -26,7 +24,9 @@ public class Grid
 	protected int heightInCells;
 	private GridCell[][] cells;
 	private GridAStarPathFinder pf;
-	private CEntityManager em;
+	private CEntityManager tiles;
+	private CEntityManager items;
+	private CEntityManager units;
 	private Random rand;
 	
 	/**
@@ -46,8 +46,11 @@ public class Grid
 		// that can be used to calculate paths for units on the grid.
 		pf = new GridAStarPathFinder(new EuclideanHeuristic(), this);
 		
-		// create a new entity manager to handle entities on the grid.
-		em = new CEntityManager();
+		// create entity managers to handle 
+		// tiles, items and units on the grid.
+		tiles = new CEntityManager();
+		items = new CEntityManager();
+		units = new CEntityManager();
 		
 		// get random from the random provider. 
 		rand = RandomProvider.getRand();
@@ -119,7 +122,7 @@ public class Grid
 				if( cell!=null )
 				{
 					cell.setTile(tile);
-					em.addEntity((CEntity)tile, 0);
+					tiles.addEntity((CEntity) tile);
 				}
 			}
 		}
@@ -160,7 +163,7 @@ public class Grid
 		if( cell!=null )
 		{
 			cell.addUnit(unit);
-			em.addEntity((CEntity)unit, 2);
+			units.addEntity((CEntity) unit);
 		}
 	}
 	
@@ -170,7 +173,7 @@ public class Grid
 	public ArrayList<GridUnit> getUnits()
 	{
 		// get all entities in the grid entity manager.
-		ArrayList<CEntity> entities = em.getEntities(2);
+		ArrayList<CEntity> entities = units.getEntities();
 		
 		// initialize an array for the units.
 		ArrayList<GridUnit> units = new ArrayList<GridUnit>();
@@ -181,7 +184,7 @@ public class Grid
 			// make sure the entity is an unit.
 			if( entity instanceof GridUnit )
 			{
-				units.add((GridUnit)entity);
+				units.add((GridUnit) entity);
 			}
 		}
 		
@@ -207,7 +210,7 @@ public class Grid
 			for( int y=0, ymax=visible[x].length; y<ymax; y++ )
 			{
 				// make sure the cell is visible to the unit.
-				if( visible[x][y]==true )
+				if( visible[x][y] )
 				{
 					GridCell cell = getCell(x, y);
 					
@@ -276,7 +279,7 @@ public class Grid
 					
 					if( unit instanceof Player )
 					{
-						destination.loot((Player)unit);
+						destination.loot((Player) unit);
 					}
 				}
 			}
@@ -297,7 +300,7 @@ public class Grid
 		if( cell!=null )
 		{
 			cell.addLoot(loot);			
-			em.addEntity((CEntity)loot, 1);
+			items.addEntity((CEntity) loot);
 		}
 	}
 	
@@ -442,7 +445,9 @@ public class Grid
 	 */
 	public void update(long timePassed)
 	{
-		em.update(timePassed);
+		tiles.update(timePassed);
+		items.update(timePassed);
+		units.update(timePassed);
 	}
 	
 	/**
@@ -451,13 +456,15 @@ public class Grid
 	 */
 	public void render(Graphics2D g)
 	{
-		em.render(g);
+		tiles.render(g);
+		items.render(g);
+		units.render(g);
 	}
 	
 	/**
 	 * Private inner class representing a single cell in the grid.
 	 */
-	public class GridCell implements IEventListener
+	public class GridCell implements IUnitListener
 	{
 		protected int gx;
 		protected int gy;
@@ -545,10 +552,10 @@ public class Grid
 			// make sure the unit is in the cell.
 			if( units.contains(unit) )
 			{
-				units.remove(unit);
-				
 				// stop listening to the unit that is about to be removed.
 				unit.removeListener(this);
+				
+				units.remove(unit);
 			}
 		}
 		
@@ -621,25 +628,23 @@ public class Grid
 		{
 			return this.loot;
 		}
-
-		/**
-		 * Handles incoming events.
-		 * @param e the event.
-		 */
-		public void handleEvent(CEvent e) 
+		
+		@Override
+		public synchronized void onUnitDeath(UnitEvent e) 
 		{
-			String type = e.getType();
-			Object source = e.getSource();
-			
-			// unit event handling.
-			if( source instanceof Unit )
-			{
-				// Actions to be taken when a unit dies.
-				if( type=="death" )
-				{
-					removeUnit((GridUnit)source);
-				}
-			}	
+			removeUnit( (GridUnit) e.getSource() );
 		}
+
+		@Override
+		public synchronized void onUnitSpawn(UnitEvent e) {}
+
+		@Override
+		public synchronized void onUnitHealthGain(UnitEvent e) {}
+
+		@Override
+		public synchronized void onUnitHealthLoss(UnitEvent e) {}
+
+		@Override
+		public synchronized void onUnitMove(UnitEvent e) {}
 	}
 }

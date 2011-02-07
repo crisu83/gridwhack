@@ -11,38 +11,19 @@ import gridwhack.gui.unit.HealthDisplay;
 import gridwhack.map.*;
 import gridwhack.map.MapFactory.MapType;
 
-public class Game extends CGameEngine implements IEventListener
+public class GridWhack extends CGameEngine
 {
+	private static int DEFAULT_FPS = 40;
+	
 	public static boolean DEBUG = true;
 	
 	private Player player;
 	private GridMap map;
 	private Camera camera;
 	
-	/**
-	 * Main method.
-	 * @param args the arguments.
-	 */
-	public static void main(String[] args)
+	public GridWhack(long period)
 	{
-		new Game().run();
-	}
-	
-	/**
-	 * Initializes the key test.
-	 */
-	public void init()
-	{
-		// initialize the core.
-		super.init();
-		
-		// set window properties.
-		Window w = screen.getFullScreenWindow();
-		w.setFocusTraversalKeysEnabled(false);
-		w.addKeyListener(new KeyboardHandler(this));
-		w.setFont(new Font("Arial", Font.PLAIN, 11));
-		w.setBackground(Color.black);
-		w.setForeground(Color.white);
+		super("GridWhack", period);
 	}
 	
 	/**
@@ -50,9 +31,15 @@ public class Game extends CGameEngine implements IEventListener
 	 */
 	public void gameInit()
 	{
+		Window w = screen.getFullScreenWindow();
+		w.addKeyListener(new KeyboardHandler(this));
+		w.setFont(new Font("Arial", Font.PLAIN, 11));
+		w.setBackground(Color.black);
+		w.setForeground(Color.white);
+		
 		createMap();
 		createPlayer();	
-		//createCamera();
+		createCamera();
 		
 		// initialize the user interface.
 		initGui();
@@ -74,7 +61,7 @@ public class Game extends CGameEngine implements IEventListener
 		Grid grid = map.getGrid();
 		
 		player = new Player(grid);
-		player.addListener(this);
+		//player.addListener(this);
 		
 		// add the player onto the map.
 		map.addPlayer(player);
@@ -87,7 +74,7 @@ public class Game extends CGameEngine implements IEventListener
 	{
 		Window w = screen.getFullScreenWindow();		
 		Rectangle bounds = new Rectangle(0, 0, map.getWidth(), map.getHeight());
-		camera = new Camera(w.getWidth(), w.getHeight(), bounds, player);
+		camera = new Camera(0, 0, w.getWidth(), w.getHeight()-100, bounds, player, true);
 		player.addListener(camera);
 	}
 	
@@ -105,6 +92,7 @@ public class Game extends CGameEngine implements IEventListener
 	 */
 	private void createPlayerPanel()
 	{
+		Window w = screen.getFullScreenWindow();
 		GuiPanel playerPanel = new GuiPanel(5, 5, 180, 20, null);
 		playerPanel.addElement(new HealthDisplay(5, 5, player));
 		Gui.addPanel(playerPanel);
@@ -116,7 +104,7 @@ public class Game extends CGameEngine implements IEventListener
 	private void createCombatLog()
 	{
 		Window w = screen.getFullScreenWindow();
-		GuiPanel combatLog = new GuiPanel(5, w.getHeight()-95, w.getWidth()-10, 100, null);
+		GuiPanel combatLog = new GuiPanel(0, w.getHeight()-100, w.getWidth(), 100, null);
 		combatLog.addElement(new CombatLogBox(5, 15, 290, 10));
 		Gui.addPanel(combatLog);
 	}
@@ -133,7 +121,9 @@ public class Game extends CGameEngine implements IEventListener
 	 * @param timePassed the time that has passed.
 	 */
 	public void gameUpdate(long timePassed)
-	{		
+	{
+		//camera.update(timePassed);
+		
 		// update the map.
 		map.update(timePassed);
 		
@@ -149,14 +139,11 @@ public class Game extends CGameEngine implements IEventListener
 	{			
 		Window w = screen.getFullScreenWindow();
 		
-		/*
 		// get the camera offset.
-		int cx = (int)Math.round(camera.getX());
-		int cy = (int)Math.round(camera.getY());
-
-		// offset the rendering according to the camera.
+		int cx = (int) Math.round( Math.round(camera.getX()) );
+		int cy = (int) Math.round( Math.round(camera.getY()) );
+		
 		g.translate(-cx, -cy);
-		*/
 		
 		// set a black background.
 		g.setColor(Color.BLACK);
@@ -165,8 +152,7 @@ public class Game extends CGameEngine implements IEventListener
 		// render the map.
 		map.render(g);
 		
-		// reverse the camera offset.
-		//g.translate(cx, cy);
+		g.translate(cx, cy);
 		
 		// render the gui last.
 		Gui.render(g);
@@ -176,33 +162,62 @@ public class Game extends CGameEngine implements IEventListener
 	 * Renders the application.
 	 * @param g the graphics object.
 	 */
+	/*
 	public void paint(Graphics g)
 	{
 		if( g instanceof Graphics2D )
 		{
 			Graphics2D g2d = (Graphics2D)g;
-			g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+			g2d.setRenderingHint(
+					RenderingHints.KEY_TEXT_ANTIALIASING, 
+					RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		}
 	}
-	
-	/**
-	 * Handles incoming events.
-	 * @param e the event.
-	 */
-	public void handleEvent(CEvent e) 
+	*/
+
+	/*
+	@Override
+	public void onUnitDeath(UnitEvent e) 
 	{
-		String type = e.getType();
-		Object source = e.getSource();		
+		Unit source = (Unit) e.getSource();		
 		
-		// player event handling.
 		if( source instanceof Player )
 		{
-			// actions to be taken on player death.
-			if( type=="death" )
-			{
-				System.out.println("Player has died.");
-				stopGame();
-			}
+			System.out.println("Player has died.");
+			stopGame();
 		}
+	}
+
+	@Override
+	public void onUnitSpawn(UnitEvent e) {}
+
+	@Override
+	public void onUnitHealthGain(UnitEvent e) {}
+
+	@Override
+	public void onUnitHealthLoss(UnitEvent e) {}
+
+	@Override
+	public void onUnitMove(UnitEvent e) {}
+	*/
+	
+	/**
+	 * Main method.
+	 * @param args the application arguments.
+	 */
+	public static void main(String[] args)
+	{
+		int fps = DEFAULT_FPS;
+		
+		if( args.length!=0 )
+		{
+			fps = Integer.parseInt(args[0]);
+		}
+		
+		long period = (long) 1000.0/fps;
+		
+		System.out.println("fps: " + fps + "; period: " + period + " ms");
+		
+		new GridWhack(period*1000000L); // ms -> ns
 	}
 }

@@ -2,9 +2,11 @@ package gridwhack.entity.unit;
 
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.util.Iterator;
 
-import gridwhack.CEvent;
 import gridwhack.entity.unit.attack.AttackScenario;
+import gridwhack.entity.unit.event.*;
+import gridwhack.event.IEventListener;
 import gridwhack.grid.Grid;
 import gridwhack.grid.GridEntity;
 import gridwhack.gui.unit.HealthBar;
@@ -130,13 +132,13 @@ public abstract class Unit extends GridEntity
 	 * Reduces the units health by the specified amount.
 	 * @param amount the amount to reduce the health.
 	 */
-	public void reduceHealth(int amount)
+	public synchronized void reduceHealth(int amount)
 	{
 		// reduce the unit health.
 		currentHealth -= amount;
 		
 		// let all listeners know that this unit has lost health.
-		fireEvent( new CEvent("healthLoss", this) );
+		fireUnitEvent( new UnitEvent(UnitEvent.UNIT_HEALTHLOSS, this) );
 		
 		// make sure that the unit health is not below or equal to zero.
 		if( currentHealth<=0 )
@@ -148,12 +150,12 @@ public abstract class Unit extends GridEntity
 	/**
 	 * Marks the unit dead.
 	 */
-	public void markDead()
+	public synchronized void markDead()
 	{
 		this.dead = true;
 		
 		// let all listeners know that this unit is dead.
-		fireEvent( new CEvent("death", this) );
+		fireUnitEvent( new UnitEvent(UnitEvent.UNIT_DEATH, this) );
 		
 		// dead units needs to be removed.
 		super.markRemoved();
@@ -183,10 +185,55 @@ public abstract class Unit extends GridEntity
 	/**
 	 * Mark the unit to have moved.
 	 */
-	public void markMoved()
+	public synchronized void markMoved()
 	{
 		// let all listeners know that the unit has moved.
-		fireEvent( new CEvent("move", this) );
+		fireUnitEvent( new UnitEvent(UnitEvent.UNIT_MOVE, this) );
+	}
+	
+	/**
+	 * Fires an unit event.
+	 * @param e the event.
+	 */
+	private synchronized void fireUnitEvent(UnitEvent e)
+	{
+		for( IEventListener listener : getListeners() )
+		{			
+			// Make sure we only notify unit listeners.
+			if( listener instanceof IUnitListener )
+			{
+				switch( e.getType() )
+				{
+					// Unit has died.
+					case UnitEvent.UNIT_DEATH:
+						( (IUnitListener) listener ).onUnitDeath(e);
+						break;
+					
+					// Unit has been spawned.
+					case UnitEvent.UNIT_SPAWN:
+						( (IUnitListener) listener ).onUnitSpawn(e);
+						break;
+						
+					// Unit has gained health.
+					case UnitEvent.UNIT_HEALTHGAIN:
+						( (IUnitListener) listener ).onUnitHealthGain(e);
+						break;
+						
+					// Unit has lost health.
+					case UnitEvent.UNIT_HEALTHLOSS:
+						( (IUnitListener) listener ).onUnitHealthLoss(e);
+						break;
+						
+					// Unit has moved.
+					case UnitEvent.UNIT_MOVE:
+						( (IUnitListener) listener ).onUnitMove(e);
+						break;
+						
+					// Unknown event.
+					default:
+				}
+			}
+		}
 	}
 	
 	/**
@@ -195,12 +242,16 @@ public abstract class Unit extends GridEntity
 	 */
 	public void render(Graphics2D g)
 	{
-		super.render(g);
-		
-		// render the health bar aswell if necessary.
-		if( healthBar!=null )
+		// Make sure the unit is not dead.
+		if( !dead )
 		{
-			healthBar.render(g);
+			super.render(g);
+			
+			// render the health bar as well if necessary.
+			if( healthBar!=null )
+			{
+				healthBar.render(g);
+			}
 		}
 	}
 	
