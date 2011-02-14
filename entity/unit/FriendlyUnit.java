@@ -3,8 +3,8 @@ package gridwhack.entity.unit;
 import gridwhack.entity.unit.hostile.HostileUnit;
 import gridwhack.grid.Grid;
 
-public class FriendlyUnit extends NonPlayerUnit {
-
+public class FriendlyUnit extends NonPlayerUnit
+{
 	/**
 	 * Constructs the friendly unit.
 	 * @param filename the sprite filename.

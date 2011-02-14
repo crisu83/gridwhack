@@ -13,10 +13,10 @@ public class MeleeAttack extends Attack
 	public void attack()
 	{
 		Die d100 = new Die(100, scenario.rand);
-		
 		int hitRoll = d100.roll();
-		
-		int damage = scenario.attacker.getDamage();
+
+		Die damageDie = new Die(scenario.attacker.getMaximumDamage(), scenario.rand);
+		int damage = damageDie.roll(scenario.attacker.getMinimumDamage());
 		
 		// critical hit.
 		if( hitRoll>=75 )

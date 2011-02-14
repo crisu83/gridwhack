@@ -16,7 +16,7 @@ import gridwhack.entity.tile.TileFactory.TileType;
 import gridwhack.fov.IViewer;
 import gridwhack.path.*;
 
-public class Grid
+public class Grid implements IUnitListener
 {
 	private static final int CELL_SIZE = 32;
 	
@@ -31,8 +31,8 @@ public class Grid
 	
 	/**
 	 * Constructs the grid.
-	 * @param width the width of the grid in cells.
-	 * @param height the height of the grid in cells.
+	 * @param widthInCells the width of the grid in cells.
+	 * @param heightInCells the height of the grid in cells.
 	 */
 	public Grid(int widthInCells, int heightInCells)
 	{
@@ -100,10 +100,10 @@ public class Grid
 	
 	/**
 	 * Sets the tile in the specific coordinates.
-	 * @param x the grid x-coordinate to start at.
-	 * @param y the grid y-coordinate to start at.
-	 * @param width the rectangle width in cells.
-	 * @param height the rectangle height in cells.
+	 * @param sgx the grid x-coordinate to start at.
+	 * @param sgy the grid y-coordinate to start at.
+	 * @param widthInCells the rectangle width in cells.
+	 * @param heightInCells the rectangle height in cells.
 	 * @param type the type of tile to use.
 	 */
 	public void createTileRect(int sgx, int sgy, int widthInCells, int heightInCells, TileType type)
@@ -122,7 +122,7 @@ public class Grid
 				if( cell!=null )
 				{
 					cell.setTile(tile);
-					tiles.addEntity((CEntity) tile);
+					tiles.addEntity(tile);
 				}
 			}
 		}
@@ -130,8 +130,6 @@ public class Grid
 	
 	/**
 	 * Adds an unit to the grid.
-	 * @param x the grid x-coordinate where to add the unit.
-	 * @param y the grid y-coordinate where to add the unit.
 	 * @param type the type of unit to create.
 	 */
 	public synchronized void createUnit(UnitType type)
@@ -151,8 +149,8 @@ public class Grid
 	
 	/**
 	 * Adds an unit to the grid.
-	 * @param x the grid x-coordinate where to add the unit.
-	 * @param y the grid y-coordinate where to add the unit.
+	 * @param gx the grid x-coordinate where to add the unit.
+	 * @param gy the grid y-coordinate where to add the unit.
 	 * @param unit the unit to add.
 	 */
 	public synchronized void createUnit(int gx, int gy, GridUnit unit)
@@ -163,8 +161,10 @@ public class Grid
 		if( cell!=null )
 		{
 			cell.addUnit(unit);
-			units.addEntity((CEntity) unit);
+			units.addEntity(unit);
 		}
+
+		unit.addListener(this);
 	}
 	
 	/**
@@ -177,7 +177,7 @@ public class Grid
 		
 		// initialize an array for the units.
 		ArrayList<GridUnit> units = new ArrayList<GridUnit>();
-		
+
 		// loop through the entities and collect all units.
 		for( CEntity entity : entities )
 		{
@@ -217,16 +217,11 @@ public class Grid
 					// make sure we have a cell.
 					if( cell!=null )
 					{
-						ArrayList<Unit> units = cell.getUnits();
+						GridUnit target = cell.getUnit();
 						
-						// add units in the cell to the list of visible units
-						// unless they are already included in the list.
-						for( Unit u : units )
+						if( target!=null && !visibleUnits.contains(target) )
 						{
-							if( !visibleUnits.contains(u) )
-							{
-								visibleUnits.add(u);
-							}
+							visibleUnits.add(target);
 						}
 					}
 				}
@@ -262,19 +257,18 @@ public class Grid
 			if( destination!=null && !destination.isBlocked(unit) )
 			{
 				// get the unit in the destination cell.
-				ArrayList<Unit> targets = destination.getUnits();
+				GridUnit target = destination.getUnit();
 				
 				// check if there are potential targets.
-				if( !targets.isEmpty() )
+				if( target!=null )
 				{
-					// choose a target from the potential targets
-					// if a valid target is available.
-					unit.chooseTarget(targets);
+					// attack the target if hostile.
+					unit.attack(target);
 				}
 				else
 				{					
 					// move the unit to the destination cell.
-					source.removeUnit(unit);
+					source.removeUnit();
 					destination.addUnit(unit);
 					
 					if( unit instanceof Player )
@@ -290,7 +284,7 @@ public class Grid
 	 * Adds loot to the given coordinate on the grid.
 	 * @param gx the grid x-coordinate.
 	 * @param gy the grid y-coordinate.
-	 * @param item the item to add.
+	 * @param loot the loot to create.
 	 */
 	public synchronized void createLoot(int gx, int gy, Loot loot)
 	{
@@ -300,7 +294,7 @@ public class Grid
 		if( cell!=null )
 		{
 			cell.addLoot(loot);			
-			items.addEntity((CEntity) loot);
+			items.addEntity(loot);
 		}
 	}
 	
@@ -441,7 +435,7 @@ public class Grid
 	
 	/**
 	 * Updates the tiles in the grid.
-	 * @param timePassed
+	 * @param timePassed the time that has passed.
 	 */
 	public void update(long timePassed)
 	{
@@ -460,191 +454,31 @@ public class Grid
 		items.render(g);
 		units.render(g);
 	}
-	
-	/**
-	 * Private inner class representing a single cell in the grid.
-	 */
-	public class GridCell implements IUnitListener
+
+	public void onUnitDeath(UnitEvent e)
 	{
-		protected int gx;
-		protected int gy;
-		protected Tile tile;
-		protected Loot loot;
-		protected ArrayList<Unit> units;
-		
-		/**
-		 * Constructs the grid cell.
-		 * @param gx the x-coordinate on the grid.
-		 * @param gy the y-coordinate on the grid.
-		 */
-		public GridCell(int gx, int gy)
-		{
-			this.gx = gx;
-			this.gy = gy;
-			this.units = new ArrayList<Unit>();
-		}
-		
-		/**
-		 * @param tile the tile in the cell.
-		 */
-		public void setTile(Tile tile)
-		{			
-			// set the position of the tile.
-			tile.setGridX(gx);
-			tile.setGridY(gy);
-			
-			this.tile = tile;
-		}
-		
-		/**
-		 * Adds loot to the cell.
-		 * @param loot the loot to add.
-		 */
-		public synchronized void addLoot(Loot loot)
-		{
-			// check if there is already loot in the cell,
-			// if so we need to add the items in the new loot
-			// to the exisiting loot.
-			if( this.loot!=null )
-			{
-				ArrayList<Item> items = loot.getItems();
-				
-				// make sure the loot has items.
-				if( !items.isEmpty() )
-				{
-					for( Item item : items )
-					{
-						this.loot.addItem(item);
-					}
-				}
-			}
-			// no loot in the cell.
-			else
-			{
-				// move the loot to the cell.
-				loot.setGridX(gx);
-				loot.setGridY(gy);
-				
-				this.loot = loot;
-			}
-		}
-		
-		/**
-		 * @param unit the unit to add.
-		 */
-		public synchronized void addUnit(GridUnit unit)
-		{			
-			// move the unit to the cell.
-			unit.setGridX(gx);
-			unit.setGridY(gy);
-			
-			// start listening to the added unit.
-			unit.addListener(this);
-			
-			units.add(unit);
-		}
-		
-		/**
-		 * @param unit the unit to remove.
-		 */
-		public synchronized void removeUnit(GridUnit unit)
-		{
-			// make sure the unit is in the cell.
-			if( units.contains(unit) )
-			{
-				// stop listening to the unit that is about to be removed.
-				unit.removeListener(this);
-				
-				units.remove(unit);
-			}
-		}
-		
-		/**
-		 * @return all units in the cell.
-		 */
-		public ArrayList<Unit> getUnits()
-		{
-			return units;
-		}
-		
-		public void loot(Player player)
-		{
-			if( loot!=null )
-			{
-				player.pickUp(loot);
-			}
-		}
-		
-		/**
-		 * @param mover the moving entity.
-		 * @return whether the cell is blocked.
-		 */
-		public boolean isBlocked(IMover mover)
-		{
-			if( tile!=null )
-			{
-				return tile.isBlocked(mover);
-			}
+		GridUnit unit = (GridUnit) e.getSource();
+		GridCell cell = getCell(unit.getGridX(), unit.getGridY());
 
-			// cell is blocked by default.
-			return true;
-		}
-		
-		/**
-		 * @param viewer the viewing entity.
-		 * @return whether the cell can be seen through.
-		 */
-		public boolean isSolid(IViewer viewer)
+		if( cell!=null )
 		{
-			if( tile!=null )
-			{
-				return tile.isSolid(viewer);
-			}
-			
-			// cells are solid by default.
-			return true;
+			cell.removeUnit();
 		}
-		
-		/**
-		 * @return the cell x-coordinate on the grid.
-		 */
-		public int getGridX()
-		{
-			return gx;
-		}
-		
-		/**
-		 * @return the cell y-coordinate on the grid.
-		 */
-		public int getGridY()
-		{
-			return gy;
-		}
+	}
 
-		/**
-		 * @return the loot.
-		 */
-		public Loot getLoot()
-		{
-			return this.loot;
-		}
-		
-		@Override
-		public synchronized void onUnitDeath(UnitEvent e) 
-		{
-			removeUnit( (GridUnit) e.getSource() );
-		}
+	public void onUnitSpawn(UnitEvent e)
+	{
+	}
 
-		@Override
-		public synchronized void onUnitSpawn(UnitEvent e) {}
+	public void onUnitHealthGain(UnitEvent e)
+	{
+	}
 
-		@Override
-		public synchronized void onUnitHealthGain(UnitEvent e) {}
+	public void onUnitHealthLoss(UnitEvent e)
+	{
+	}
 
-		@Override
-		public synchronized void onUnitHealthLoss(UnitEvent e) {}
-
-		@Override
-		public synchronized void onUnitMove(UnitEvent e) {}
+	public void onUnitMove(UnitEvent e)
+	{
 	}
 }

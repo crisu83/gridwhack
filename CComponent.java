@@ -23,7 +23,7 @@ public class CComponent
 	
 	/**
 	 * Adds an event listener to this component.
-	 * @param the listener the event listener to add.
+	 * @param listener the event listener to add.
 	 */
 	public synchronized void addListener(IEventListener listener)
 	{
@@ -32,7 +32,7 @@ public class CComponent
 	
 	/**
 	 * Removes an event listener from this component.
-	 * @param the listener the event listener to remove.
+	 * @param listener the event listener to remove.
 	 */
 	public synchronized void removeListener(IEventListener listener)
 	{

@@ -19,7 +19,6 @@ public class GridAStarPathFinder implements IPathFinder
 	
 	/**
 	 * Constructs the path finder.
-	 * @param maxPathLength the maximum path length.
 	 * @param heuristic the heuristic to use.
 	 * @param grid the grid on which to find the path.
 	 */

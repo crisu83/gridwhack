@@ -3,7 +3,7 @@ package gridwhack.entity.sprite;
 import java.awt.*;
 import java.util.HashMap;
 
-import gridwhack.CResourceManager;
+import gridwhack.CImageLoader;
 
 /**
  * Sprite Manager class.
@@ -26,7 +26,7 @@ public class CSpriteManager
 		// check if we need to load the sprite.
 		if( sprites.get(filename)==null )
 		{
-			Image image = CResourceManager.get().getImage(filename);
+			Image image = CImageLoader.getInstance().getImage(filename);
 			CSprite sprite = new CSprite(image);
 			sprites.put(filename, sprite);
 			
@@ -35,7 +35,7 @@ public class CSpriteManager
 		// sprite is already loaded.
 		else
 		{
-			return (CSprite)sprites.get(filename);
+			return sprites.get(filename);
 		}
 	}
 }

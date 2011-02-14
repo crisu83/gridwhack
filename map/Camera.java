@@ -8,8 +8,8 @@ import gridwhack.entity.unit.event.UnitEvent;
 
 public class Camera implements IUnitListener
 {
-	protected double x;
-	protected double y;
+	protected int x;
+	protected int y;
 	protected int width;
 	protected int height;
 	protected Unit subject;
@@ -31,11 +31,17 @@ public class Camera implements IUnitListener
 	
 	public void focusOnSubject()
 	{
-		setX( subject.getX() - (width/2) );
-		setY( subject.getY() - (height/2) );
+		int middleX = (int) Math.round( subject.getX()+(subject.getWidth() / 2) );
+		int middleY = (int) Math.round( subject.getY()+(subject.getHeight() / 2) );
+		
+		int x = middleX - (width / 2);
+		int y = middleY - (height / 2);
+		
+		setX(x);
+		setY(y);
 	}
 	
-	public void setX(double x)
+	public void setX(int x)
 	{
 		if( x<bounds.x )
 		{
@@ -49,12 +55,12 @@ public class Camera implements IUnitListener
 		this.x = x;
 	}
 	
-	public double getX()
+	public int getX()
 	{
 		return x;
 	}
 	
-	public void setY(double y)
+	public void setY(int y)
 	{
 		if( y<bounds.y )
 		{
@@ -68,7 +74,7 @@ public class Camera implements IUnitListener
 		this.y = y;
 	}
 	
-	public double getY()
+	public int getY()
 	{
 		return y;
 	}
@@ -79,23 +85,19 @@ public class Camera implements IUnitListener
 		setY(ty);
 	}
 
-	@Override
 	public void onUnitDeath(UnitEvent e) {}
 
-	@Override
 	public void onUnitSpawn(UnitEvent e) {}
 
-	@Override
 	public void onUnitHealthGain(UnitEvent e) {}
 
-	@Override
 	public void onUnitHealthLoss(UnitEvent e) {}
 
-	@Override
-	public void onUnitMove(UnitEvent e) 
+	public void onUnitMove(UnitEvent e)
 	{
 		if( follow )
 		{
+			//focusOnSubject();
 			int subjectX = (int) Math.round(subject.getX());
 			int subjectY = (int) Math.round(subject.getY());
 			
@@ -103,23 +105,23 @@ public class Camera implements IUnitListener
 			
 			if( subjectX<x )
 			{
-				move((int) (x-width), (int) y);
+				move(x - width, y);
 				//System.out.println("moving camera: x:"+((int) (x-width))+", y:"+((int) y));
 			}
-			else if( subjectX>=width )
+			else if( (x + subjectX)>=width )
 			{
-				move((int) (x+width), (int) y);
+				move(x + width, y);
 				//System.out.println("moving camera: x:"+((int) (x+width))+", y:"+((int) y));
 			}
 			
 			if( subjectY<y )
 			{
-				move((int) x, (int) (y-height));
+				move(x, y - height);
 				//System.out.println("moving camera: x:"+((int) x)+", y:"+((int) (y-height)));
 			}
-			else if( subjectY>=height )
+			else if( (y + subjectY)>=height )
 			{
-				move((int) x, (int) (y+height));
+				move(x, y + height);
 				//System.out.println("moving camera: x:"+((int) x)+", y:"+((int) (y+height)));
 			}
 		}

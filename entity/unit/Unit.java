@@ -2,7 +2,6 @@ package gridwhack.entity.unit;
 
 import java.awt.Graphics2D;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import gridwhack.entity.unit.attack.AttackScenario;
 import gridwhack.entity.unit.event.*;
@@ -25,7 +24,8 @@ public abstract class Unit extends GridEntity
 	protected int currentHealth;
 	protected int maximumHealth;
 	protected int level;
-	protected int damage;
+	protected int minimumDamage;
+	protected int maximumDamage;
 	protected int attackCooldown;
 	protected int movementCooldown;
 	protected long nextAttackTime;
@@ -101,16 +101,17 @@ public abstract class Unit extends GridEntity
 	public void attack(Unit target)
 	{
 		// make sure the unit may attack.
-		if( attackAllowed() )
+		if( isHostile(target) && isAttackAllowed() )
 		{
-			new AttackScenario(this, target, rand).attack();
+			AttackScenario scenario = new AttackScenario(this, target, rand);
+			scenario.attack();
 		}
 	}
 	
 	/**
 	 * @return whether the unit is allowed to move. 
 	 */
-	public boolean attackAllowed()
+	public boolean isAttackAllowed()
 	{
 		long attackInterval = getAttackCooldown();
 		
@@ -156,7 +157,7 @@ public abstract class Unit extends GridEntity
 		
 		// let all listeners know that this unit is dead.
 		fireUnitEvent( new UnitEvent(UnitEvent.UNIT_DEATH, this) );
-		
+
 		// dead units needs to be removed.
 		super.markRemoved();
 	}
@@ -234,6 +235,12 @@ public abstract class Unit extends GridEntity
 				}
 			}
 		}
+	}
+
+	public void setDamage(int minimum, int maximum)
+	{
+		this.minimumDamage = minimum;
+		this.maximumDamage = maximum;
 	}
 	
 	/**
@@ -338,21 +345,35 @@ public abstract class Unit extends GridEntity
 	}
 	
 	/**
-	 * @return the damage the unit inflicts.
-	 * when attacking successfully.
+	 * @return the minimum damage the unit inflicts.
 	 */
-	public int getDamage()
+	public int getMinimumDamage()
 	{
-		return damage;
+		return minimumDamage;
 	}
 	
 	/**
-	 * @param damage the damage the unit inflicts
-	 * when attacking successfully.
+	 * @param minimumDamage the minimum damage the unit inflicts.
 	 */
-	public void setDamage(int damage)
+	public void setMinimumDamage(int minimumDamage)
 	{
-		this.damage = damage;
+		this.minimumDamage = minimumDamage;
+	}
+
+	/**
+	 * @return the maximum damage the unit inflicts.
+	 */
+	public int getMaximumDamage()
+	{
+		return maximumDamage;
+	}
+
+	/**
+	 * @param maximumDamage the minimum damage the unit inflicts.
+	 */
+	public void setMaximumDamage(int maximumDamage)
+	{
+		this.maximumDamage = maximumDamage;
 	}
 	
 	/**

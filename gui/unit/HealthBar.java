@@ -54,26 +54,21 @@ public class HealthBar extends StatusBar
 		super.move(x, y);
 	}
 
-	@Override
 	public void onUnitDeath(UnitEvent e) {}
 
-	@Override
 	public void onUnitSpawn(UnitEvent e) {}
 
-	@Override
-	public void onUnitHealthGain(UnitEvent e) 
+	public void onUnitHealthGain(UnitEvent e)
 	{
 		update();
 	}
 
-	@Override
-	public void onUnitHealthLoss(UnitEvent e) 
+	public void onUnitHealthLoss(UnitEvent e)
 	{
 		update();
 	}
 
-	@Override
-	public void onUnitMove(UnitEvent e) 
+	public void onUnitMove(UnitEvent e)
 	{		
 		if( owner instanceof NonPlayerUnit )
 		{

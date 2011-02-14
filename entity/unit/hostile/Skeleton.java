@@ -9,7 +9,7 @@ public class Skeleton extends HostileUnit
 		super("skeleton.png", grid);
 		
 		setName("Skeleton");
-		setDamage(80);
+		setDamage(80, 160);
 		setHealth(160);
 		setAttackCooldown(3000);
 		setMovementCooldown(3000);

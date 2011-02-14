@@ -11,7 +11,6 @@ public class Player extends GridUnit
 	
 	/**
 	 * Constructs the player.
-	 * @param gui the gui.
 	 * @param grid the grid the unit exists on.
 	 */
 	public Player(Grid grid) 
@@ -21,10 +20,11 @@ public class Player extends GridUnit
 		setName("Player");
 		setLevel(1);
 		setHealth(300);
-		setDamage(50);
+		setDamage(50, 100);
 		setAttackCooldown(1000);
 		setMovementCooldown(1000);
-		
+		setViewRange(10);
+
 		// initialize the player.
 		super.init();
 	}

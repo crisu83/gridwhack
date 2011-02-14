@@ -8,7 +8,9 @@ import gridwhack.gui.Gui;
 import gridwhack.gui.GuiPanel;
 import gridwhack.gui.message.CombatLogBox;
 import gridwhack.gui.unit.HealthDisplay;
-import gridwhack.map.*;
+import gridwhack.map.Camera;
+import gridwhack.map.GridMap;
+import gridwhack.map.MapFactory;
 import gridwhack.map.MapFactory.MapType;
 
 public class GridWhack extends CGameEngine

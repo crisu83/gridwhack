@@ -1,12 +1,12 @@
 package gridwhack.entity;
 
 import java.awt.*;
-import java.util.Iterator;
 import java.util.Random;
 
 import gridwhack.CComponent;
 import gridwhack.RandomProvider;
-import gridwhack.entity.event.*;
+import gridwhack.entity.event.EntityEvent;
+import gridwhack.entity.event.IEntityListener;
 import gridwhack.entity.sprite.CSprite;
 import gridwhack.entity.sprite.CSpriteManager;
 import gridwhack.event.IEventListener;
@@ -36,7 +36,7 @@ public abstract class CEntity extends CComponent
 	public CEntity(String filename)
 	{
 		// get the sprite with the sprite manager.
-		this.sprite = CSpriteManager.getSprite(filename);
+		sprite = CSpriteManager.getSprite(filename);
 		
 		// get random from the random provider. 
 		rand = RandomProvider.getRand();
@@ -59,11 +59,16 @@ public abstract class CEntity extends CComponent
 	public synchronized void markRemoved()
 	{
 		removed = true;
-		
+
 		// let all listeners know that this entity is removed.
 		fireEntityEvent( new EntityEvent(EntityEvent.ENTITY_REMOVE, this) );
 	}
-	
+
+	/**
+	 * Sets a destination for the entity.
+	 * @param tx the target x-coordinates.
+	 * @param ty the target y-coordinates.
+	 */
 	public void setDestination(int tx, int ty)
 	{
 		if( tx>x )
@@ -94,23 +99,21 @@ public abstract class CEntity extends CComponent
 	public void update(long timePassed)
 	{
 		// Make sure the entity is not removed.
+		// Make sure the entity is not removed.
 		if( !removed )
 		{
 			if( x==tx )
 			{
 				vx = 0;
 			}
-			
 			if( y==ty )
 			{
 				vy = 0;
 			}
-			
 			if( vx>0 )
 			{
 				x += vx * timePassed;
 			}
-			
 			if( vy>0 )
 			{
 				y += vy * timePassed;
@@ -146,7 +149,7 @@ public abstract class CEntity extends CComponent
 				{
 					// Entity has been removed.
 					case EntityEvent.ENTITY_REMOVE:
-						( (IEntityListener) listener ).onEntityRemove( (EntityEvent) e );
+						( (IEntityListener) listener ).onEntityRemove(e);
 						break;
 					
 					// Unknown event.
@@ -155,7 +158,7 @@ public abstract class CEntity extends CComponent
 			}
 		}
 	}
-	
+
 	/**
 	 * @return the x-coordinate in pixels.
 	 */

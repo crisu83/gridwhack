@@ -3,9 +3,9 @@ package gridwhack.grid;
 import java.awt.Graphics2D;
 
 import gridwhack.GridWhack;
+import gridwhack.entity.unit.Player;
 import gridwhack.entity.unit.Unit;
 import gridwhack.fov.IViewer;
-import gridwhack.grid.Grid.GridCell;
 import gridwhack.path.IMover;
 
 /**
@@ -76,20 +76,6 @@ public abstract class GridUnit extends Unit implements IMover, IViewer
 		markMoved();
 	}
 	
-	public synchronized void markDead()
-	{
-		super.markDead();
-		
-		/*
-		GridCell cell = grid.getCell(this.getGridX(), this.getGridY());
-		
-		if( cell!=null )
-		{
-			// TODO: create a bogus item to test "dropping" items.
-		}
-		*/
-	}
-	
 	/**
 	 * Marks the unit to have moved.
 	 */
@@ -141,12 +127,12 @@ public abstract class GridUnit extends Unit implements IMover, IViewer
 		super.render(g);
 		
 		if( GridWhack.DEBUG )
-		{			
-			if( fov!=null )
+		{
+			if( this instanceof Player && fov!=null )
 			{
-				//fov.render(g);
+				fov.render(g);
 			}
-			
+
 			if( path!=null )
 			{
 				path.render(g);

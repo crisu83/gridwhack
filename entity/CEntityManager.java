@@ -82,7 +82,10 @@ public class CEntityManager implements IEntityListener
 		}
 	}
 
-	@Override
+	/**
+	 * Actions to be taken when an entity is removed.
+	 * @param e the event.
+	 */
 	public synchronized void onEntityRemove(EntityEvent e) 
 	{
 		removeEntity( (CEntity) e.getSource() );

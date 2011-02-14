@@ -9,7 +9,7 @@ public class Orc extends HostileUnit
 		super("orc.png", grid);
 		
 		setName("Orc");
-		setDamage(50);
+		setDamage(50, 100);
 		setHealth(100);
 		setAttackCooldown(2000);
 		setMovementCooldown(2000);

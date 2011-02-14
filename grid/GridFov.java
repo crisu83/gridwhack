@@ -127,6 +127,10 @@ public class GridFov
 		
 		dx *= 2;
 		dy *= 2;
+
+		// we need to remember where we started
+		// in order to check the range.
+		int ns = n;
 		
 		// loop while we have gird cells left.
 		while( n>0 )
@@ -137,15 +141,15 @@ public class GridFov
 			{
 				break;
 			}
-			
+
 			// mark grid cell within the range as visible.
-			if( n>(n - range) && visible[x][y]==false )
+			if( n>(ns - range) && !visible[x][y] )
 			{
 				visible[x][y] = true;
 			}
 			
 			// add visible fields to the complete field of view.
-			if( complete[x][y]==false )
+			if( !complete[x][y] )
 			{
 				complete[x][y] = true;
 			}
@@ -183,7 +187,7 @@ public class GridFov
 	 */
 	public void render(Graphics2D g)
 	{
-		g.setColor(Color.white);
+		g.setColor(Color.gray);
 		
 		boolean[][] visible = this.getVisible();
 		
@@ -191,7 +195,7 @@ public class GridFov
 		{
 			for( int y=0; y<height; y++ )
 			{
-				if( visible[x][y]==true )
+				if( visible[x][y] )
 				{
 					g.drawRect(x*32, y*32, 32, 32);
 				}

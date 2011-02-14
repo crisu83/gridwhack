@@ -59,7 +59,12 @@ public abstract class GridEntity extends CEntity
 	{
 		this.y = grid.getOffsetInPixels(y);
 	}
-	
+
+	/**
+	 * Sets a destination for the entity.
+	 * @param tgx the target x-coordinates in grid cells.
+	 * @param tgy the target y-coordinates in grid cells.
+	 */
 	public void setDestination(int tgx, int tgy)
 	{
 		super.setDestination(tgx*grid.getCellSize(), tgy*grid.getCellSize());

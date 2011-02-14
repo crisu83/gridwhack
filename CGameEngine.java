@@ -149,8 +149,10 @@ public abstract class CGameEngine extends JFrame implements Runnable
 	{
 		running = false; // exit the game loop
 	}
-	
-	@Override
+
+	/**
+	 * Runs the game.
+	 */
 	public void run() 
 	{
 		long beforeTime, afterTime, timeDiff, sleepTime;
