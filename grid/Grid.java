@@ -9,13 +9,16 @@ import gridwhack.entity.*;
 import gridwhack.entity.unit.*;
 import gridwhack.entity.unit.UnitFactory.UnitType;
 import gridwhack.entity.unit.event.*;
-import gridwhack.entity.item.Item;
 import gridwhack.entity.item.Loot;
 import gridwhack.entity.tile.*;
 import gridwhack.entity.tile.TileFactory.TileType;
 import gridwhack.fov.IViewer;
 import gridwhack.path.*;
 
+/**
+ * Grid class file.
+ * @author Christoffer Niska <ChristofferNiska@gmail.com>
+ */
 public class Grid implements IUnitListener
 {
 	private static final int CELL_SIZE = 32;
@@ -30,7 +33,7 @@ public class Grid implements IUnitListener
 	private Random rand;
 	
 	/**
-	 * Constructs the grid.
+	 * Creates the grid.
 	 * @param widthInCells the width of the grid in cells.
 	 * @param heightInCells the height of the grid in cells.
 	 */
@@ -66,7 +69,7 @@ public class Grid implements IUnitListener
 	}
 	
 	/**
-	 * Returns a specific cell in the grid.
+	 * Returns a specific cell in this grid.
 	 * @param gx the grid x-coordinates of the cell.
 	 * @param gy the grid y-coordinates of the cell.
 	 * @return the cell.
@@ -84,14 +87,15 @@ public class Grid implements IUnitListener
 	}
 	
 	/**
-	 * Returns a path on the grid from a starting point to the target.
+	 * Creates a path on this grid for a specific unit
+	 * from a starting position to a target position.
 	 * @param sgx the starting grid x-coordinate.
 	 * @param sgy the starting grid y-coordinate.
 	 * @param tgx the target grid x-coordinate.
 	 * @param tgy the target grid y-coordinate.
-	 * @param maxPathLength the maximum length of the path.
-	 * @param mover the unit moving.
-	 * @return the path or null if no path available.
+	 * @param maxPathLength the maximum allowed path length.
+	 * @param mover the unit for which to create the path.
+	 * @return the path, or null if no path available.
 	 */
 	public GridPath getPath(int sgx, int sgy, int tgx, int tgy, int maxPathLength, IMover mover)
 	{
@@ -99,12 +103,12 @@ public class Grid implements IUnitListener
 	}
 	
 	/**
-	 * Sets the tile in the specific coordinates.
-	 * @param sgx the grid x-coordinate to start at.
-	 * @param sgy the grid y-coordinate to start at.
+	 * Creates tiles and places them on this grid.
+	 * @param sgx the starting grid x-coordinate.
+	 * @param sgy the starting grid y-coordinate.
 	 * @param widthInCells the rectangle width in cells.
 	 * @param heightInCells the rectangle height in cells.
-	 * @param type the type of tile to use.
+	 * @param type the type of tile to create.
 	 */
 	public void createTileRect(int sgx, int sgy, int widthInCells, int heightInCells, TileType type)
 	{
@@ -114,7 +118,7 @@ public class Grid implements IUnitListener
 			for( int gy=sgy, ymax=(sgy + heightInCells); gy<ymax; gy++ )
 			{
 				// request the tile from the tile factory.
-				Tile tile = TileFactory.factory(type, this);
+				GridTile tile = TileFactory.factory(type, this);
 				
 				GridCell cell = getCell(gx, gy);
 				
@@ -129,13 +133,13 @@ public class Grid implements IUnitListener
 	}
 	
 	/**
-	 * Adds an unit to the grid.
+	 * Creates an unit and adds it in a random cell on this grid.
 	 * @param type the type of unit to create.
 	 */
 	public synchronized void createUnit(UnitType type)
 	{		
 		// request the unit from the unit factory.
-		GridUnit unit = (GridUnit)UnitFactory.factory(type, this);
+		GridUnit unit = UnitFactory.factory(type, this);
 		
 		// get a random cell on the grid.
 		GridCell cell = getRandomCell();
@@ -144,37 +148,38 @@ public class Grid implements IUnitListener
 		int gy = cell.getGridY();
 		
 		// add the unit to that random cell.
-		createUnit(gx, gy, unit);
+		addUnit(gx, gy, unit);
 	}
 	
 	/**
-	 * Adds an unit to the grid.
-	 * @param gx the grid x-coordinate where to add the unit.
-	 * @param gy the grid y-coordinate where to add the unit.
+	 * Adds an unit to this grid.
+	 * @param gx the target grid x-coordinate.
+	 * @param gy the target grid y-coordinate.
 	 * @param unit the unit to add.
 	 */
-	public synchronized void createUnit(int gx, int gy, GridUnit unit)
+	public synchronized void addUnit(int gx, int gy, GridUnit unit)
 	{
 		GridCell cell = getCell(gx, gy);
 		
 		// make sure the cell exists.
 		if( cell!=null )
 		{
-			cell.addUnit(unit);
+			cell.setUnit(unit);
 			units.addEntity(unit);
 		}
 
 		unit.addListener(this);
 	}
-	
+
 	/**
-	 * @return all units on the grid.
+	 * Returns all units on this grid.
+	 * @return the units.
 	 */
 	public ArrayList<GridUnit> getUnits()
 	{
 		// get all entities in the grid entity manager.
 		ArrayList<CEntity> entities = units.getEntities();
-		
+
 		// initialize an array for the units.
 		ArrayList<GridUnit> units = new ArrayList<GridUnit>();
 
@@ -187,18 +192,18 @@ public class Grid implements IUnitListener
 				units.add((GridUnit) entity);
 			}
 		}
-		
+
 		return units;
 	}
 	
 	/**
 	 * Returns all visible units for the given unit.
 	 * @param unit the unit for which to get visible units.
-	 * @return the visible units.
+	 * @return the units.
 	 */
-	public ArrayList<Unit> getVisibleUnits(GridUnit unit)
+	public ArrayList<GridUnit> getVisibleUnits(GridUnit unit)
 	{
-		ArrayList<Unit> visibleUnits = new ArrayList<Unit>();
+		ArrayList<GridUnit> units = new ArrayList<GridUnit>();
 		
 		// get a matrix representation of which cells on the grid
 		// are visible to the unit.
@@ -219,20 +224,20 @@ public class Grid implements IUnitListener
 					{
 						GridUnit target = cell.getUnit();
 						
-						if( target!=null && !visibleUnits.contains(target) )
+						if( target!=null && !units.contains(target) )
 						{
-							visibleUnits.add(target);
+							units.add(target);
 						}
 					}
 				}
 			}
 		}
 		
-		return visibleUnits;
+		return units;
 	}
 	
 	/**
-	 * Moves a specific unit on the grid.
+	 * Moves a specific unit on this grid.
 	 * @param dgx the grid delta x. 
 	 * @param dgy the grid delta y.
 	 * @param unit the unit to move.
@@ -262,14 +267,14 @@ public class Grid implements IUnitListener
 				// check if there are potential targets.
 				if( target!=null )
 				{
-					// attack the target if hostile.
+					// engage the target if hostile.
 					unit.attack(target);
 				}
 				else
 				{					
 					// move the unit to the destination cell.
 					source.removeUnit();
-					destination.addUnit(unit);
+					destination.setUnit(unit);
 					
 					if( unit instanceof Player )
 					{
@@ -281,12 +286,12 @@ public class Grid implements IUnitListener
 	}
 	
 	/**
-	 * Adds loot to the given coordinate on the grid.
+	 * Adds loot to this grid.
 	 * @param gx the grid x-coordinate.
 	 * @param gy the grid y-coordinate.
-	 * @param loot the loot to create.
+	 * @param loot the loot to add.
 	 */
-	public synchronized void createLoot(int gx, int gy, Loot loot)
+	public synchronized void addLoot(int gx, int gy, Loot loot)
 	{
 		GridCell cell = getCell(gx, gy);
 		
@@ -299,7 +304,8 @@ public class Grid implements IUnitListener
 	}
 	
 	/**
-	 * @return a random non-blocked cell on the grid.
+	 * Returns a random non-blocked cell on this grid.
+	 * @return the cell.
 	 */
 	public GridCell getRandomCell()
 	{
@@ -326,10 +332,10 @@ public class Grid implements IUnitListener
 	}
 	
 	/**
-	 * Returns whether a cell is blocked.
-	 * @param mover the moving entity.
+	 * Returns whether a specific cell is blocked.
 	 * @param gx the grid x-coordinate.
 	 * @param gy the grid y-coordinate.
+	 * @param mover the moving unit.
 	 * @return whether the cell is blocked.
 	 */
 	public boolean isBlocked(int gx, int gy, IMover mover)
@@ -347,10 +353,10 @@ public class Grid implements IUnitListener
 	}
 	
 	/**
-	 * Returns whether the cell can be seen through.
-	 * @param viewer the viewing entity.
+	 * Returns whether a specific cell can be seen through.
 	 * @param gx the grid x-coordinate.
 	 * @param gy the grid y-coordinate.
+	 * @param viewer the viewing entity.
 	 * @return whether the cell can be seen through.
 	 */
 	public boolean isSolid(int gx, int gy, IViewer viewer)
@@ -368,7 +374,7 @@ public class Grid implements IUnitListener
 	}
 	
 	/**
-	 * Returns the movement cost for the given cell.
+	 * Returns the movement cost to a specific cell.
 	 * @param gx the grid x-coordinate.
 	 * @param gy the grid y-coordinate.
 	 * @param mover the mover.
@@ -376,6 +382,8 @@ public class Grid implements IUnitListener
 	 */
 	public int getMovementCost(int gx, int gy, IMover mover)
 	{
+		GridCell cell = getCell(gx, gy);
+
 		return 1;
 	}
 	
@@ -396,11 +404,12 @@ public class Grid implements IUnitListener
 	 */
 	public int getOffsetInCells(double offset)
 	{
-		return (int)(Math.round(offset) / getCellSize());
+		return (int) (Math.round(offset) / getCellSize());
 	}
 
 	/**
-	 * @return the size of one cell.
+	 * Returns the size of one cell in pixels.
+	 * @return the cell size.
 	 */
 	public int getCellSize() 
 	{
@@ -408,7 +417,8 @@ public class Grid implements IUnitListener
 	}
 	
 	/**
-	 * @return the width of the grid in cells.
+	 * Returns the width of this grid in cells.
+	 * @return the width.
 	 */
 	public int getGridWidth()
 	{
@@ -416,25 +426,34 @@ public class Grid implements IUnitListener
 	}
 	
 	/**
-	 * @return the height of the grid in cells.
+	 * Returns the height of this grid in cells.
+	 * @return the height.
 	 */
 	public int getGridHeight()
 	{
 		return heightInCells;
 	}
-	
+
+	/**
+	 * Returns the width of this grid in cells.
+	 * @return the width.
+	 */
 	public int getWidth()
 	{
 		return widthInCells * getCellSize();
 	}
-	
+
+	/**
+	 * Returns the height of this grid in cells.
+	 * @return the height.
+	 */
 	public int getHeight()
 	{
 		return heightInCells * getCellSize();
 	}
 	
 	/**
-	 * Updates the tiles in the grid.
+	 * Updates the entities on this grid.
 	 * @param timePassed the time that has passed.
 	 */
 	public void update(long timePassed)
@@ -445,8 +464,8 @@ public class Grid implements IUnitListener
 	}
 	
 	/**
-	 * Renders the grid.
-	 * @param g the 2D graphics object.
+	 * Renders this grid.
+	 * @param g the graphics context.
 	 */
 	public void render(Graphics2D g)
 	{
@@ -455,30 +474,43 @@ public class Grid implements IUnitListener
 		units.render(g);
 	}
 
+	/**
+	 * Actions to be taken when the unit dies.
+	 * @param e the event.
+	 */
 	public void onUnitDeath(UnitEvent e)
 	{
 		GridUnit unit = (GridUnit) e.getSource();
 		GridCell cell = getCell(unit.getGridX(), unit.getGridY());
 
+		// make sure the cell exists.
 		if( cell!=null )
 		{
 			cell.removeUnit();
 		}
 	}
 
-	public void onUnitSpawn(UnitEvent e)
-	{
-	}
+	/**
+	 * Actions to be taken when the unit is spawned.
+	 * @param e the event.
+	 */
+	public void onUnitSpawn(UnitEvent e) {}
 
-	public void onUnitHealthGain(UnitEvent e)
-	{
-	}
+	/**
+	 * Actions to be taken when the unit gains health.
+	 * @param e the event.
+	 */
+	public void onUnitHealthGain(UnitEvent e) {}
 
-	public void onUnitHealthLoss(UnitEvent e)
-	{
-	}
+	/**
+	 * Actions to be taken when the unit loses health.
+	 * @param e the event.
+	 */
+	public void onUnitHealthLoss(UnitEvent e) {}
 
-	public void onUnitMove(UnitEvent e)
-	{
-	}
+	/**
+	 * Actions to be taken when the unit moves.
+	 * @param e the event.
+	 */
+	public void onUnitMove(UnitEvent e) {}
 }

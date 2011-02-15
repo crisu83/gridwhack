@@ -1,23 +1,23 @@
-package gridwhack.entity.tile;
+package gridwhack.grid;
 
 import gridwhack.fov.IViewer;
-import gridwhack.grid.Grid;
-import gridwhack.grid.GridTile;
 import gridwhack.path.IMover;
 
 /**
- * Floor tile class file.
+ * Grid tile class file.
+ * All tiles must be extended from this class.
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
-public class FloorTile extends GridTile
+public abstract class GridTile extends GridEntity
 {
 	/**
 	 * Creates the tile.
+	 * @param filename the image filename.
 	 * @param grid the grid this tile belongs to.
 	 */
-	public FloorTile(Grid grid) 
+	public GridTile(String filename, Grid grid)
 	{
-		super("floortile.png", grid);
+		super(filename, grid);
 	}
 
 	/**
@@ -25,18 +25,12 @@ public class FloorTile extends GridTile
 	 * @param mover the entity.
 	 * @return whether the tile is blocked.
 	 */
-	public boolean isBlocked(IMover mover)
-	{
-		return false; // not blocked for any entities
-	}
+	public abstract boolean isBlocked(IMover mover);
 
 	/**
 	 * Returns whether a specific entity can see through this tile.
 	 * @param viewer the entity.
 	 * @return whether the tile is solid.
 	 */
-	public boolean isSolid(IViewer viewer)
-	{
-		return false; // not solid for eny entities
-	}
+	public abstract boolean isSolid(IViewer viewer);
 }

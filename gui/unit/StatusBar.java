@@ -2,12 +2,13 @@ package gridwhack.gui.unit;
 
 import java.awt.*;
 
-import gridwhack.entity.unit.Unit;
 import gridwhack.entity.unit.event.IUnitListener;
+import gridwhack.grid.GridUnit;
 
 /**
  * Status bar class.
- * Provides functionality for representing unit values visually.
+ * Allows for visualizing unit values in the gui.
+ * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
 public abstract class StatusBar implements IUnitListener
 {
@@ -17,10 +18,10 @@ public abstract class StatusBar implements IUnitListener
 	protected int height;
 	protected int barWidth;
 	protected Color color;
-	protected Unit owner;
+	protected GridUnit owner;
 	
 	/**
-	 * Constructs the bar.
+	 * Creates the bar.
 	 * @param x the x-coordinate.
 	 * @param y the y-coordinate
 	 * @param width the width of the bar.
@@ -28,7 +29,7 @@ public abstract class StatusBar implements IUnitListener
 	 * @param empty whether the bar should be empty.
 	 * @param owner the unit this bar belongs to.
 	 */
-	public StatusBar(int x, int y, int width, int height, boolean empty, Unit owner)
+	public StatusBar(int x, int y, int width, int height, boolean empty, GridUnit owner)
 	{
 		this.x = x;
 		this.y = y;
@@ -53,7 +54,7 @@ public abstract class StatusBar implements IUnitListener
 	}
 	
 	/**
-	 * Updates the bars position.
+	 * Updates the bar position.
 	 * @param x the x-coordinate.
 	 * @param y the y-coordinate.
 	 */
@@ -65,7 +66,7 @@ public abstract class StatusBar implements IUnitListener
 
 	/**
 	 * Renders the status bar.
-	 * @param g the 2D graphics object.
+	 * @param g the graphics context.
 	 */
 	public void render(Graphics2D g)
 	{

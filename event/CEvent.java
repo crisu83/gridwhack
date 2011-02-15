@@ -3,7 +3,7 @@ package gridwhack.event;
 import java.util.EventObject;
 
 /**
- * Base event class file.
+ * Core event class file.
  * All events must be extended from this class.
  */
 abstract public class CEvent extends EventObject 

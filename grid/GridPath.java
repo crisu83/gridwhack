@@ -5,12 +5,16 @@ import java.awt.Graphics2D;
 
 import gridwhack.path.Path;
 
+/**
+ * Grid path class file.
+ * @author Christoffer Niska <ChristofferNiska@gmail.com>
+ */
 public class GridPath extends Path
 {
 	private int currentIndex;
 	
 	/**
-	 * Constructs the path.
+	 * Creates the path.
 	 */
 	public GridPath() 
 	{
@@ -21,7 +25,8 @@ public class GridPath extends Path
 	}
 	
 	/**
-	 * @return the next step on the path.
+	 * Returns the next step on this path.
+	 * @return the step.
 	 */
 	public Step getNextStep()
 	{
@@ -39,7 +44,7 @@ public class GridPath extends Path
 	
 	/**
 	 * Renders the path (used for debug purposes).
-	 * @param g the 2d graphics object.
+	 * @param g the graphics context.
 	 */
 	public void render(Graphics2D g)
 	{

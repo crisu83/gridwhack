@@ -6,8 +6,9 @@ import java.awt.Graphics2D;
 import gridwhack.fov.IViewer;
 
 /**
- * Grid field of view class.
- * Used to generate field of view for grid entities.
+ * Grid field of view class file.
+ * Allows for generating a field of view for grid entities.
+ * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
 public class GridFov 
 {
@@ -19,8 +20,8 @@ public class GridFov
 	protected boolean[][] complete;
 	
 	/**
-	 * Constructs the field of view.
-	 * @param grid the grid the viewer exists on.
+	 * Creates the field of view.
+	 * @param grid the grid the viewer belongs to.
 	 * @param viewer owner of the FoV.
 	 */
 	public GridFov(Grid grid, IViewer viewer)
@@ -30,18 +31,23 @@ public class GridFov
 		this.grid = grid;
 		this.viewer = viewer;
 		
-		empty();
+		reset();
 	}
-	
-	public void empty()
+
+	/**
+	 * Resets the field of view.
+	 */
+	public void reset()
 	{
 		visible = new boolean[width][height];
 		complete = new boolean[width][height];
 	}
 	
 	/**
-	 * @return boolean matrix representation of which cells on the grid
-	 * are visible and which are not in the field of view.
+	 * Returns a matrix representation of which cells are visible
+	 * taking into account the owner view range.
+	 * @return the visible matrix.
+	 *
 	 */
 	public boolean[][] getVisible()
 	{
@@ -49,11 +55,10 @@ public class GridFov
 	}
 	
 	/**
-	 * Returns whether the cell in the given coordinates
-	 * is visible to the owner of the FoV.
+	 * Returns whether a specific cell is visible to the owner.
 	 * @param gx the grid x-coordinate.
 	 * @param gy the grid y-coordinate.
-	 * @return whether the cell in the coordinate is visible.
+	 * @return whether the cell is visible.
 	 */
 	public boolean isVisible(int gx, int gy)
 	{
@@ -61,8 +66,9 @@ public class GridFov
 	}
 	
 	/**
-	 * @return boolean matrix representation of all cells
-	 * in the field of view not limited by the view range. 
+	 * Returns a matrix representation of which cells are visible
+	 * not taking into account the owner view range.
+	 * @return the complete matrix.
 	 */
 	public boolean[][] getComplete()
 	{
@@ -70,16 +76,15 @@ public class GridFov
 	}
 	
 	/**
-	 * Updates the field of view by raytracing 
-	 * the every cell on the edge of the grid.
+	 * Updates this FoV by raytracing every cell on the edge of the grid.
 	 * @param gx the grid x-coordinates.
 	 * @param gy the grid y-coordinates.
 	 * @param range the view range in grid cells.
 	 */
 	public void update(int gx, int gy, int range)
 	{
-		// empty the visible list.
-		empty();
+		// reset the field of view.
+		reset();
 		
 		// loop through all coordinates on the grid.
 		for( int x=0; x<width; x++ )
@@ -98,7 +103,7 @@ public class GridFov
 	/**
 	 * Raytracing method that uses an integer only version
 	 * of "Bresenham line-drawing algorithm" to determine 
-	 * if the target can be seen from the specified position.
+	 * if the target can be seen from a specific position.
 	 * @param sx the starting x-coordinate.
 	 * @param sy the starting y-coordinate.
 	 * @param tx the target x-coordinate.
@@ -182,8 +187,8 @@ public class GridFov
 	}
 	
 	/**
-	 * Renders the field of view (used for debug purposes).
-	 * @param g the 2d graphics object.
+	 * Renders this FoV (used for debug purposes).
+	 * @param g the graphics context.
 	 */
 	public void render(Graphics2D g)
 	{

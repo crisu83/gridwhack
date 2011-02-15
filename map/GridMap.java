@@ -19,7 +19,7 @@ public class GridMap
 	
 	public void addPlayer(Player player)
 	{
-		grid.createUnit(10, 10, player);
+		grid.addUnit(10, 10, player);
 	}
 	
 	public Grid getGrid()

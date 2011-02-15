@@ -12,7 +12,8 @@ import gridwhack.entity.sprite.CSpriteManager;
 import gridwhack.event.IEventListener;
 
 /**
- * Core entity base class.
+ * Core entity class file.
+ * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
 public abstract class CEntity extends CComponent
 {	
@@ -30,7 +31,7 @@ public abstract class CEntity extends CComponent
 	protected int ty;
 	
 	/**
-	 * Constructs the entity.
+	 * Creates the entity.
 	 * @param filename the sprite filename.
 	 */
 	public CEntity(String filename)
@@ -99,7 +100,6 @@ public abstract class CEntity extends CComponent
 	public void update(long timePassed)
 	{
 		// Make sure the entity is not removed.
-		// Make sure the entity is not removed.
 		if( !removed )
 		{
 			if( x==tx )
@@ -123,7 +123,7 @@ public abstract class CEntity extends CComponent
 	
 	/**
 	 * Renders the entity.
-	 * @param g the 2d graphics object.
+	 * @param g the graphics context.
 	 */
 	public void render(Graphics2D g)
 	{
@@ -160,19 +160,27 @@ public abstract class CEntity extends CComponent
 	}
 
 	/**
+	 * @param x the x-coordinate in pixels.
+	 */
+	public void setX(double x)
+	{
+		this.x = x;
+	}
+
+	/**
 	 * @return the x-coordinate in pixels.
 	 */
 	public double getX()
 	{
 		return x;
 	}
-	
+
 	/**
-	 * @param x the x-coordinate in pixels.
+	 * @param y the y-coordinate in pixels.
 	 */
-	public void setX(double x)
+	public void setY(double y)
 	{
-		this.x = x;
+		this.y = y;
 	}
 	
 	/**
@@ -184,15 +192,7 @@ public abstract class CEntity extends CComponent
 	}
 	
 	/**
-	 * @param y the y-coordinate in pixels.
-	 */
-	public void setY(double y)
-	{
-		this.y = y;
-	}
-	
-	/**
-	 * @return the width of the entity.
+	 * @return the width of this entity.
 	 */
 	public int getWidth()
 	{
@@ -200,7 +200,7 @@ public abstract class CEntity extends CComponent
 	}
 	
 	/**
-	 * @return the height of the entity.
+	 * @return the height of this entity.
 	 */
 	public int getHeight()
 	{

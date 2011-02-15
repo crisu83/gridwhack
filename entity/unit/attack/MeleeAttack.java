@@ -3,13 +3,24 @@ package gridwhack.entity.unit.attack;
 import gridwhack.Die;
 import gridwhack.gui.message.CombatLog;
 
+/**
+ * Melee attack class file.
+ * @author Christoffer Niska <ChristofferNiska@gmail.com>
+ */
 public class MeleeAttack extends Attack
 {
-	public MeleeAttack(AttackScenario scenario) 
+	/**
+	 * Creates the attack.
+	 * @param scenario the combat scenario.
+	 */
+	public MeleeAttack(CombatScenario scenario)
 	{
 		super(scenario);	
 	}
 
+	/**
+	 * Actions to be taken when attacking.
+	 */
 	public void attack()
 	{
 		Die d100 = new Die(100, scenario.rand);

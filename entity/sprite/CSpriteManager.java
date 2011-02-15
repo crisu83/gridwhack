@@ -6,8 +6,9 @@ import java.util.HashMap;
 import gridwhack.CImageLoader;
 
 /**
- * Sprite Manager class.
- * Provides functionality for requesting sprite images.
+ * Core sprite manager class file.
+ * Allows for caching of sprites in a map.
+ * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
 public class CSpriteManager 
 {
@@ -29,7 +30,6 @@ public class CSpriteManager
 			Image image = CImageLoader.getInstance().getImage(filename);
 			CSprite sprite = new CSprite(image);
 			sprites.put(filename, sprite);
-			
 			return sprite;
 		}
 		// sprite is already loaded.

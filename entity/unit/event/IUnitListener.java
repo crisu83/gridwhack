@@ -2,6 +2,11 @@ package gridwhack.entity.unit.event;
 
 import gridwhack.event.IEventListener;
 
+/**
+ * Unit listener interface file.
+ * All unit listeners must implement this interface.
+ * @author Christoffer Niska <ChristofferNiska@gmail.com>
+ */
 public interface IUnitListener extends IEventListener 
 {
 	/**

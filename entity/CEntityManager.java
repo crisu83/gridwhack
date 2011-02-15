@@ -6,12 +6,17 @@ import java.util.ArrayList;
 import gridwhack.entity.event.EntityEvent;
 import gridwhack.entity.event.IEntityListener;
 
+/**
+ * Core entity manager class file.
+ * Allows for managing multiple entities of the same type.
+ * @author Christoffer Niska <ChristofferNiska@gmail.com>
+ */
 public class CEntityManager implements IEntityListener 
 {
 	private ArrayList<CEntity> entities;
 	
 	/**
-	 * Constructs the entity manager.
+	 * Creates the manager.
 	 */
 	public CEntityManager()
 	{
@@ -25,11 +30,11 @@ public class CEntityManager implements IEntityListener
 	 */
 	public CEntity getEntity(int index)
 	{
-		return (CEntity) entities.get(index);
+		return entities.get(index);
 	}
 	
 	/**
-	 * Adds an entity to the manager.
+	 * Adds an entity to this manager.
 	 * @param entity the entity to add.
 	 */
 	public synchronized void addEntity(CEntity entity)
@@ -39,7 +44,7 @@ public class CEntityManager implements IEntityListener
 	}
 	
 	/**
-	 * Removes an entity from the manager.
+	 * Removes an entity from this manager.
 	 * @param entity the entity to remove.
 	 */
 	public synchronized void removeEntity(CEntity entity)
@@ -49,7 +54,8 @@ public class CEntityManager implements IEntityListener
 	}
 	
 	/**
-	 * @return all the entities in the manager.
+	 * Returns all entities in this manager.
+	 * @return the entities in the manager.
 	 */
 	public ArrayList<CEntity> getEntities()
 	{
@@ -57,7 +63,7 @@ public class CEntityManager implements IEntityListener
 	}
 	
 	/**
-	 * Updates the position of all entities.
+	 * Updates the logic for all entities in this manager.
 	 * @param timePassed the time that has passed.
 	 */
 	public synchronized void update(long timePassed)
@@ -71,7 +77,7 @@ public class CEntityManager implements IEntityListener
 	
 	/**
 	 * Renders the entities.
-	 * @param g the 2D graphics object.
+	 * @param g the graphics context.
 	 */
 	public synchronized void render(Graphics2D g)
 	{

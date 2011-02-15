@@ -2,25 +2,28 @@ package gridwhack.grid;
 
 import gridwhack.entity.item.Item;
 import gridwhack.entity.item.Loot;
-import gridwhack.entity.tile.Tile;
 import gridwhack.entity.unit.Player;
 import gridwhack.fov.IViewer;
 import gridwhack.path.IMover;
 
 import java.util.ArrayList;
 
+/**
+ * Grid cell class file.
+ * @author Christoffer Niska <ChristofferNiska@gmail.com>
+ */
 public class GridCell
 {
 	protected int gx;
 	protected int gy;
-	protected Tile tile;
+	protected GridTile tile;
 	protected Loot loot;
 	protected GridUnit unit;
 
 	/**
-	 * Constructs the grid cell.
-	 * @param gx the x-coordinate on the grid.
-	 * @param gy the y-coordinate on the grid.
+	 * Creates the cell.
+	 * @param gx the grid x-coordinate.
+	 * @param gy the grid y-coordinate.
 	 */
 	public GridCell(int gx, int gy)
 	{
@@ -31,7 +34,7 @@ public class GridCell
 	/**
 	 * @param tile the tile in the cell.
 	 */
-	public void setTile(Tile tile)
+	public void setTile(GridTile tile)
 	{
 		// set the position of the tile.
 		tile.setGridX(gx);
@@ -76,13 +79,22 @@ public class GridCell
 	/**
 	 * @param unit the unit to add.
 	 */
-	public void addUnit(GridUnit unit)
+	public void setUnit(GridUnit unit)
 	{
 		// move the unit to the cell.
 		unit.setGridX(gx);
 		unit.setGridY(gy);
 
 		this.unit = unit;
+	}
+
+	/**
+	 * Returns the unit in this cell.
+	 * @return the unit.
+	 */
+	public GridUnit getUnit()
+	{
+		return unit;
 	}
 
 	/**
@@ -93,6 +105,10 @@ public class GridCell
 		unit = null;
 	}
 
+	/**
+	 * Actions to be taken when player loots this cell.
+	 * @param player the player.
+	 */
 	public void loot(Player player)
 	{
 		if( loot!=null )
@@ -102,8 +118,9 @@ public class GridCell
 	}
 
 	/**
-	 * @param mover the moving entity.
-	 * @return whether the cell is blocked.
+	 * Returns whether a specific entity can walk on this cell.
+	 * @param mover the entity.
+	 * @return whether this cell is blocked.
 	 */
 	public boolean isBlocked(IMover mover)
 	{
@@ -117,8 +134,9 @@ public class GridCell
 	}
 
 	/**
-	 * @param viewer the viewing entity.
-	 * @return whether the cell can be seen through.
+	 * Returns whether a specific entity can see through this cell.
+	 * @param viewer the entity.
+	 * @return whether this cell is solid.
 	 */
 	public boolean isSolid(IViewer viewer)
 	{
@@ -132,7 +150,8 @@ public class GridCell
 	}
 
 	/**
-	 * @return the cell x-coordinate on the grid.
+	 * Returns the grid x-coordinate for this cell.
+	 * @return the x-coordinate.
 	 */
 	public int getGridX()
 	{
@@ -140,26 +159,11 @@ public class GridCell
 	}
 
 	/**
-	 * @return the cell y-coordinate on the grid.
+	 * Returns the grid y-coordinate for this cell.
+	 * @return the y-coordinate.
 	 */
 	public int getGridY()
 	{
 		return gy;
-	}
-
-	/**
-	 * @return the loot.
-	 */
-	public Loot getLoot()
-	{
-		return loot;
-	}
-
-	/**
-	 * @return all units in the cell.
-	 */
-	public GridUnit getUnit()
-	{
-		return unit;
 	}
 }

@@ -10,8 +10,8 @@ public class Player extends GridUnit
 	protected int experience;
 	
 	/**
-	 * Constructs the player.
-	 * @param grid the grid the unit exists on.
+	 * Creates the player.
+	 * @param grid the grid the player belongs to.
 	 */
 	public Player(Grid grid) 
 	{		
@@ -24,9 +24,6 @@ public class Player extends GridUnit
 		setAttackCooldown(1000);
 		setMovementCooldown(1000);
 		setViewRange(10);
-
-		// initialize the player.
-		super.init();
 	}
 	
 	/**
@@ -55,15 +52,8 @@ public class Player extends GridUnit
 	 * Returns whether the target unit is hostile.
 	 * @param target the target unit.
 	 */
-	public boolean isHostile(Unit target)
+	public boolean isHostile(GridUnit target)
 	{
-		if( target instanceof HostileUnit )
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return target instanceof HostileUnit;
 	}
 }

@@ -14,8 +14,5 @@ public class Orc extends HostileUnit
 		setAttackCooldown(2000);
 		setMovementCooldown(2000);
 		setViewRange(5);
-		
-		// initialize the unit.
-		super.init();
 	}
 }

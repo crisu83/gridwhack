@@ -7,6 +7,7 @@ import gridwhack.path.*;
 
 /**
  * Grid A* path finder class.
+ * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
 public class GridAStarPathFinder implements IPathFinder
 {
@@ -18,7 +19,7 @@ public class GridAStarPathFinder implements IPathFinder
 	protected Grid grid;
 	
 	/**
-	 * Constructs the path finder.
+	 * Creates the path finder.
 	 * @param heuristic the heuristic to use.
 	 * @param grid the grid on which to find the path.
 	 */
@@ -36,11 +37,9 @@ public class GridAStarPathFinder implements IPathFinder
 	 */
 	public void clear()
 	{
-		// empty the include and exclude lists.
 		include.clear();
 		exclude.clear();
 		
-		// add nodes.
 		addNodes();
 	}
 	
@@ -225,7 +224,7 @@ public class GridAStarPathFinder implements IPathFinder
 		private Node parent;
 		
 		/**
-		 * Constructs the node.
+		 * Creates the node.
 		 * @param x the x-coordinate.
 		 * @param y the y-coordinate.
 		 */

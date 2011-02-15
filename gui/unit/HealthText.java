@@ -2,8 +2,8 @@ package gridwhack.gui.unit;
 
 import java.awt.Color;
 
-import gridwhack.entity.unit.Unit;
 import gridwhack.entity.unit.event.UnitEvent;
+import gridwhack.grid.GridUnit;
 
 /**
  * Health status text class.
@@ -20,7 +20,7 @@ public class HealthText extends StatusText
 	 * @param y the y-coordinate.
 	 * @param owner the unit the health belongs to.
 	 */
-	public HealthText(int x, int y, Unit owner) 
+	public HealthText(int x, int y, GridUnit owner)
 	{
 		super(x, y, 11, owner);
 		
@@ -43,24 +43,19 @@ public class HealthText extends StatusText
 		current = owner.getCurrentHealth();
 	}
 
-	@Override
 	public void onUnitDeath(UnitEvent e) {}
 
-	@Override
 	public void onUnitSpawn(UnitEvent e) {}
 
-	@Override
-	public void onUnitHealthGain(UnitEvent e) 
+	public void onUnitHealthGain(UnitEvent e)
 	{
 		update();
 	}
 
-	@Override
-	public void onUnitHealthLoss(UnitEvent e) 
+	public void onUnitHealthLoss(UnitEvent e)
 	{
 		update();		
 	}
 
-	@Override
 	public void onUnitMove(UnitEvent e) {}
 }

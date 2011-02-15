@@ -3,9 +3,9 @@ package gridwhack;
 import java.util.Random;
 
 /**
- * Random provider class.
- * Provides functionality for using one and same random generator 
- * through out the whole application.
+ * Random provider class file.
+ * Allows for generating random context based on the current time.
+ * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
 public class RandomProvider 
 {
@@ -13,7 +13,7 @@ public class RandomProvider
 	private static Random rand = new Random(seed);
 	
 	/**
-	 * @return the random generator.
+	 * @return the random context.
 	 */
 	public static Random getRand()
 	{
@@ -21,7 +21,7 @@ public class RandomProvider
 	}
 	
 	/**
-	 * @return the seed used when creating the random generator.
+	 * @return the seed used when creating the random context.
 	 */
 	public static long getSeed()
 	{

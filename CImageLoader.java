@@ -5,14 +5,15 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+/**
+ * Core image loader class file.
+ * @author Christoffer Niska <ChristofferNiska@gmail.com>
+ */
 public class CImageLoader
 {
-	private static final String IMAGE_DIR = "images\\";
-
-	/**
-	 * Single instance of this class.
-	 */
 	private static CImageLoader instance = new CImageLoader();
+
+	private static final String IMAGE_DIR = "images\\";
 
 	private GraphicsConfiguration gc;
 
@@ -21,9 +22,8 @@ public class CImageLoader
 	 */
 	private CImageLoader()
 	{
-		// Get the graphics environment.
+		// Get the graphics configuration.
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-
 		gc = ge.getDefaultScreenDevice().getDefaultConfiguration();
 
 	}
@@ -45,6 +45,7 @@ public class CImageLoader
 	{
 		try
 		{
+			// Create a managed image for hardware acceleration.
 			BufferedImage image = ImageIO.read(getClass().getResource(IMAGE_DIR + filename));
 			int transparency = image.getColorModel().getTransparency();
 			BufferedImage copy = gc.createCompatibleImage(image.getWidth(), image.getHeight(), transparency);

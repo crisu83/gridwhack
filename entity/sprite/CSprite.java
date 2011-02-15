@@ -2,6 +2,10 @@ package gridwhack.entity.sprite;
 
 import java.awt.*;
 
+/**
+ * Core sprite class file.
+ * @author Christoffer Niska <ChristofferNiska@gmail.com>
+ */
 public class CSprite 
 {
 	protected Image image;
@@ -12,7 +16,7 @@ public class CSprite
 	protected int height;
 	
 	/**
-	 * Constructs the sprite.
+	 * Creates the sprite.
 	 * @param image the image that represent the sprite.
 	 */
 	public CSprite(Image image)
@@ -33,29 +37,13 @@ public class CSprite
 	}
 	
 	/**
-	 * @param width the width of the sprite.
-	 */
-	public void setWidth(int width)
-	{
-		this.width = width;
-	}
-	
-	/**
 	 * @return the height of the sprite.
 	 */
 	public int getHeight()
 	{
 		return height;
 	}
-	
-	/**
-	 * @param height the height of the sprite.
-	 */
-	public void setHeight(int height)
-	{
-		this.height = height;
-	}
-	
+
 	/**
 	 * @return the offset on the x-axis.
 	 */
@@ -80,25 +68,10 @@ public class CSprite
 	{
 		return y;
 	}
-	
+
 	/**
-	 * @param the offset on the x-axis.
-	 */
-	public void setX(int x)
-	{
-		this.x = x;
-	}
-	
-	/**
-	 * @param the offset on the y-axis.
-	 */
-	public void setY(int y)
-	{
-		this.y = y;
-	}
-	
-	/**
-	 * @return the sprite image.
+	 * Returns the image for this sprite.
+	 * @return the image.
 	 */
 	public Image getImage()
 	{
@@ -106,7 +79,7 @@ public class CSprite
 	}
 	
 	/**
-	 * Updates the sprite.
+	 * Updates this sprite.
 	 * @param timePassed the time that has passed.
 	 */
 	public void update(long timePassed)
@@ -119,8 +92,10 @@ public class CSprite
 	}
 	
 	/**
-	 * Renders the sprite.
-	 * @param g the 2D graphics object.
+	 * Renders this sprite.
+	 * @param g the graphics context.
+	 * @param x the x-coordinate.
+	 * @param y the y-coordinate.
 	 */
 	public void render(Graphics2D g, int x, int y)
 	{

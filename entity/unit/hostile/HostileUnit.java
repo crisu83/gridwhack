@@ -1,17 +1,21 @@
 package gridwhack.entity.unit.hostile;
 
 import gridwhack.entity.unit.FriendlyUnit;
-import gridwhack.entity.unit.NonPlayerUnit;
+import gridwhack.entity.unit.NPCUnit;
 import gridwhack.entity.unit.Player;
-import gridwhack.entity.unit.Unit;
 import gridwhack.grid.Grid;
+import gridwhack.grid.GridUnit;
 
-public abstract class HostileUnit extends NonPlayerUnit 
+/**
+ * Hostile unit class file.
+ * @author Christoffer Niska <ChristofferNiska@gmail.com>
+ */
+public abstract class HostileUnit extends NPCUnit
 {	
 	/**
-	 * Constructs the hostile unit.
-	 * @param filename the sprite filename.
-	 * @param grid the grid the hostile exists on.
+	 * Creates the unit.
+	 * @param filename the image filename.
+	 * @param grid the grid the hostile belongs to.
 	 */
 	public HostileUnit(String filename, Grid grid) 
 	{
@@ -21,17 +25,11 @@ public abstract class HostileUnit extends NonPlayerUnit
 	/**
 	 * Returns whether the target unit is hostile.
 	 * @param target the target unit.
+	 * @return whether the target is hostile.
 	 */
-	public boolean isHostile(Unit target)
+	public boolean isHostile(GridUnit target)
 	{
 		// players and friendly units are hostile towards hostile units.
-		if( target instanceof Player || target instanceof FriendlyUnit )
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return target instanceof Player || target instanceof FriendlyUnit;
 	}
 }

@@ -5,8 +5,9 @@ import gridwhack.event.IEventListener;
 import java.util.ArrayList;
 
 /**
- * Base component class.
- * Provides functionality for adding event listeners and firing events.
+ * Core component class file.
+ * Allows for adding event listeners and firing events.
+ * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
 public class CComponent 
 {

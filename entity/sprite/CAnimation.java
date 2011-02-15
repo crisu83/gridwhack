@@ -2,6 +2,10 @@ package gridwhack.entity.sprite;
 
 import java.util.ArrayList;
 
+/**
+ * Core animation class file.
+ * @author Christoffer Niska <ChristofferNiska@gmail.com>
+ */
 public class CAnimation 
 {
 	private ArrayList<Frame> frames;
@@ -10,7 +14,7 @@ public class CAnimation
 	private long totalTime;
 	
 	/**
-	 * Constructs the animation.
+	 * Creates the animation.
 	 */
 	public CAnimation()
 	{
@@ -45,7 +49,7 @@ public class CAnimation
 	 */
 	public synchronized void update(long timePassed)
 	{
-		// make sure we have more than one scene.
+		// make sure we have more than one frame.
 		if( frames.size()>1 )
 		{
 			currentTime += timePassed;
@@ -67,7 +71,8 @@ public class CAnimation
 	}
 	
 	/**
-	 * @return the current offset on the x-axis.
+	 * Returns the current offset on the x-axis.
+	 * @return the offset.
 	 */
 	public synchronized int getFrameOffset()
 	{
@@ -85,7 +90,7 @@ public class CAnimation
 	}
 	
 	/**
-	 * Returns the frame with the specified index.
+	 * Returns the frame with the given index.
 	 * @param index the frame index.
 	 * @return the frame object.
 	 */
@@ -103,7 +108,7 @@ public class CAnimation
 		long endTime;
 		
 		/**
-		 * Constructs the scene.
+		 * Creates the scene.
 		 * @param offset the offset on the x-axis.
 		 * @param endTime the runtime for the scene.
 		 */

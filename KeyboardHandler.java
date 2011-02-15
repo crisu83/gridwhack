@@ -4,14 +4,18 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 import gridwhack.entity.unit.Player;
-import gridwhack.entity.unit.Unit.Directions;
+import gridwhack.grid.GridUnit.Directions;
 
+/**
+ * GridWhack keyboard handler class file.
+ * @author Christoffer Niska <ChristofferNiska@gmail.com>
+ */
 public class KeyboardHandler extends KeyAdapter
 {
 	private GridWhack game;
 	
 	/**
-	 * Constructs the keyboard handler.
+	 * Creates the keyboard handler.
 	 * @param game the game.
 	 */
 	public KeyboardHandler(GridWhack game)

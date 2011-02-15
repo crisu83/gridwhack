@@ -7,7 +7,7 @@ public class Path
 	protected ArrayList<Step> steps;
 	
 	/**
-	 * Constructs the path.
+	 * Creates the path.
 	 */
 	public Path() 
 	{
@@ -15,7 +15,8 @@ public class Path
 	}
 	
 	/**
-	 * @return the length of the path.
+	 * Returns the length of this path.
+	 * @return the length.
 	 */
 	public int getLength()
 	{

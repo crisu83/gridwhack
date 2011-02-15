@@ -2,13 +2,14 @@ package gridwhack.gui.unit;
 
 import java.awt.*;
 
-import gridwhack.entity.unit.NonPlayerUnit;
-import gridwhack.entity.unit.Unit;
+import gridwhack.entity.unit.NPCUnit;
 import gridwhack.entity.unit.event.UnitEvent;
+import gridwhack.grid.GridUnit;
 
 /**
  * Health bar class.
- * Provides functionality for representing unit health visually.
+ * Allows for visualizing unit health in the gui.
+ * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
 public class HealthBar extends StatusBar
 {
@@ -18,7 +19,7 @@ public class HealthBar extends StatusBar
 	 * @param height the height of the bar.
 	 * @param owner the unit this bar belongs to.
 	 */
-	public HealthBar(int x, int y, int width, int height, Unit owner)
+	public HealthBar(int x, int y, int width, int height, GridUnit owner)
 	{
 		super(x, y, width, height, false, owner);
 		
@@ -70,7 +71,7 @@ public class HealthBar extends StatusBar
 
 	public void onUnitMove(UnitEvent e)
 	{		
-		if( owner instanceof NonPlayerUnit )
+		if( owner instanceof NPCUnit )
 		{
 			move();
 		}

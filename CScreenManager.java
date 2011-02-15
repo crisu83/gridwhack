@@ -5,7 +5,7 @@ import java.awt.*;
 import javax.swing.JFrame;
 
 /**
- * Screen manager class file.
+ * Core screen manager class file.
  * Allows for running applications in full-screen mode. 
  */
 public class CScreenManager
@@ -16,6 +16,7 @@ public class CScreenManager
 	
 	/**
 	 * Creates the screen manager.
+	 * @param app the application that this screen manager belongs to.
 	 */
 	public CScreenManager(JFrame app)
 	{
@@ -30,7 +31,6 @@ public class CScreenManager
 	
 	/**
 	 * Initializes the full screen mode.
-	 * @param app the application that this screen manager belongs to.
 	 * @param bufferCount the amount of buffers to use with the buffer strategy.
 	 */
 	public void initFullScreen(int bufferCount) 

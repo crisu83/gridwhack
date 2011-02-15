@@ -2,14 +2,14 @@ package gridwhack.gui.unit;
 
 import java.awt.Graphics2D;
 
-import gridwhack.entity.unit.Unit;
+import gridwhack.grid.GridUnit;
 import gridwhack.gui.GuiElement;
 
 public class HealthDisplay extends GuiElement 
 {
 	protected HealthBar healthBar;
 	protected HealthText healthText;
-	protected Unit owner;
+	protected GridUnit owner;
 	
 	/**
 	 * Consturcts the health display.
@@ -17,7 +17,7 @@ public class HealthDisplay extends GuiElement
 	 * @param y the y-coordinate.
 	 * @param owner the unit which health to display.
 	 */
-	public HealthDisplay(int x, int y, Unit owner) 
+	public HealthDisplay(int x, int y, GridUnit owner)
 	{
 		super(x, y, 170, 20);
 		

@@ -14,8 +14,5 @@ public class Skeleton extends HostileUnit
 		setAttackCooldown(3000);
 		setMovementCooldown(3000);
 		setViewRange(3);
-		
-		// initialize the unit.
-		super.init();
 	}
 }

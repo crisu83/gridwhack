@@ -2,9 +2,9 @@ package gridwhack.map;
 
 import java.awt.Rectangle;
 
-import gridwhack.entity.unit.Unit;
 import gridwhack.entity.unit.event.IUnitListener;
 import gridwhack.entity.unit.event.UnitEvent;
+import gridwhack.grid.GridUnit;
 
 public class Camera implements IUnitListener
 {
@@ -12,11 +12,11 @@ public class Camera implements IUnitListener
 	protected int y;
 	protected int width;
 	protected int height;
-	protected Unit subject;
+	protected GridUnit subject;
 	protected Rectangle bounds;
 	protected boolean follow;
 	
-	public Camera(int x, int y, int width, int height, Rectangle bounds, Unit subject, boolean follow)
+	public Camera(int x, int y, int width, int height, Rectangle bounds, GridUnit subject, boolean follow)
 	{
 		this.x = x;
 		this.y = y;

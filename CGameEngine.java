@@ -7,6 +7,10 @@ import java.text.DecimalFormat;
 
 import javax.swing.JFrame;
 
+/**
+ * Core game engine class file.
+ * @author Christoffer Niska <ChristofferNiska@gmail.com>
+ */
 public abstract class CGameEngine extends JFrame implements Runnable 
 {	
 	protected int pWidth, pHeight;
@@ -14,18 +18,20 @@ public abstract class CGameEngine extends JFrame implements Runnable
 	private Thread animator; // for the animation
 	private volatile boolean running = false; // stops the animation
 	private volatile boolean ended = false; // ensures that the application is not terminated multiple times
-	
+
+	private volatile boolean gameOver = false; // for game termination
+
 	private long period; // period in between drawing in nanoseconds
 
 	protected CScreenManager screen;
-	
-	private static int NUM_BUFFERS = 2; // number of buffers to use with the buffer strategy
-	
+
+	private static final int NUM_BUFFERS = 2; // number of buffers to use with the buffer strategy
+
 	private static final int NO_DELAYS_PER_YIELD = 16;
 	private static final int MAX_FRAME_SKIPS = 5;
 	
-	private static long MAX_STATS_INTERVAL = 1000L; // record stats every second
-	private static int NUM_FPS = 10; // number of FPS values sorted to get an average
+	private static final long MAX_STATS_INTERVAL = 1000L; // record stats every second
+	private static final int NUM_FPS = 10; // number of FPS values sorted to get an average
 	
 	private long statsInterval = 0L; // in nanoseconds
 	private long prevStatsTime;   
@@ -47,16 +53,14 @@ public abstract class CGameEngine extends JFrame implements Runnable
 	
 	protected DecimalFormat df = new DecimalFormat("0.##"); // 2 decimal precision
 	protected DecimalFormat timedf = new DecimalFormat("0.####"); // 4 decimal precision
-	
-	private volatile boolean gameOver = false; // for game termination
-	
+
 	protected Font font;
 	protected FontMetrics metrics;
-	
+
 	/**
 	 * Creates the game engine.
 	 * @param title the application frame title.
-	 * @param period the period.
+	 * @param period the period (in nanoseconds).
 	 */
 	public CGameEngine(String title, long period)
 	{
@@ -114,7 +118,7 @@ public abstract class CGameEngine extends JFrame implements Runnable
 						|| keyCode==KeyEvent.VK_END
 						|| (keyCode==KeyEvent.VK_C && e.isControlDown()) )
 				{
-					running = false;
+					gameStop();
 				}
 			}
 		});
@@ -123,7 +127,7 @@ public abstract class CGameEngine extends JFrame implements Runnable
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run()
 			{ 
-				running = false;   
+				gameStop();
 				endClean();
 			}
 		});
@@ -224,12 +228,12 @@ public abstract class CGameEngine extends JFrame implements Runnable
 	 */
 	private void stateUpdate()
 	{
-		// Get the amount of time passed since the last update.
-		long timePassed = getTimeSinceLastUpdate();
-		
 		// Make sure that the game is not over.
 		if( !gameOver )
 		{
+			// Get the amount of time passed since the last update.
+			long timePassed = getTimeSinceLastUpdate();
+
 			// Update the game state.
 			gameUpdate(timePassed);
 		}
@@ -392,18 +396,18 @@ public abstract class CGameEngine extends JFrame implements Runnable
 		System.out.println("Average UPS: " + df.format(averageUPS));
 		System.out.println("Time Spent: " + timeSpentInGame + " secs");
 	}
-	
+
 	/**
 	 * Initializes the game.
 	 */
 	public abstract void gameInit();
-	
+
 	/**
 	 * Updates the game state.
 	 * @param timePassed the time passed since the last update.
 	 */
 	public abstract void gameUpdate(long timePassed);
-	
+
 	/**
 	 * Renders the game.
 	 * @param g the graphics context.
