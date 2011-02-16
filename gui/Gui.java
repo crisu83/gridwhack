@@ -3,27 +3,28 @@ package gridwhack.gui;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
-import gridwhack.event.CEvent;
 import gridwhack.event.IEventListener;
 
 /**
- * Graphical user interface class.
- * Provides functionality for rendering panels.
+ * Graphical user interface class file.
+ * Allows for rendering panels.
+ * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
 public class Gui implements IEventListener
 {
 	protected static Gui instance = new Gui();
+
 	protected static ArrayList<GuiPanel> panels = new ArrayList<GuiPanel>();
 	
 	/**
-	 * Private constructor to enforce the singleton pattern.
+	 * Private constructor enforces the singleton pattern.
 	 */
 	private Gui() {}
 	
 	/**
 	 * @return the single gui instance.
 	 */
-	private static Gui get()
+	private static Gui getInstance()
 	{
 		return instance;
 	}
@@ -34,7 +35,7 @@ public class Gui implements IEventListener
 	 */
 	public static void addPanel(GuiPanel panel)
 	{
-		panel.addListener(Gui.get());
+		panel.addListener(Gui.getInstance());
 		panels.add(panel);
 	}
 	
@@ -44,16 +45,8 @@ public class Gui implements IEventListener
 	 */
 	public void removePanel(GuiPanel panel)
 	{
-		panel.removeListener(Gui.get());
+		panel.removeListener(Gui.getInstance());
 		panels.remove(panel);
-	}
-	
-	/**
-	 * @return the panels.
-	 */
-	public static ArrayList<GuiPanel> getPanels()
-	{
-		return Gui.get().panels;
 	}
 	
 	/**
@@ -62,19 +55,19 @@ public class Gui implements IEventListener
 	 */
 	public static void update(long timePassed)
 	{
-		for( GuiPanel panel : Gui.getPanels() )
+		for( GuiPanel panel : panels )
 		{
 			panel.update(timePassed);
 		}
 	}
 	
 	/**
-	 * Renders all panels in the gui
-	 * @param g the 2D graphics object.
+	 * Renders all panels in the gui.
+	 * @param g the graphics context.
 	 */
 	public static void render(Graphics2D g)
 	{
-		for( GuiPanel panel : Gui.getPanels() )
+		for( GuiPanel panel : panels )
 		{
 			panel.render(g);
 		}

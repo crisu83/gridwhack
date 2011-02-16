@@ -14,7 +14,9 @@ import gridwhack.grid.GridUnit;
 public class HealthBar extends StatusBar
 {
 	/**
-	 * Constructs the bar.
+	 * Creates the bar.
+	 * @param x the x-coordinate.
+	 * @param y the y-coordinate.
 	 * @param width the width of the bar.
 	 * @param height the height of the bar.
 	 * @param owner the unit this bar belongs to.
@@ -28,9 +30,9 @@ public class HealthBar extends StatusBar
 	}
 	
 	/**
-	 * Updates the bar.
+	 * Refreshes the bar.
 	 */
-	private void update()
+	private void refresh()
 	{
 		// calculate how many percent the units current health is of its maximum health.
 		float healthPercent = (float)owner.getCurrentHealth() / (float)owner.getMaximumHealth();
@@ -48,28 +50,48 @@ public class HealthBar extends StatusBar
 	private void move()
 	{
 		// calculate the new position for the bar.
-		int x = (int)Math.round(owner.getX()+1);
-		int y = (int)Math.round(owner.getY()+1);
+		int x = (int) Math.round(owner.getX()+1);
+		int y = (int) Math.round(owner.getY()+1);
 		
 		// move the bar with the unit.
 		super.move(x, y);
 	}
 
-	public void onUnitDeath(UnitEvent e) {}
+	/**
+	 * Actions to be taken when the unit dies.
+	 * @param e the event.
+	 */
+	public synchronized void onUnitDeath(UnitEvent e) {}
 
-	public void onUnitSpawn(UnitEvent e) {}
+	/**
+	 * Actions to be taken when the unit is spawned.
+	 * @param e the event.
+	 */
+	public synchronized void onUnitSpawn(UnitEvent e) {}
 
-	public void onUnitHealthGain(UnitEvent e)
+	/**
+	 * Actions to be taken when the unit gains health.
+	 * @param e the event.
+	 */
+	public synchronized void onUnitHealthGain(UnitEvent e)
 	{
-		update();
+		refresh();
 	}
 
-	public void onUnitHealthLoss(UnitEvent e)
+	/**
+	 * Actions to be taken when the unit loses health.
+	 * @param e the event.
+	 */
+	public synchronized void onUnitHealthLoss(UnitEvent e)
 	{
-		update();
+		refresh();
 	}
 
-	public void onUnitMove(UnitEvent e)
+	/**
+	 * Actions to be taken when the unit moves.
+	 * @param e the event.
+	 */
+	public synchronized void onUnitMove(UnitEvent e)
 	{		
 		if( owner instanceof NPCUnit )
 		{

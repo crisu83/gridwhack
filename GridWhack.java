@@ -41,7 +41,7 @@ public class GridWhack extends CGameEngine
 		
 		createMap();
 		createPlayer();	
-		createCamera();
+		//createCamera();
 		
 		// initialize the user interface.
 		initGui();
@@ -107,7 +107,8 @@ public class GridWhack extends CGameEngine
 	{
 		Window w = screen.getFullScreenWindow();
 		GuiPanel combatLog = new GuiPanel(0, w.getHeight()-100, w.getWidth(), 100, null);
-		combatLog.addElement(new CombatLogBox(5, 15, 290, 10));
+		Font font = new Font("Arial", Font.PLAIN, 11);
+		combatLog.addElement(new CombatLogBox(5, 15, 290, 10, font, Color.white));
 		Gui.addPanel(combatLog);
 	}
 	
@@ -142,10 +143,10 @@ public class GridWhack extends CGameEngine
 		Window w = screen.getFullScreenWindow();
 		
 		// get the camera offset.
-		int cx = (int) Math.round( Math.round(camera.getX()) );
-		int cy = (int) Math.round( Math.round(camera.getY()) );
+		//int cx = (int) Math.round( Math.round(camera.getX()) );
+		//int cy = (int) Math.round( Math.round(camera.getY()) );
 		
-		g.translate(-cx, -cy);
+		//g.translate(-cx, -cy);
 		
 		// set a black background.
 		g.setColor(Color.BLACK);
@@ -154,7 +155,7 @@ public class GridWhack extends CGameEngine
 		// render the map.
 		map.render(g);
 		
-		g.translate(cx, cy);
+		//g.translate(cx, cy);
 		
 		// render the gui last.
 		Gui.render(g);
@@ -164,44 +165,16 @@ public class GridWhack extends CGameEngine
 	 * Renders the application.
 	 * @param g the graphics object.
 	 */
-	/*
 	public void paint(Graphics g)
 	{
 		if( g instanceof Graphics2D )
 		{
-			Graphics2D g2d = (Graphics2D)g;
+			Graphics2D g2d = (Graphics2D) g;
 			g2d.setRenderingHint(
 					RenderingHints.KEY_TEXT_ANTIALIASING, 
 					RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		}
 	}
-	*/
-
-	/*
-	@Override
-	public void onUnitDeath(UnitEvent e) 
-	{
-		Unit source = (Unit) e.getSource();		
-		
-		if( source instanceof Player )
-		{
-			System.out.println("Player has died.");
-			stopGame();
-		}
-	}
-
-	@Override
-	public void onUnitSpawn(UnitEvent e) {}
-
-	@Override
-	public void onUnitHealthGain(UnitEvent e) {}
-
-	@Override
-	public void onUnitHealthLoss(UnitEvent e) {}
-
-	@Override
-	public void onUnitMove(UnitEvent e) {}
-	*/
 	
 	/**
 	 * Main method.

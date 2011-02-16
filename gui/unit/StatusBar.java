@@ -23,7 +23,7 @@ public abstract class StatusBar implements IUnitListener
 	/**
 	 * Creates the bar.
 	 * @param x the x-coordinate.
-	 * @param y the y-coordinate
+	 * @param y the y-coordinate.
 	 * @param width the width of the bar.
 	 * @param height the height of the bar.
 	 * @param empty whether the bar should be empty.

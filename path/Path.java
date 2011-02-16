@@ -2,6 +2,10 @@ package gridwhack.path;
 
 import java.util.ArrayList;
 
+/**
+ * Path class file.
+ * @author Christoffer Niska <ChristofferNiska@gmail.com>
+ */
 public class Path 
 {	
 	protected ArrayList<Step> steps;
@@ -24,8 +28,8 @@ public class Path
 	}
 	
 	/**
-	 * Returns a specific step.
-	 * @param index the index of the step to get.
+	 * Returns a specific step on this path.
+	 * @param index the index of the step.
 	 * @return the step.
 	 */
 	public Step getStep(int index)
@@ -34,7 +38,7 @@ public class Path
 	}
 	
 	/**
-	 * Return the x-coordinate of a specific step.
+	 * Returns the x-coordinate of a specific step.
 	 * @param index the index of the step.
 	 * @return the x-coordinate.
 	 */
@@ -44,7 +48,7 @@ public class Path
 	}
 	
 	/**
-	 * Return the y-coordinate of a specific step.
+	 * Returns the y-coordinate of a specific step.
 	 * @param index the index of the step.
 	 * @return the y-coordinate.
 	 */
@@ -54,7 +58,7 @@ public class Path
 	}
 	
 	/**
-	 * Appends a step to the path.
+	 * Appends a step to this path.
 	 * @param x the x-coordinate of the step.
 	 * @param y the y-coordinate of the step.
 	 */
@@ -64,7 +68,7 @@ public class Path
 	}
 	
 	/**
-	 * Prepend a step to the path.
+	 * Prepends a step to this path.
 	 * @param x the x-coordinate of the step.
 	 * @param y the y-coordinate of the step.
 	 */
@@ -90,7 +94,7 @@ public class Path
 		private int y;
 		
 		/**
-		 * Constructs the step.
+		 * Creates the step.
 		 * @param x the x-coordinate of the step.
 		 * @param y the y-coordinate of the step.
 		 */
@@ -119,7 +123,7 @@ public class Path
 		/**
 		 * Returns whether this step is the same as the given step.
 		 * @param step the step to compare this step to.
-		 * @return whether the steps are identical.
+		 * @return whether the steps are the same.
 		 */
 		public boolean equals(Step step)
 		{

@@ -77,7 +77,7 @@ public class GridAStarPathFinder implements IPathFinder
 	}
 	
 	/**
-	 * Returns the found path from the starting coordinates to the target coordinates.
+	 * Returns the path from the starting coordinates to the target coordinates.
 	 * @param sx the starting x-coordinate.
 	 * @param sy the starting y-coordinate.
 	 * @param tx the target x-coordinate.

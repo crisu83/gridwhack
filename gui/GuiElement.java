@@ -3,8 +3,10 @@ package gridwhack.gui;
 import java.awt.Graphics2D;
 
 /**
- * Gui element base class.
- * Provides functionality for gui panel elements.
+ * Gui element base class file.
+ * Allows for adding elements to panels in the gui.
+ * All gui elements must be extended from this class.
+ * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
 public abstract class GuiElement 
 {
@@ -15,9 +17,9 @@ public abstract class GuiElement
 	protected GuiPanel parent;
 	
 	/**
-	 * Constructs the element.
-	 * @param x the x-coordinate.
-	 * @param y the y-coordinate.
+	 * Creates the element.
+	 * @param x the element x-coordinate.
+	 * @param y the element y-coordinate.
 	 * @param width the element width.
 	 * @param height the element height.
 	 */
@@ -30,8 +32,8 @@ public abstract class GuiElement
 	}
 	
 	/**
-	 * Returns the real x-coordinate by adding
-	 * taking into account the parent panels offset.
+	 * Returns the absolute x-coordinate of this element
+	 * including the parent panels offset.
 	 * @return the x-coordinate.
 	 */
 	public int getX()
@@ -49,8 +51,8 @@ public abstract class GuiElement
 	}
 	
 	/**
-	 * Returns the real y-coordinate by adding
-	 * taking into account the parent panels offset.
+	 * Returns the absolute y-coordinate of this element
+	 * including the parent panels offset.
 	 * @return the y-coordinate.
 	 */
 	public int getY()
@@ -68,7 +70,8 @@ public abstract class GuiElement
 	}
 	
 	/**
-	 * @return the panel this element belongs to.
+	 * Returns the panel this elements belongs to.
+	 * @return the panel.
 	 */
 	public GuiPanel getParent()
 	{
@@ -76,7 +79,8 @@ public abstract class GuiElement
 	}
 	
 	/**
-	 * @param parent the panel this element belongs to.
+	 * Sets the panel this element belongs to.
+	 * @param parent the panel.
 	 */
 	public void setParent(GuiPanel parent)
 	{
@@ -85,7 +89,7 @@ public abstract class GuiElement
 	
 	/**
 	 * Renders the element.
-	 * @param g the 2D graphics object.
+	 * @param g the graphics context.
 	 */
 	public abstract void render(Graphics2D g);
 }

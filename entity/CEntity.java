@@ -47,14 +47,6 @@ public abstract class CEntity extends CComponent
 	}
 	
 	/**
-	 * @return whether this entity has been removed.
-	 */
-	public boolean getRemoved()
-	{
-		return removed;
-	}
-	
-	/**
 	 * Marks this entity as removed.
 	 */
 	public synchronized void markRemoved()

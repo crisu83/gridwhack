@@ -59,9 +59,6 @@ public abstract class GridUnit extends GridEntity implements IMover, IViewer
 
 		// create a new field of view for the unit.
 		fov = new GridFov(grid, this);
-
-		// set current health to maximum health.
-		currentHealth = maximumHealth;
 	}
 	
 	/**
@@ -70,7 +67,7 @@ public abstract class GridUnit extends GridEntity implements IMover, IViewer
 	 */
 	public void setHealth(int health)
 	{
-		this.setMaximumHealth(health);
+		currentHealth = maximumHealth = health;
 	}
 	
 	/**
@@ -141,7 +138,7 @@ public abstract class GridUnit extends GridEntity implements IMover, IViewer
 	 */
 	public synchronized void markDead()
 	{
-		this.dead = true;
+		dead = true;
 		
 		// let all listeners know that this unit is dead.
 		fireUnitEvent( new UnitEvent(UnitEvent.UNIT_DEATH, this) );

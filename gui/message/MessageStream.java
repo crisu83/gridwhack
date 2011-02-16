@@ -3,14 +3,15 @@ package gridwhack.gui.message;
 import java.util.ArrayList;
 
 /**
- * Base message stream class.
+ * Message stream class file.
+ * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
 public class MessageStream 
 {
 	protected ArrayList<String> stream;
 	
 	/**
-	 * Constructs the stream.
+	 * Creates the stream.
 	 */
 	public MessageStream()
 	{

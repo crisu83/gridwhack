@@ -7,7 +7,8 @@ import gridwhack.grid.GridUnit;
 
 /**
  * Health status text class.
- * Provides functionality for displaying unit health values.
+ * Allows for displaying unit health values in the gui.
+ * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
 public class HealthText extends StatusText
 {
@@ -29,6 +30,14 @@ public class HealthText extends StatusText
 		
 		color = Color.white;
 	}
+
+	/**
+	 * Refreshes the values.
+	 */
+	private void refresh()
+	{
+		current = owner.getCurrentHealth();
+	}
 	
 	/**
 	 * @return the health text.
@@ -37,25 +46,40 @@ public class HealthText extends StatusText
 	{
 		return current + " / " + maximum;
 	}
-	
-	private void update()
+
+	/**
+	 * Actions to be taken when the unit dies.
+	 * @param e the event.
+	 */
+	public synchronized void onUnitDeath(UnitEvent e) {}
+
+	/**
+	 * Actions to be taken when the unit is spawned.
+	 * @param e the event.
+	 */
+	public synchronized void onUnitSpawn(UnitEvent e) {}
+
+	/**
+	 * Actions to be taken when the unit gains health.
+	 * @param e the event.
+	 */
+	public synchronized void onUnitHealthGain(UnitEvent e)
 	{
-		current = owner.getCurrentHealth();
+		refresh();
 	}
 
-	public void onUnitDeath(UnitEvent e) {}
-
-	public void onUnitSpawn(UnitEvent e) {}
-
-	public void onUnitHealthGain(UnitEvent e)
+	/**
+	 * Actions to be taken when the unit loses health.
+	 * @param e the event.
+	 */
+	public synchronized void onUnitHealthLoss(UnitEvent e)
 	{
-		update();
+		refresh();
 	}
 
-	public void onUnitHealthLoss(UnitEvent e)
-	{
-		update();		
-	}
-
-	public void onUnitMove(UnitEvent e) {}
+	/**
+	 * Actions to be taken when the unit moves.
+	 * @param e the event.
+	 */
+	public synchronized void onUnitMove(UnitEvent e) {}
 }

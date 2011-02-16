@@ -10,6 +10,7 @@ import gridwhack.grid.GridUnit;
 /**
  * Status text class file.
  * Allows for representing unit values as text in the gui.
+ * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
 public abstract class StatusText implements IUnitListener
 {

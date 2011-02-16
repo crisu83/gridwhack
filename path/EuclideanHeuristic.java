@@ -1,5 +1,9 @@
 package gridwhack.path;
 
+/**
+ * Euclidean heuristic class file.
+ * @author Christoffer Niska <ChristofferNiska@gmail.com>
+ */
 public class EuclideanHeuristic implements IAStarHeuristic 
 {
 	/**
@@ -18,7 +22,7 @@ public class EuclideanHeuristic implements IAStarHeuristic
 		
 		// use pythagorean theorem to determine the distance. (a^2 + b^2 = c^2)
 		// might not be the perfect solution but good enough for now.
-		float heuristic = (float)Math.sqrt( (dx*dx) + (dy*dy) );
+		float heuristic = (float) Math.sqrt( (dx*dx) + (dy*dy) );
 		
 		return heuristic;
 	}

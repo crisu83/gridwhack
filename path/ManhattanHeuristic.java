@@ -1,5 +1,9 @@
 package gridwhack.path;
 
+/**
+ * Manhattan heuristic class file.
+ * @author Christoffer Niska <ChristofferNiska@gmail.com>
+ */
 public class ManhattanHeuristic implements IAStarHeuristic 
 {
 	/**

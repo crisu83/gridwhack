@@ -1,12 +1,14 @@
 package gridwhack.path;
 
 /**
- * Interface all path finders must implement. 
+ * Path finder interface file.
+ * All path finders must implement this interface.
+ * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
 public interface IPathFinder 
 {
 	/**
-	 * Returns the found path from the starting coordinates to the target coordinates.
+	 * Returns the path from the starting coordinates to the target coordinates.
 	 * @param sx the starting x-coordinate.
 	 * @param sy the starting y-coordinate.
 	 * @param tx the target x-coordiante.

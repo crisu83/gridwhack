@@ -8,42 +8,46 @@ import java.util.ArrayList;
 import gridwhack.gui.GuiElement;
 
 /**
- * Base message box class.
- * Provides functionality for rendering message streams in the gui.
+ * Message box class file.
+ * Allows for rendering message streams in the gui.
+ * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
 public abstract class MessageBox extends GuiElement 
-{	
+{
+	protected Font font;
+	protected Color textColor;
 	protected int lineCount;
-	protected int fontSize;
 	protected int lineHeight;
-	
+
 	/**
-	 * Constructs the message box.
+	 * Creates the message box.
 	 * @param x the x-coordinate.
 	 * @param y the y-coordinate.
 	 * @param width the box width.
 	 * @param height the box height.
+	 * @param font the font.
+	 * @param textColor the text bgColor.
 	 * @param lineCount the amount of lines to display.
-	 * @param fontSize the font size.
 	 */
-	public MessageBox(int x, int y, int width, int height, int lineCount, int fontSize) 
+	public MessageBox(int x, int y, int width, int height, Font font, Color textColor, int lineCount)
 	{
 		super(x, y, width, height);
-		
+
+		this.font = font;
+		this.textColor = textColor;
 		this.lineCount = lineCount;
-		this.fontSize = fontSize;
-		this.lineHeight = (int)Math.round(fontSize * 1.5);
+		this.lineHeight = (int) Math.round(font.getSize() * 1.5);
 	}
 
 	/**
 	 * Renders the message box.
-	 * @param g the 2D graphics object.
+	 * @param g the graphics context.
 	 */
 	public void render(Graphics2D g)
 	{
-		// set the font and color.
-		g.setFont(new Font("Arial", Font.PLAIN, fontSize));
-		g.setColor(Color.white);
+		// set the font and bgColor.
+		g.setFont(font);
+		g.setColor(textColor);
 		
 		// get the messages from the combat log.
 		ArrayList<String> messages = getMessages();
@@ -60,7 +64,8 @@ public abstract class MessageBox extends GuiElement
 	}
 	
 	/**
-	 * Returns a list of the newest messages.
+	 * Returns the messages in the stream.
+	 * @return the messages.
 	 */
 	public abstract ArrayList<String> getMessages();
 }

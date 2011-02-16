@@ -1,7 +1,9 @@
 package gridwhack.path;
 
 /**
- * Interface all heuristics must implement.
+ * A* heuristic interface file.
+ * All heuristics must implement this interface.
+ * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
 public interface IAStarHeuristic
 {

@@ -7,8 +7,9 @@ import java.util.ArrayList;
 import gridwhack.CComponent;
 
 /**
- * Gui panel base class.
- * Provides functionality for gui panels.
+ * Gui panel base class file.
+ * Allows for adding panels to the gui.
+ * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
 public class GuiPanel extends CComponent
 {
@@ -16,18 +17,18 @@ public class GuiPanel extends CComponent
 	protected int y;
 	protected int width;
 	protected int height;
-	protected Color color;
+	protected Color bgColor;
 	protected ArrayList<GuiElement> elements;
 	
 	/**
-	 * Constructs the panel
-	 * @param x the x-coordinate.
-	 * @param y the y-coordinate.
+	 * Creates the panel.
+	 * @param x the panel x-coordinate.
+	 * @param y the panel y-coordinate.
 	 * @param width the panel width.
 	 * @param height the panel height.
-	 * @param color the background color.
+	 * @param bgColor the background bgColor.
 	 */
-	public GuiPanel(int x, int y, int width, int height, Color color)
+	public GuiPanel(int x, int y, int width, int height, Color bgColor)
 	{		
 		this.x = x;
 		this.y = y;
@@ -35,12 +36,13 @@ public class GuiPanel extends CComponent
 		this.height = height;
 		
 		// panel is black by default.
-		this.color = color!=null ? color : Color.black;
+		this.bgColor = bgColor!=null ? bgColor : Color.black;
 		
 		elements = new ArrayList<GuiElement>();
 	}
 	
 	/**
+	 * Returns the x-coordinate of this panel.
 	 * @return the x-coordinate.
 	 */
 	public int getX()
@@ -49,6 +51,7 @@ public class GuiPanel extends CComponent
 	}
 	
 	/**
+	 * Returns the y-coordinate of this panel.
 	 * @return the y-coordinate.
 	 */
 	public int getY()
@@ -57,7 +60,8 @@ public class GuiPanel extends CComponent
 	}
 	
 	/**
-	 * @return the panel width.
+	 * Returns the width of this panel.
+	 * @return the width.
 	 */
 	public int getWidth()
 	{
@@ -65,7 +69,8 @@ public class GuiPanel extends CComponent
 	}
 	
 	/**
-	 * @return the panel height.
+	 * Returns the height of this panel.
+	 * @return the height.
 	 */
 	public int getHeight()
 	{
@@ -73,7 +78,7 @@ public class GuiPanel extends CComponent
 	}
 	
 	/**
-	 * Adds and element to the panel.
+	 * Adds an element to the panel.
 	 * @param element the element.
 	 */
 	public void addElement(GuiElement element)
@@ -92,21 +97,18 @@ public class GuiPanel extends CComponent
 	}
 	
 	/**
-	 * Updates all elements on the panel.
+	 * Updates all elements in the panel.
 	 * @param timePassed the time that has passed.
 	 */
-	public void update(long timePassed)
-	{
-		// nothing at this time.
-	}
+	public void update(long timePassed) {}
 	
 	/**
-	 * Renders the panel and all its elements.
-	 * @param g the 2D graphics object.
+	 * Renders the panel and its elements.
+	 * @param g the graphics context.
 	 */
 	public void render(Graphics2D g)
 	{
-		g.setColor(color);
+		g.setColor(bgColor);
 		g.fillRect(x, y, width, height);
 		
 		// render all panel elements.

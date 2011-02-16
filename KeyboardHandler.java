@@ -25,6 +25,7 @@ public class KeyboardHandler extends KeyAdapter
 	
 	/**
 	 * Actions to be taken when a key is pressed.
+	 * @param e the key event.
 	 */
 	public void keyPressed(KeyEvent e)
 	{
@@ -60,6 +61,7 @@ public class KeyboardHandler extends KeyAdapter
 	
 	/**
 	 * Actions to be taken when a key is released.
+	 * @param e the key event.
 	 */
 	public void keyReleased(KeyEvent e)
 	{
@@ -68,6 +70,7 @@ public class KeyboardHandler extends KeyAdapter
 	
 	/**
 	 * Actions to be taken when a key is typed.
+	 * @param e the key event.
 	 */
 	public void keyTyped(KeyEvent e)
 	{
