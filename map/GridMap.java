@@ -17,9 +17,9 @@ public class GridMap
 		rand = RandomProvider.getRand();
 	}
 	
-	public void addPlayer(Player player)
+	public void setPlayer(Player player)
 	{
-		grid.addUnit(10, 10, player);
+		grid.setPlayer(10, 10, player);
 	}
 	
 	public Grid getGrid()

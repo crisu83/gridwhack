@@ -43,7 +43,7 @@ public abstract class GridUnit extends GridEntity implements IMover, IViewer
 	protected GridPath path;
 	
 	/**
-	 * Constructs the unit.
+	 * Creates the unit.
 	 * @param filename the sprite filename.
 	 * @param grid the grid the unit exists on.
 	 */
@@ -60,7 +60,7 @@ public abstract class GridUnit extends GridEntity implements IMover, IViewer
 		// create a new field of view for the unit.
 		fov = new GridFov(grid, this);
 	}
-	
+
 	/**
 	 * Sets the unit health.
 	 * @param health the health.
@@ -290,10 +290,12 @@ public abstract class GridUnit extends GridEntity implements IMover, IViewer
 
 			if( GridWhack.DEBUG )
 			{
+				/*
 				if( this instanceof Player && fov!=null )
 				{
 					fov.render(g);
 				}
+				*/
 
 				if( path!=null )
 				{
@@ -321,6 +323,15 @@ public abstract class GridUnit extends GridEntity implements IMover, IViewer
 	public GridPath getPath(int tgx, int tgy, int maxPathLength)
 	{
 		return grid.getPath(this.getGridX(), this.getGridY(), tgx, tgy, maxPathLength, this);
+	}
+
+	/**
+	 * Returns the units field of view.
+	 * @return the fov.
+	 */
+	public GridFov getFov()
+	{
+		return fov;
 	}
 	
 	/**

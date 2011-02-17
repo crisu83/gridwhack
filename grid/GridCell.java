@@ -1,7 +1,7 @@
 package gridwhack.grid;
 
+import gridwhack.entity.item.GridLoot;
 import gridwhack.entity.item.Item;
-import gridwhack.entity.item.Loot;
 import gridwhack.entity.unit.Player;
 import gridwhack.fov.IViewer;
 import gridwhack.path.IMover;
@@ -17,7 +17,7 @@ public class GridCell
 	protected int gx;
 	protected int gy;
 	protected GridTile tile;
-	protected Loot loot;
+	protected GridLoot loot;
 	protected GridUnit unit;
 
 	/**
@@ -47,7 +47,7 @@ public class GridCell
 	 * Adds loot to the cell.
 	 * @param loot the loot to add.
 	 */
-	public void addLoot(Loot loot)
+	public void addLoot(GridLoot loot)
 	{
 		// check if there is already loot in the cell,
 		// if so we need to add the items in the new loot

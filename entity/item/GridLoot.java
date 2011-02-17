@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import gridwhack.grid.Grid;
 import gridwhack.grid.GridEntity;
 
-public class Loot extends GridEntity
+public class GridLoot extends GridEntity
 {
 	protected ArrayList<Item> items;
 	
-	public Loot(Grid grid) 
+	public GridLoot(Grid grid)
 	{
 		super("loot.png", grid);
 		

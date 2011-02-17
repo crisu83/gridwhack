@@ -3,7 +3,7 @@ package gridwhack.entity.unit;
 import java.util.ArrayList;
 
 import gridwhack.entity.item.HealthOrb;
-import gridwhack.entity.item.Loot;
+import gridwhack.entity.item.GridLoot;
 import gridwhack.grid.Grid;
 import gridwhack.grid.GridUnit;
 import gridwhack.gui.unit.HealthBar;
@@ -195,7 +195,7 @@ public abstract class NPCUnit extends GridUnit
 	 */
 	protected void createLoot()
 	{
-		Loot loot = new Loot(grid);
+		GridLoot loot = new GridLoot(grid);
 		loot.addItem(new HealthOrb());
 		grid.addLoot(this.getGridX(), this.getGridY(), loot);
 	}

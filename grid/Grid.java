@@ -6,10 +6,10 @@ import java.util.Random;
 
 import gridwhack.RandomProvider;
 import gridwhack.entity.*;
+import gridwhack.entity.item.GridLoot;
 import gridwhack.entity.unit.*;
 import gridwhack.entity.unit.UnitFactory.UnitType;
 import gridwhack.entity.unit.event.*;
-import gridwhack.entity.item.Loot;
 import gridwhack.entity.tile.*;
 import gridwhack.entity.tile.TileFactory.TileType;
 import gridwhack.fov.IViewer;
@@ -30,7 +30,9 @@ public class Grid implements IUnitListener
 	private CEntityManager tiles;
 	private CEntityManager items;
 	private CEntityManager units;
+	private GridUnit player;
 	private Random rand;
+	private boolean[][] visible;
 	
 	/**
 	 * Creates the grid.
@@ -57,6 +59,9 @@ public class Grid implements IUnitListener
 		
 		// get random from the random provider. 
 		rand = RandomProvider.getRand();
+
+		// initialize the visible matrix.
+		visible = new boolean[widthInCells][heightInCells];
 		
 		// add cells to the grid.
 		for( int gx=0; gx<widthInCells; gx++ )
@@ -131,6 +136,24 @@ public class Grid implements IUnitListener
 			}
 		}
 	}
+
+	/**
+	 * Adds loot to this grid.
+	 * @param gx the grid x-coordinate.
+	 * @param gy the grid y-coordinate.
+	 * @param loot the loot to add.
+	 */
+	public synchronized void addLoot(int gx, int gy, GridLoot loot)
+	{
+		GridCell cell = getCell(gx, gy);
+
+		// make sure the cell exists.
+		if( cell!=null )
+		{
+			cell.addLoot(loot);
+			items.addEntity(loot);
+		}
+	}
 	
 	/**
 	 * Creates an unit and adds it in a random cell on this grid.
@@ -162,7 +185,7 @@ public class Grid implements IUnitListener
 		GridCell cell = getCell(gx, gy);
 		
 		// make sure the cell exists.
-		if( cell!=null )
+		if( cell!=null && !cell.isBlocked(unit) )
 		{
 			cell.setUnit(unit);
 			units.addEntity(unit);
@@ -207,7 +230,7 @@ public class Grid implements IUnitListener
 		
 		// get a matrix representation of which cells on the grid
 		// are visible to the unit.
-		boolean[][] visible = unit.fov.getVisible();
+		boolean[][] visible = unit.getFov().getVisible();
 		
 		// loop through all the cells.
 		for( int x=0, xmax=visible.length; x<xmax; x++ )
@@ -278,28 +301,49 @@ public class Grid implements IUnitListener
 					
 					if( unit instanceof Player )
 					{
+						updateVisible();
 						destination.loot((Player) unit);
 					}
 				}
 			}
 		}
 	}
-	
+
 	/**
-	 * Adds loot to this grid.
+	 * Updates the visible matrix based on the players field of view.
+	 */
+	public void updateVisible()
+	{
+		boolean[][] fv = player.getFov().getVisible();
+
+		for( int gx=0; gx<fv.length; gx++ )
+		{
+			for( int gy=0; gy<fv[gx].length; gy++ )
+			{
+				if( fv[gx][gy] && !visible[gx][gy] )
+				{
+					visible[gx][gy] = true;
+				}
+			}
+		}
+	}
+
+	/**
+	 * Sets the player for this grid.
 	 * @param gx the grid x-coordinate.
 	 * @param gy the grid y-coordinate.
-	 * @param loot the loot to add.
+	 * @param player the player.
 	 */
-	public synchronized void addLoot(int gx, int gy, Loot loot)
+	public void setPlayer(int gx, int gy, Player player)
 	{
+		this.player = player;
+
 		GridCell cell = getCell(gx, gy);
-		
+
 		// make sure the cell exists.
-		if( cell!=null )
+		if( cell!=null && !cell.isBlocked(player) )
 		{
-			cell.addLoot(loot);			
-			items.addEntity(loot);
+			cell.setUnit(player);
 		}
 	}
 	
@@ -469,9 +513,44 @@ public class Grid implements IUnitListener
 	 */
 	public void render(Graphics2D g)
 	{
+		ArrayList<ArrayList<CEntity>> allEntities = new ArrayList<ArrayList<CEntity>>();
+		
+		allEntities.add(tiles.getEntities());
+		allEntities.add(items.getEntities());
+		allEntities.add(units.getEntities());
+
+		GridFov fov = player.getFov();
+
+		for( ArrayList<CEntity> entities : allEntities )
+		{
+			for( CEntity entity : entities )
+			{
+				GridEntity ge = (GridEntity) entity;
+
+				if( ge instanceof GridTile || ge instanceof GridLoot )
+				{
+					if( visible[ ge.getGridX() ][ ge.getGridY() ] )
+					{
+						ge.render(g);
+					}
+				}
+				else
+				{
+					if( fov.isVisible(ge.getGridX(), ge.getGridY()) )
+					{
+						ge.render(g);
+					}
+				}
+			}
+		}
+
+		player.render(g);
+
+		/*
 		tiles.render(g);
 		items.render(g);
 		units.render(g);
+		*/
 	}
 
 	/**

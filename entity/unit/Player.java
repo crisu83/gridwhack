@@ -1,6 +1,6 @@
 package gridwhack.entity.unit;
 
-import gridwhack.entity.item.Loot;
+import gridwhack.entity.item.GridLoot;
 import gridwhack.entity.unit.hostile.HostileUnit;
 import gridwhack.grid.Grid;
 import gridwhack.grid.GridUnit;
@@ -25,6 +25,14 @@ public class Player extends GridUnit
 		setMovementCooldown(1000);
 		setViewRange(10);
 	}
+
+	public void updateFov()
+	{
+		super.updateFov();
+
+		// TODO: Think of a better way to call this.	
+		grid.updateVisible();
+	}
 	
 	/**
 	 * @return the player experience.
@@ -43,7 +51,7 @@ public class Player extends GridUnit
 		experience += amount;
 	}
 	
-	public void pickUp(Loot loot)
+	public void pickUp(GridLoot loot)
 	{
 		System.out.println("looted successfully.");
 	}

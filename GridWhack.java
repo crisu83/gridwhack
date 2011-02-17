@@ -8,21 +8,29 @@ import gridwhack.gui.Gui;
 import gridwhack.gui.GuiPanel;
 import gridwhack.gui.message.CombatLogBox;
 import gridwhack.gui.unit.HealthDisplay;
-import gridwhack.map.Camera;
+//import gridwhack.map.Camera;
 import gridwhack.map.GridMap;
 import gridwhack.map.MapFactory;
 import gridwhack.map.MapFactory.MapType;
 
+/**
+ * GridWhack class file.
+ * @author Christoffer Niska <ChristofferNiska@gmail.com>
+ */
 public class GridWhack extends CGameEngine
 {
-	private static int DEFAULT_FPS = 40;
+	private static final int DEFAULT_FPS = 80;
 	
-	public static boolean DEBUG = true;
+	public static final boolean DEBUG = true;
 	
 	private Player player;
 	private GridMap map;
-	private Camera camera;
-	
+	//private Camera camera;
+
+	/**
+	 * Creates the game.
+	 * @param period the update period.
+	 */
 	public GridWhack(long period)
 	{
 		super("GridWhack", period);
@@ -46,6 +54,13 @@ public class GridWhack extends CGameEngine
 		// initialize the user interface.
 		initGui();
 	}
+
+	public void gameStop()
+	{
+		System.out.println("Player has died!");
+
+		super.gameStop();
+	}
 	
 	/**
 	 * Creates the map.
@@ -63,15 +78,17 @@ public class GridWhack extends CGameEngine
 		Grid grid = map.getGrid();
 		
 		player = new Player(grid);
-		//player.addListener(this);
 		
-		// add the player onto the map.
-		map.addPlayer(player);
+		map.setPlayer(player);
+
+		// TODO: Think of a better way to call this the first time.
+		player.updateFov();
 	}
 	
 	/**
 	 * Creates the camera to follow the player.
 	 */
+	/*
 	protected void createCamera()
 	{
 		Window w = screen.getFullScreenWindow();		
@@ -79,6 +96,7 @@ public class GridWhack extends CGameEngine
 		camera = new Camera(0, 0, w.getWidth(), w.getHeight()-100, bounds, player, true);
 		player.addListener(camera);
 	}
+	*/
 	
 	/**
 	 * Initializes the user interface.
@@ -94,7 +112,6 @@ public class GridWhack extends CGameEngine
 	 */
 	private void createPlayerPanel()
 	{
-		Window w = screen.getFullScreenWindow();
 		GuiPanel playerPanel = new GuiPanel(5, 5, 180, 20, null);
 		playerPanel.addElement(new HealthDisplay(5, 5, player));
 		Gui.addPanel(playerPanel);
@@ -132,6 +149,12 @@ public class GridWhack extends CGameEngine
 		
 		// update the gui.
 		Gui.update(timePassed);
+
+		// Make sure that the player is not dead.
+		if( player.getDead() )
+		{
+			gameStop();
+		}
 	}
 
 	/**
@@ -165,6 +188,7 @@ public class GridWhack extends CGameEngine
 	 * Renders the application.
 	 * @param g the graphics object.
 	 */
+	/*
 	public void paint(Graphics g)
 	{
 		if( g instanceof Graphics2D )
@@ -175,6 +199,7 @@ public class GridWhack extends CGameEngine
 					RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		}
 	}
+	*/
 	
 	/**
 	 * Main method.
