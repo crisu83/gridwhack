@@ -5,10 +5,10 @@ import java.util.Random;
 import gridwhack.grid.GridUnit;
 
 /**
- * Attack scenario class file.
+ * Battle scenario class file.
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
-public class CombatScenario
+public class BattleScenario
 {
 	protected GridUnit attacker;
 	protected GridUnit defender;
@@ -20,7 +20,7 @@ public class CombatScenario
 	 * @param defender the defending unit.
 	 * @param rand the random context to be used.
 	 */
-	public CombatScenario(GridUnit attacker, GridUnit defender, Random rand)
+	public BattleScenario(GridUnit attacker, GridUnit defender, Random rand)
 	{
 		this.attacker = attacker;
 		this.defender = defender;
@@ -28,9 +28,9 @@ public class CombatScenario
 	}
 
 	/**
-	 * Actions to be taken when engaging.
+	 * Starts the battle scenario.
 	 */
-	public void engage()
+	public void start()
 	{
 		// TODO: Support other types of attacks than melee.
 		new MeleeAttack(this).attack();

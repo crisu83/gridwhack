@@ -6,7 +6,8 @@ import javax.swing.JFrame;
 
 /**
  * Core screen manager class file.
- * Allows for running applications in full-screen mode. 
+ * Allows for running applications in full-screen mode.
+ * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
 public class CScreenManager
 {
@@ -236,11 +237,11 @@ public class CScreenManager
 	}
 	
 	/**
-	 * @return the full screen window.
+	 * Returns the full screen window.
+	 * @return the window.
 	 */
 	public Window getFullScreenWindow()
 	{
 		return gd.getFullScreenWindow();
 	}
-	
 }

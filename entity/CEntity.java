@@ -53,7 +53,7 @@ public abstract class CEntity extends CComponent
 	{
 		removed = true;
 
-		// let all listeners know that this entity is removed.
+		// let all listeners know that this entity has been removed.
 		fireEntityEvent( new EntityEvent(EntityEvent.ENTITY_REMOVE, this) );
 	}
 

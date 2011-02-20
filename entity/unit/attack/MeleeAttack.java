@@ -13,7 +13,7 @@ public class MeleeAttack extends Attack
 	 * Creates the attack.
 	 * @param scenario the combat scenario.
 	 */
-	public MeleeAttack(CombatScenario scenario)
+	public MeleeAttack(BattleScenario scenario)
 	{
 		super(scenario);	
 	}
@@ -33,19 +33,19 @@ public class MeleeAttack extends Attack
 		if( hitRoll>=75 )
 		{
 			damage = damage * scenario.attacker.getCritialMultiplier();
-			CombatLog.addMessage(scenario.attacker.getName() + " critically hit " + scenario.defender.getName() + " for " + damage + " points of damage.");
+			CombatLog.addMessage( scenario.attacker.getName() + " critically hits " + scenario.defender.getName() + " for " + damage + "!");
 			dealDamage(damage);
 		}
 		// normal hit.
 		else if( hitRoll>=25 )
 		{
-			CombatLog.addMessage(scenario.attacker.getName() + " hit " + scenario.defender.getName() + " for " + damage + " points of damage.");
+			CombatLog.addMessage(scenario.attacker.getName() + " hits " + scenario.defender.getName() + " for " + damage + ".");
 			dealDamage(damage);
 		}
 		// miss.
 		else
 		{
-			CombatLog.addMessage(scenario.attacker.getName() + " missed " + scenario.defender.getName() + ".");
+			CombatLog.addMessage(scenario.attacker.getName() + " misses " + scenario.defender.getName() + ".");
 			// do nothing.
 		}
 	}

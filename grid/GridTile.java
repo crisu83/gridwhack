@@ -10,6 +10,12 @@ import gridwhack.path.IMover;
  */
 public abstract class GridTile extends GridEntity
 {
+	// Tile types.
+	public static enum Type {
+		FLOOR,
+		WALL
+	}
+
 	/**
 	 * Creates the tile.
 	 * @param filename the image filename.

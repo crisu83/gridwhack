@@ -2,9 +2,13 @@ package gridwhack.gui;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import gridwhack.CComponent;
+import gridwhack.event.IEventListener;
+import gridwhack.gui.event.IPanelListener;
+import gridwhack.gui.event.PanelEvent;
 
 /**
  * Gui panel base class file.
@@ -18,7 +22,8 @@ public class GuiPanel extends CComponent
 	protected int width;
 	protected int height;
 	protected Color bgColor;
-	protected ArrayList<GuiElement> elements;
+	protected boolean removed;
+	protected HashMap<String, GuiElement> elements;
 	
 	/**
 	 * Creates the panel.
@@ -26,7 +31,7 @@ public class GuiPanel extends CComponent
 	 * @param y the panel y-coordinate.
 	 * @param width the panel width.
 	 * @param height the panel height.
-	 * @param bgColor the background bgColor.
+	 * @param bgColor the background color.
 	 */
 	public GuiPanel(int x, int y, int width, int height, Color bgColor)
 	{		
@@ -35,10 +40,10 @@ public class GuiPanel extends CComponent
 		this.width = width;
 		this.height = height;
 		
-		// panel is black by default.
+		// Panel is black by default.
 		this.bgColor = bgColor!=null ? bgColor : Color.black;
 		
-		elements = new ArrayList<GuiElement>();
+		elements = new HashMap<String, GuiElement>();
 	}
 	
 	/**
@@ -76,31 +81,89 @@ public class GuiPanel extends CComponent
 	{
 		return height;
 	}
-	
+
+	/**
+	 * Marks this panel as removed.
+	 */
+	public synchronized void markRemoved()
+	{
+		removed = true;
+
+		// Let all listeners know that this panel has been removed.
+		firePanelEvent(new PanelEvent(PanelEvent.PANEL_REMOVE, this));
+	}
+
 	/**
 	 * Adds an element to the panel.
 	 * @param element the element.
 	 */
-	public void addElement(GuiElement element)
+	public synchronized void addElement(String name, GuiElement element)
 	{
 		element.setParent(this);
-		elements.add(element);
+		elements.put(name, element);
+	}
+
+	/**
+	 * Returns a specific element on this panel.
+	 * @param name the name of the element.
+	 * @return the element.
+	 */
+	public GuiElement getElement(String name)
+	{
+		// Make sure that the element exists.
+		return elements.containsKey(name) ? elements.get(name) : null;
 	}
 	
 	/**
 	 * Removes an element from the panel.
 	 * @param element the element.
 	 */
-	public void removeElement(GuiElement element)
+	public synchronized void removeElement(GuiElement element)
 	{
 		elements.remove(element);
+	}
+
+	/**
+	 * Fires a panel event.
+	 * @param e the event.
+	 */
+	private synchronized void firePanelEvent(PanelEvent e)
+	{
+		for( IEventListener listener : getListeners() )
+		{
+			// Make sure we only notify panel listeners.
+			if( listener instanceof IPanelListener )
+			{
+				switch( e.getType() )
+				{
+					// Panel has been removed.
+					case PanelEvent.PANEL_REMOVE:
+						( (IPanelListener) listener ).onPanelRemove(e);
+						break;
+
+					// Unknown event.
+					default:
+				}
+			}
+		}
 	}
 	
 	/**
 	 * Updates all elements in the panel.
 	 * @param timePassed the time that has passed.
 	 */
-	public void update(long timePassed) {}
+	public void update(long timePassed)
+	{
+		// Make sure that this panel is not removed.
+		if( !removed )
+		{
+			// Update all panel elements.
+			for( Map.Entry<String, GuiElement> element : elements.entrySet() )
+			{
+				element.getValue().update(timePassed);
+			}
+		}
+	}
 	
 	/**
 	 * Renders the panel and its elements.
@@ -108,13 +171,17 @@ public class GuiPanel extends CComponent
 	 */
 	public void render(Graphics2D g)
 	{
-		g.setColor(bgColor);
-		g.fillRect(x, y, width, height);
-		
-		// render all panel elements.
-		for( GuiElement element : elements )
+		// Make sure that this panel is not removed.
+		if( !removed )
 		{
-			element.render(g);
+			g.setColor(bgColor);
+			g.fillRect(x, y, width, height);
+
+			// Render all panel elements.
+			for( Map.Entry<String, GuiElement> element : elements.entrySet() )
+			{
+				element.getValue().render(g);
+			}
 		}
 	}
 }

@@ -14,21 +14,12 @@ import gridwhack.grid.GridUnit;
 public class UnitFactory 
 {
 	/**
-	 * List of all unit types.
-	 */
-	public static enum UnitType {
-		ORC,
-		KOBOLD,
-		SKELETON
-	}
-
-	/**
 	 * Returns new units of the given type.
 	 * @param type the unit type.
 	 * @param grid the grid the unit belongs to.
 	 * @return the unit.
 	 */
-	public static GridUnit factory(UnitType type, Grid grid)
+	public static GridUnit factory(GridUnit.Type type, Grid grid)
 	{
 		// return the requested type of unit.
 		switch( type )

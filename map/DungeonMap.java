@@ -4,6 +4,8 @@ import gridwhack.entity.tile.TileFactory;
 import gridwhack.entity.unit.UnitFactory;
 import gridwhack.grid.Grid;
 import gridwhack.grid.GridCell;
+import gridwhack.grid.GridTile;
+import gridwhack.grid.GridUnit;
 
 public class DungeonMap extends GridMap 
 {
@@ -19,7 +21,7 @@ public class DungeonMap extends GridMap
 	public void init()
 	{
 		// create some terrain.
-		grid.createTileRect(0, 0, 60, 30, TileFactory.TileType.FLOOR);
+		grid.createTileRect(0, 0, 60, 30, GridTile.Type.FLOOR);
 
 		for(int i=0, wallCount=100; i<wallCount; i++)
 		{
@@ -27,33 +29,33 @@ public class DungeonMap extends GridMap
 			int gx = cell.getGridX();
 			int gy = cell.getGridY();
 
-			grid.createTileRect(gx, gy, 1, 1, TileFactory.TileType.WALL);
+			grid.createTileRect(gx, gy, 1, 1, GridTile.Type.WALL);
 		}
 		
 		// create some hostiles.
-		grid.createUnit(UnitFactory.UnitType.ORC);
-		grid.createUnit(UnitFactory.UnitType.ORC);
-		grid.createUnit(UnitFactory.UnitType.ORC);
-		grid.createUnit(UnitFactory.UnitType.ORC);
-		grid.createUnit(UnitFactory.UnitType.ORC);
-		grid.createUnit(UnitFactory.UnitType.ORC);
-		grid.createUnit(UnitFactory.UnitType.ORC);
-		grid.createUnit(UnitFactory.UnitType.ORC);
-		grid.createUnit(UnitFactory.UnitType.KOBOLD);
-		grid.createUnit(UnitFactory.UnitType.KOBOLD);
-		grid.createUnit(UnitFactory.UnitType.KOBOLD);
-		grid.createUnit(UnitFactory.UnitType.KOBOLD);
-		grid.createUnit(UnitFactory.UnitType.KOBOLD);
-		grid.createUnit(UnitFactory.UnitType.KOBOLD);
-		grid.createUnit(UnitFactory.UnitType.KOBOLD);
-		grid.createUnit(UnitFactory.UnitType.KOBOLD);
-		grid.createUnit(UnitFactory.UnitType.SKELETON);
-		grid.createUnit(UnitFactory.UnitType.SKELETON);
-		grid.createUnit(UnitFactory.UnitType.SKELETON);
-		grid.createUnit(UnitFactory.UnitType.SKELETON);
-		grid.createUnit(UnitFactory.UnitType.SKELETON);
-		grid.createUnit(UnitFactory.UnitType.SKELETON);
-		grid.createUnit(UnitFactory.UnitType.SKELETON);
-		grid.createUnit(UnitFactory.UnitType.SKELETON);
+		grid.createUnit(GridUnit.Type.ORC);
+		grid.createUnit(GridUnit.Type.ORC);
+		grid.createUnit(GridUnit.Type.ORC);
+		grid.createUnit(GridUnit.Type.ORC);
+		grid.createUnit(GridUnit.Type.ORC);
+		grid.createUnit(GridUnit.Type.ORC);
+		grid.createUnit(GridUnit.Type.ORC);
+		grid.createUnit(GridUnit.Type.ORC);
+		grid.createUnit(GridUnit.Type.KOBOLD);
+		grid.createUnit(GridUnit.Type.KOBOLD);
+		grid.createUnit(GridUnit.Type.KOBOLD);
+		grid.createUnit(GridUnit.Type.KOBOLD);
+		grid.createUnit(GridUnit.Type.KOBOLD);
+		grid.createUnit(GridUnit.Type.KOBOLD);
+		grid.createUnit(GridUnit.Type.KOBOLD);
+		grid.createUnit(GridUnit.Type.KOBOLD);
+		grid.createUnit(GridUnit.Type.SKELETON);
+		grid.createUnit(GridUnit.Type.SKELETON);
+		grid.createUnit(GridUnit.Type.SKELETON);
+		grid.createUnit(GridUnit.Type.SKELETON);
+		grid.createUnit(GridUnit.Type.SKELETON);
+		grid.createUnit(GridUnit.Type.SKELETON);
+		grid.createUnit(GridUnit.Type.SKELETON);
+		grid.createUnit(GridUnit.Type.SKELETON);
 	}
 }

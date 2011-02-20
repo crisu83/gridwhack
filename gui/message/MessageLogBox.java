@@ -1,23 +1,22 @@
 package gridwhack.gui.message;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 /**
- * Combat log message box class.
+ * Message log message box class.
  * Allows for rendering the combat log in the gui.
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
-public class CombatLogBox extends MessageBox
+public class MessageLogBox extends MessageBox
 {
 	/**
-	 * Creates the combat log.
+	 * Creates the message log.
 	 * @param x the x-coordinate.
 	 * @param y the y-coordinate.
 	 * @param width the box width.
 	 * @param height the box height.
 	 */
-	public CombatLogBox(int x, int y, int width, int height)
+	public MessageLogBox(int x, int y, int width, int height)
 	{
 		super(x, y, width, height, 5);
 	}
@@ -28,6 +27,6 @@ public class CombatLogBox extends MessageBox
 	 */
 	public ArrayList<String> getMessages() 
 	{
-		return CombatLog.getMessages();
+		return MessageLog.getMessages();
 	}
 }

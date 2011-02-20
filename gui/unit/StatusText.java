@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 
 import gridwhack.entity.unit.event.IUnitListener;
 import gridwhack.grid.GridUnit;
+import gridwhack.gui.Gui;
 
 /**
  * Status text class file.
@@ -16,7 +17,7 @@ public abstract class StatusText implements IUnitListener
 {
 	protected int x;
 	protected int y;
-	protected int fontSize;
+	protected Font font;
 	protected Color color;
 	protected GridUnit owner;
 	
@@ -24,15 +25,17 @@ public abstract class StatusText implements IUnitListener
 	 * Constructs the status text.
 	 * @param x the x-coordinate.
 	 * @param y the y-coordinate.
-	 * @param fontSize the font size.
+	 * @param font the font to use.
 	 * @param owner the unit this text belongs to.
 	 */
-	public StatusText(int x, int y, int fontSize, GridUnit owner)
+	public StatusText(int x, int y, Font font, GridUnit owner)
 	{
 		this.x = x;
 		this.y = y;
-		this.fontSize = fontSize;
-		this.owner = owner;		
+		this.font = font;
+		this.owner = owner;
+
+		this.color = Color.white;
 		
 		// set the text to listen to its owner.
 		owner.addListener(this);
@@ -44,8 +47,7 @@ public abstract class StatusText implements IUnitListener
 	 */
 	public void render(Graphics2D g)
 	{
-		// render the text.
-		g.setFont(new Font("Arial", Font.PLAIN, fontSize));
+		g.setFont(font);
 		g.setColor(color);
 		g.drawString(getText(), x, y);
 	}

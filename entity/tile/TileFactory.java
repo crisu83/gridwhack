@@ -6,26 +6,17 @@ import gridwhack.grid.GridTile;
 /**
  * Tile factory class file.
  * Allows for creating tiles.
+ * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
 public class TileFactory 
 {
-	/**
-	 * List of all tile types.
-	 */
-	public static enum TileType {
-		//DOOR,
-		FLOOR,
-		WALL,
-		//WATER
-	}
-
 	/**
 	 * Returns new tiles of the given type.
 	 * @param type the tile type.
 	 * @param grid the grid the tile belongs to.
 	 * @return the tile.
 	 */
-	public static GridTile factory(TileType type, Grid grid)
+	public static GridTile factory(GridTile.Type type, Grid grid)
 	{
 		// return the requested tile.
 		switch( type )

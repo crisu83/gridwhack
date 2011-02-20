@@ -1,6 +1,8 @@
 package gridwhack.gui;
 
-import java.awt.Graphics2D;
+import gridwhack.CComponent;
+
+import java.awt.*;
 
 /**
  * Gui element base class file.
@@ -8,14 +10,18 @@ import java.awt.Graphics2D;
  * All gui elements must be extended from this class.
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
-public abstract class GuiElement 
+public abstract class GuiElement extends CComponent
 {
 	protected int x;
 	protected int y;
 	protected int width;
 	protected int height;
+
+	protected Font font;
+	protected Color textColor;
+
 	protected GuiPanel parent;
-	
+
 	/**
 	 * Creates the element.
 	 * @param x the element x-coordinate.
@@ -77,7 +83,7 @@ public abstract class GuiElement
 	{
 		return parent;
 	}
-	
+
 	/**
 	 * Sets the panel this element belongs to.
 	 * @param parent the panel.
@@ -86,9 +92,33 @@ public abstract class GuiElement
 	{
 		this.parent = parent;
 	}
+
+	/**
+	 * Sets the font.
+	 * @param font the font.
+	 */
+	public void setFont(Font font)
+	{
+		this.font = font;
+	}
+
+	/**
+	 * Sets the text color.
+	 * @param color the color.
+	 */
+	public void setTextColor(Color color)
+	{
+		this.textColor = color;
+	}
+
+	/**
+	 * Updates this element.
+	 * @param timePassed the time that has passed.
+	 */
+	public abstract void update(long timePassed);
 	
 	/**
-	 * Renders the element.
+	 * Renders this element.
 	 * @param g the graphics context.
 	 */
 	public abstract void render(Graphics2D g);

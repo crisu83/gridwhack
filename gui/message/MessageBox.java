@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
+import gridwhack.gui.Gui;
 import gridwhack.gui.GuiElement;
 
 /**
@@ -14,8 +15,6 @@ import gridwhack.gui.GuiElement;
  */
 public abstract class MessageBox extends GuiElement 
 {
-	protected Font font;
-	protected Color textColor;
 	protected int lineCount;
 	protected int lineHeight;
 
@@ -25,22 +24,27 @@ public abstract class MessageBox extends GuiElement
 	 * @param y the y-coordinate.
 	 * @param width the box width.
 	 * @param height the box height.
-	 * @param font the font.
-	 * @param textColor the text bgColor.
 	 * @param lineCount the amount of lines to display.
 	 */
-	public MessageBox(int x, int y, int width, int height, Font font, Color textColor, int lineCount)
+	public MessageBox(int x, int y, int width, int height, int lineCount)
 	{
 		super(x, y, width, height);
 
-		this.font = font;
-		this.textColor = textColor;
+		setFont( Gui.getInstance().getWindow().getFont() );
+		setTextColor(Color.white);
+
 		this.lineCount = lineCount;
 		this.lineHeight = (int) Math.round(font.getSize() * 1.5);
 	}
 
 	/**
-	 * Renders the message box.
+	 * Updates this element.
+	 * @param timePassed the time that has passed.
+	 */
+	public void update(long timePassed) {}
+
+	/**
+	 * Renders this element.
 	 * @param g the graphics context.
 	 */
 	public void render(Graphics2D g)
@@ -58,7 +62,7 @@ public abstract class MessageBox extends GuiElement
 			// render the latest messages.
 			for( int i=0, length=messages.size(); i<length && i<lineCount; i++ )
 			{
-				g.drawString(messages.get(i), this.getX(), this.getY()+(i*lineHeight));
+				g.drawString(messages.get(i), getX(), getY()+(i*lineHeight));
 			}
 		}
 	}

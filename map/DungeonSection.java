@@ -5,8 +5,8 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Random;
 
-import gridwhack.entity.tile.TileFactory;
 import gridwhack.grid.Grid;
+import gridwhack.grid.GridTile;
 
 public class DungeonSection
 {
@@ -287,7 +287,7 @@ public class DungeonSection
 					
 					System.out.println("x: " + x + ", y: " + y + ", w: " + width + ", h: " + height);
 					
-					grid.createTileRect(x, y, width, height, TileFactory.TileType.WALL);
+					grid.createTileRect(x, y, width, height, GridTile.Type.WALL);
 				}
 				
 				ds.addCorridors();

@@ -1,8 +1,9 @@
 package gridwhack.gui.unit;
 
-import java.awt.Graphics2D;
+import java.awt.*;
 
 import gridwhack.grid.GridUnit;
+import gridwhack.gui.Gui;
 import gridwhack.gui.GuiElement;
 
 /**
@@ -24,14 +25,23 @@ public class HealthDisplay extends GuiElement
 	public HealthDisplay(int x, int y, GridUnit owner)
 	{
 		super(x, y, 170, 20);
+
+		setFont( Gui.getInstance().getWindow().getFont() );
+		setTextColor(Color.white);
 		
 		// create a health bar and text to represent the player health.
 		healthBar = new HealthBar(10, 10, 100, 10, owner);
-		healthText = new HealthText(120, 18, owner);
+		healthText = new HealthText(120, 18, font, owner);
 	}
+
+	/**
+	 * Updates this element.
+	 * @param timePassed the time that has passed.
+	 */
+	public void update(long timePassed) {}
 	
 	/**
-	 * Renders the element.
+	 * Renders this element.
 	 * @param g the graphics context.
 	 */
 	public void render(Graphics2D g)

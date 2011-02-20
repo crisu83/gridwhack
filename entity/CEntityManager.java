@@ -24,7 +24,7 @@ public class CEntityManager implements IEntityListener
 	}
 	
 	/**
-	 * Returns a specific entity.  
+	 * Returns a specific entity.
 	 * @param index the index of the entity.
 	 * @return the entity.
 	 */
@@ -32,7 +32,7 @@ public class CEntityManager implements IEntityListener
 	{
 		return entities.get(index);
 	}
-	
+
 	/**
 	 * Adds an entity to this manager.
 	 * @param entity the entity to add.
@@ -49,7 +49,7 @@ public class CEntityManager implements IEntityListener
 	 */
 	public synchronized void removeEntity(CEntity entity)
 	{
-		entity.removeListener(this);
+		//entity.removeListener(this);
 		entities.remove(entity);
 	}
 	

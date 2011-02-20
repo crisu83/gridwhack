@@ -78,7 +78,10 @@ public class Path
 	}
 	
 	/**
-	 * @return whether the path contains the specified coordinates.
+	 * Returns whether the path contains the specified coordinates
+	 * @param x the x-coordinate of the step.
+	 * @param y the y-coordinate of the step
+	 * @return whether the path contains the coordinates.
 	 */
 	public boolean containsStep(int x, int y)
 	{

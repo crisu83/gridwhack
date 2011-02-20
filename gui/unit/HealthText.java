@@ -1,6 +1,6 @@
 package gridwhack.gui.unit;
 
-import java.awt.Color;
+import java.awt.*;
 
 import gridwhack.entity.unit.event.UnitEvent;
 import gridwhack.grid.GridUnit;
@@ -19,16 +19,15 @@ public class HealthText extends StatusText
 	 * Constructs the health text.
 	 * @param x the x-coordinate.
 	 * @param y the y-coordinate.
+	 * @param font the font to use.
 	 * @param owner the unit the health belongs to.
 	 */
-	public HealthText(int x, int y, GridUnit owner)
+	public HealthText(int x, int y, Font font, GridUnit owner)
 	{
-		super(x, y, 11, owner);
+		super(x, y, font, owner);
 		
 		this.maximum = owner.getMaximumHealth();
 		this.current = maximum;
-		
-		color = Color.white;
 	}
 
 	/**

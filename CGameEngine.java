@@ -108,20 +108,24 @@ public abstract class CGameEngine extends JFrame implements Runnable
 	private void readyForTermination() 
 	{
 		// Add a key listener to listen for termination key presses.
-		addKeyListener( new KeyAdapter() {
-			public void keyPressed(KeyEvent e)
+		addKeyListener(
+			new KeyAdapter()
 			{
-				int keyCode = e.getKeyCode();
-				
-				if( (keyCode==KeyEvent.VK_ESCAPE)
-						|| keyCode==KeyEvent.VK_Q
-						|| keyCode==KeyEvent.VK_END
-						|| (keyCode==KeyEvent.VK_C && e.isControlDown()) )
+				/**
+				 * Actions to be taken when a key is pressed.
+				 * @param e the key event.
+				 */
+				public void keyPressed(KeyEvent e)
 				{
-					gameStop();
+					if( e.getKeyCode()==KeyEvent.VK_C && e.isControlDown() )
+					{
+						gameStop();
+					}
+
+					e.consume();
 				}
 			}
-		});
+		);
 		
 		// Add a shutdown hook to be called when game is terminated.
 		Runtime.getRuntime().addShutdownHook(new Thread() {

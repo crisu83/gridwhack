@@ -8,13 +8,13 @@ import gridwhack.gui.message.CombatLog;
  */
 public abstract class Attack 
 {
-	protected CombatScenario scenario;
+	protected BattleScenario scenario;
 
 	/**
 	 * Creates the engage.
 	 * @param scenario the combat scenario.
 	 */
-	public Attack(CombatScenario scenario)
+	public Attack(BattleScenario scenario)
 	{
 		this.scenario = scenario;
 	}

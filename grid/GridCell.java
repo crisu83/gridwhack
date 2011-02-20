@@ -1,8 +1,6 @@
 package gridwhack.grid;
 
-import gridwhack.entity.item.GridLoot;
 import gridwhack.entity.item.Item;
-import gridwhack.entity.unit.Player;
 import gridwhack.fov.IViewer;
 import gridwhack.path.IMover;
 
@@ -77,6 +75,15 @@ public class GridCell
 	}
 
 	/**
+	 * Returns the loot in this cell.
+	 * @return the loot.
+	 */
+	public GridLoot getLoot()
+	{
+		return loot;
+	}
+
+	/**
 	 * @param unit the unit to add.
 	 */
 	public void setUnit(GridUnit unit)
@@ -103,18 +110,6 @@ public class GridCell
 	public void removeUnit()
 	{
 		unit = null;
-	}
-
-	/**
-	 * Actions to be taken when player loots this cell.
-	 * @param player the player.
-	 */
-	public void loot(Player player)
-	{
-		if( loot!=null )
-		{
-			player.pickUp(loot);
-		}
 	}
 
 	/**

@@ -6,12 +6,9 @@ import java.util.Random;
 
 import gridwhack.RandomProvider;
 import gridwhack.entity.*;
-import gridwhack.entity.item.GridLoot;
 import gridwhack.entity.unit.*;
-import gridwhack.entity.unit.UnitFactory.UnitType;
 import gridwhack.entity.unit.event.*;
 import gridwhack.entity.tile.*;
-import gridwhack.entity.tile.TileFactory.TileType;
 import gridwhack.fov.IViewer;
 import gridwhack.path.*;
 
@@ -115,7 +112,7 @@ public class Grid implements IUnitListener
 	 * @param heightInCells the rectangle height in cells.
 	 * @param type the type of tile to create.
 	 */
-	public void createTileRect(int sgx, int sgy, int widthInCells, int heightInCells, TileType type)
+	public void createTileRect(int sgx, int sgy, int widthInCells, int heightInCells, GridTile.Type type)
 	{
 		// loop through the cells within the area and set the tiles.
 		for( int gx=sgx, xmax=(sgx + widthInCells); gx<xmax; gx++ )
@@ -159,7 +156,7 @@ public class Grid implements IUnitListener
 	 * Creates an unit and adds it in a random cell on this grid.
 	 * @param type the type of unit to create.
 	 */
-	public synchronized void createUnit(UnitType type)
+	public synchronized void createUnit(GridUnit.Type type)
 	{		
 		// request the unit from the unit factory.
 		GridUnit unit = UnitFactory.factory(type, this);
@@ -302,7 +299,6 @@ public class Grid implements IUnitListener
 					if( unit instanceof Player )
 					{
 						updateVisible();
-						destination.loot((Player) unit);
 					}
 				}
 			}
@@ -426,7 +422,7 @@ public class Grid implements IUnitListener
 	 */
 	public int getMovementCost(int gx, int gy, IMover mover)
 	{
-		GridCell cell = getCell(gx, gy);
+		//GridCell cell = getCell(gx, gy);
 
 		return 1;
 	}

@@ -22,6 +22,15 @@ public abstract class GridEntity extends CEntity
 	}
 
 	/**
+	 * Returns the cell this player stands in.
+	 * @return the cell.
+	 */
+	public GridCell getCell()
+	{
+		return grid.getCell(grid.getOffsetInCells(x), grid.getOffsetInCells(y));
+	}
+
+	/**
 	 * @param x the x-coordinate in grid cells.
 	 */
 	public void setGridX(int x)

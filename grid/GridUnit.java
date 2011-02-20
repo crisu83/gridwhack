@@ -3,8 +3,7 @@ package gridwhack.grid;
 import java.awt.Graphics2D;
 
 import gridwhack.GridWhack;
-import gridwhack.entity.unit.Player;
-import gridwhack.entity.unit.attack.CombatScenario;
+import gridwhack.entity.unit.attack.BattleScenario;
 import gridwhack.entity.unit.event.*;
 import gridwhack.event.IEventListener;
 import gridwhack.fov.IViewer;
@@ -17,6 +16,13 @@ import gridwhack.path.IMover;
  */
 public abstract class GridUnit extends GridEntity implements IMover, IViewer
 {
+	// Unit types.
+	public static enum Type {
+		ORC,
+		KOBOLD,
+		SKELETON
+	}
+
 	public static enum Directions { LEFT, RIGHT, UP, DOWN }
 	
 	protected static final int CRITICAL_MULTIPLIER = 2;
@@ -79,8 +85,8 @@ public abstract class GridUnit extends GridEntity implements IMover, IViewer
 		// make sure the unit may engage.
 		if( isHostile(target) && isAttackAllowed() )
 		{
-			CombatScenario scenario = new CombatScenario(this, target, rand);
-			scenario.engage();
+			BattleScenario scenario = new BattleScenario(this, target, rand);
+			scenario.start();
 		}
 	}
 	
@@ -111,22 +117,30 @@ public abstract class GridUnit extends GridEntity implements IMover, IViewer
 	 */
 	public synchronized void increaseHealth(int amount)
 	{
-		currentHealth += amount;
+		int health = currentHealth + amount;
+
+		// Increase the unit health and make sure that it does not exceed the maximum.
+		currentHealth = health<maximumHealth ? health : maximumHealth;
+
+		// let all listeners know that this unit has gained health.
+		fireUnitEvent( new UnitEvent(UnitEvent.UNIT_HEALTHGAIN, this) );
 	}
 	
 	/**
 	 * Reduces the units health by the specified amount.
-	 * @param amount the amount to reduce the health.
+	 * @param amount the amount.
 	 */
 	public synchronized void reduceHealth(int amount)
 	{
-		// reduce the unit health.
-		currentHealth -= amount;
+		int health = currentHealth - amount;
+
+		// Reduce the unit health and make sure that it does not become negative.
+		currentHealth = health>0 ? health : 0;
 		
-		// let all listeners know that this unit has lost health.
+		// Llet all listeners know that this unit has lost health.
 		fireUnitEvent( new UnitEvent(UnitEvent.UNIT_HEALTHLOSS, this) );
 		
-		// make sure that the unit health is not below or equal to zero.
+		// Make sure that the unit health is not below or equal to zero.
 		if( currentHealth<=0 )
 		{
 			markDead();
@@ -288,20 +302,20 @@ public abstract class GridUnit extends GridEntity implements IMover, IViewer
 				healthBar.render(g);
 			}
 
+			/*
 			if( GridWhack.DEBUG )
 			{
-				/*
 				if( this instanceof Player && fov!=null )
 				{
 					fov.render(g);
 				}
-				*/
 
 				if( path!=null )
 				{
 					path.render(g);
 				}
 			}
+			*/
 		}
 	}
 	

@@ -1,7 +1,7 @@
 package gridwhack.map;
 
-import gridwhack.entity.tile.TileFactory;
 import gridwhack.grid.Grid;
+import gridwhack.grid.GridTile;
 
 public class Room 
 {
@@ -24,7 +24,7 @@ public class Room
 	
 	public void init()
 	{
-		grid.createTileRect(x, y, width, height, TileFactory.TileType.FLOOR);
+		grid.createTileRect(x, y, width, height, GridTile.Type.FLOOR);
 	}
 	
 	public Room compareClosest(Room r1, Room r2)
