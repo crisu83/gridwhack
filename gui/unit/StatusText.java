@@ -4,16 +4,15 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 
-import gridwhack.entity.unit.event.IUnitListener;
+import gridwhack.event.IEventListener;
 import gridwhack.grid.GridUnit;
-import gridwhack.gui.Gui;
 
 /**
  * Status text class file.
  * Allows for representing unit values as text in the gui.
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
-public abstract class StatusText implements IUnitListener
+public abstract class StatusText implements IEventListener
 {
 	protected int x;
 	protected int y;
@@ -36,7 +35,7 @@ public abstract class StatusText implements IUnitListener
 		this.owner = owner;
 
 		this.color = Color.white;
-		
+
 		// set the text to listen to its owner.
 		owner.addListener(this);
 	}
@@ -49,7 +48,7 @@ public abstract class StatusText implements IUnitListener
 	{
 		g.setFont(font);
 		g.setColor(color);
-		g.drawString(getText(), x, y);
+		g.drawString(getText(), x, y+(int) Math.round(font.getSize()*0.8));
 	}
 	
 	/**

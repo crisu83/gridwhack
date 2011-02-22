@@ -1,10 +1,10 @@
 package gridwhack.grid;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import gridwhack.entity.item.Item;
-import gridwhack.grid.Grid;
-import gridwhack.grid.GridEntity;
+import gridwhack.entity.item.ItemFactory;
 
 /**
  * Grid loot class file.
@@ -20,7 +20,7 @@ public class GridLoot extends GridEntity
 	 */
 	public GridLoot(Grid grid)
 	{
-		super("loot.png", grid);
+		super("chest.png", grid);
 		
 		items = new ArrayList<Item>();
 	}
@@ -70,5 +70,29 @@ public class GridLoot extends GridEntity
 	public int getItemCount()
 	{
 		return items.size();
+	}
+
+	public void createRandomItems()
+	{
+		Random random = new Random();
+		int itemCount = random.nextInt(2); // 0-1
+
+		Item item = null;
+
+		for( int i=0; i<itemCount; i++ )
+		{
+			try
+			{
+				int n = rand.nextInt(Item.Type.values().length);
+				item = ItemFactory.factory( Item.Type.values()[n] );
+			}
+			catch( Exception e )
+			{
+				System.out.println(e.getMessage());
+				System.exit(1);
+			}
+
+			addItem(item);
+		}
 	}
 }

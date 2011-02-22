@@ -40,8 +40,8 @@ public class GuiPanel extends CComponent
 		this.width = width;
 		this.height = height;
 		
-		// Panel is black by default.
-		this.bgColor = bgColor!=null ? bgColor : Color.black;
+		// Panel is almost black by default.
+		this.bgColor = bgColor!=null ? bgColor : new Color(20, 20, 20);
 		
 		elements = new HashMap<String, GuiElement>();
 	}

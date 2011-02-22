@@ -9,6 +9,7 @@ import gridwhack.entity.*;
 import gridwhack.entity.unit.*;
 import gridwhack.entity.unit.event.*;
 import gridwhack.entity.tile.*;
+import gridwhack.entity.unit.player.Player;
 import gridwhack.fov.IViewer;
 import gridwhack.path.*;
 
@@ -119,8 +120,19 @@ public class Grid implements IUnitListener
 		{
 			for( int gy=sgy, ymax=(sgy + heightInCells); gy<ymax; gy++ )
 			{
-				// request the tile from the tile factory.
-				GridTile tile = TileFactory.factory(type, this);
+				GridTile tile = null;
+
+				try
+				{
+					// request the tile from the tile factory.
+					tile = TileFactory.factory(type, this);
+				}
+				// TODO: Create an entity not found exception and throw that instead.
+				catch( Exception e )
+				{
+					System.out.println(e.getMessage());
+					System.exit(1);
+				}
 				
 				GridCell cell = getCell(gx, gy);
 				
@@ -157,9 +169,20 @@ public class Grid implements IUnitListener
 	 * @param type the type of unit to create.
 	 */
 	public synchronized void createUnit(GridUnit.Type type)
-	{		
-		// request the unit from the unit factory.
-		GridUnit unit = UnitFactory.factory(type, this);
+	{
+		GridUnit unit = null;
+
+		try
+		{
+			// request the unit from the unit factory.
+			unit = UnitFactory.factory(type, this);
+		}
+		// TODO: Create an entity not found exception and throw that instead.
+		catch( Exception e )
+		{
+			System.out.println(e.getMessage());
+			System.exit(1);
+		}
 		
 		// get a random cell on the grid.
 		GridCell cell = getRandomCell();
@@ -296,7 +319,7 @@ public class Grid implements IUnitListener
 					source.removeUnit();
 					destination.setUnit(unit);
 					
-					if( unit instanceof Player )
+					if( unit instanceof Player)
 					{
 						updateVisible();
 					}
@@ -515,8 +538,6 @@ public class Grid implements IUnitListener
 		allEntities.add(items.getEntities());
 		allEntities.add(units.getEntities());
 
-		GridFov fov = player.getFov();
-
 		for( ArrayList<CEntity> entities : allEntities )
 		{
 			for( CEntity entity : entities )
@@ -532,7 +553,7 @@ public class Grid implements IUnitListener
 				}
 				else
 				{
-					if( fov.isVisible(ge.getGridX(), ge.getGridY()) )
+					if( player.getFov().isVisible(ge.getGridX(), ge.getGridY()) )
 					{
 						ge.render(g);
 					}

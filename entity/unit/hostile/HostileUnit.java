@@ -2,7 +2,7 @@ package gridwhack.entity.unit.hostile;
 
 import gridwhack.entity.unit.FriendlyUnit;
 import gridwhack.entity.unit.NPCUnit;
-import gridwhack.entity.unit.Player;
+import gridwhack.entity.unit.player.Player;
 import gridwhack.grid.Grid;
 import gridwhack.grid.GridUnit;
 
@@ -11,7 +11,9 @@ import gridwhack.grid.GridUnit;
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
 public abstract class HostileUnit extends NPCUnit
-{	
+{
+	private int experienceValue;
+
 	/**
 	 * Creates the unit.
 	 * @param filename the image filename.
@@ -21,7 +23,17 @@ public abstract class HostileUnit extends NPCUnit
 	{
 		super(filename, grid);
 	}
-	
+
+	public void setExperienceValue(int value)
+	{
+		this.experienceValue = value;
+	}
+
+	public int getExperienceValue()
+	{
+		return experienceValue;
+	}
+
 	/**
 	 * Returns whether the target unit is hostile.
 	 * @param target the target unit.

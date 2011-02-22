@@ -1,28 +1,28 @@
-package gridwhack.gui.unit;
-
-import java.awt.*;
+package gridwhack.gui.unit.player;
 
 import gridwhack.grid.GridUnit;
 import gridwhack.gui.Gui;
 import gridwhack.gui.GuiElement;
 
+import java.awt.*;
+
 /**
- * Health display class file.
+ * Experience display class file.
  * Allows for representing unit health in the gui.
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
-public class HealthDisplay extends GuiElement 
+public class ExperienceDisplay extends GuiElement
 {
-	protected HealthBar healthBar;
-	protected HealthText healthText;
-	
+	protected ExperienceBar experienceBar;
+	protected ExperienceText experienceText;
+
 	/**
 	 * Creates the display.
 	 * @param x the x-coordinate.
 	 * @param y the y-coordinate.
 	 * @param owner the unit this bar belongs to.
 	 */
-	public HealthDisplay(int x, int y, GridUnit owner)
+	public ExperienceDisplay(int x, int y, GridUnit owner)
 	{
 		super(x, y, 170, 20);
 
@@ -30,8 +30,8 @@ public class HealthDisplay extends GuiElement
 		setTextColor(Color.white);
 		
 		// create a health bar and text to represent the player health.
-		healthBar = new HealthBar(x, y, 100, 10, owner);
-		healthText = new HealthText(x+healthBar.getWidth()+10, y, font, owner);
+		experienceBar = new ExperienceBar(x, y, 100, 10, owner);
+		experienceText = new ExperienceText(x+experienceBar.getWidth()+10, y, font, owner);
 	}
 
 	/**
@@ -46,7 +46,7 @@ public class HealthDisplay extends GuiElement
 	 */
 	public void render(Graphics2D g)
 	{
-		healthBar.render(g);
-		healthText.render(g);
+		experienceBar.render(g);
+		experienceText.render(g);
 	}
 }

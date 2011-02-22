@@ -75,7 +75,7 @@ public abstract class CGameEngine extends JFrame implements Runnable
 		screen.initFullScreen(NUM_BUFFERS);
 		
 		// Set an appropriate display mode.
-		screen.setDisplayMode(1920, 1080, 32);
+		//screen.setDisplayMode(1920, 1080, 32);
 		
 		// Get the width and height after changing the display mode.
 		pWidth = screen.getWidth();
@@ -128,13 +128,16 @@ public abstract class CGameEngine extends JFrame implements Runnable
 		);
 		
 		// Add a shutdown hook to be called when game is terminated.
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run()
-			{ 
-				gameStop();
-				endClean();
+		Runtime.getRuntime().addShutdownHook(
+			new Thread()
+			{
+				public void run()
+				{
+					gameStop();
+					endClean();
+				}
 			}
-		});
+		);
 	}
 
 	/**

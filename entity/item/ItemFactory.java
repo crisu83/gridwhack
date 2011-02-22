@@ -12,15 +12,24 @@ public class ItemFactory
 	 * @param type the item type.
 	 * @return the tile.
 	 */
-	public static Item factory(Item.Type type)
+	public static Item factory(Item.Type type) throws Exception
 	{
+		Item item;
+
 		// return the requested item.
 		switch( type )
 		{
 			case HEALTH_ORB:
-				return new HealthOrb();
+				item = new HealthOrb();
+				break;
+
 			default:
-				return null;
+				throw new Exception("Failed to create item, type '" + type + "' is invalid!");
 		}
+
+		// Initialze the item.
+		item.init();
+
+		return item;
 	}
 }

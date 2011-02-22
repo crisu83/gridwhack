@@ -1,7 +1,7 @@
 package gridwhack.gui.item;
 
 import gridwhack.entity.item.Item;
-import gridwhack.entity.unit.Player;
+import gridwhack.entity.unit.player.Player;
 import gridwhack.grid.GridLoot;
 import gridwhack.gui.Gui;
 import gridwhack.gui.GuiElement;
@@ -29,14 +29,14 @@ public class LootBox extends GuiElement
 	 */
 	public LootBox(int x, int y, GridLoot loot, Player owner)
 	{
-		super(x, y, 90, 90);
+		super(x, y, 110, 90);
 
 		setFont( Gui.getInstance().getWindow().getFont() );
 		setTextColor(Color.white);
 
 		this.loot = loot;
 		this.owner = owner;
-		this.lineHeight = (int) Math.round(font.getSize() * 1.5);
+		this.lineHeight = (int) Math.round(font.getSize() * 1.8);
 		this.selectedIndex = 0;
 	}
 
@@ -66,6 +66,7 @@ public class LootBox extends GuiElement
 	}
 
 	/**
+
 	 * Updates this element.
 	 * @param timePassed the time that has passed.
 	 */
@@ -92,19 +93,21 @@ public class LootBox extends GuiElement
 				if( i==selectedIndex)
 				{
 					g.setColor(Color.darkGray);
-					g.fillRect(getX(), getY() + (i*lineHeight), width, (int) Math.round(lineHeight * 0.8));
+					g.fillRect(getX(), getY()+(i*lineHeight), width, 20);
 					g.setColor(textColor);
 				}
 
-				// TODO: Figure out why we need to add an additional 5 px to the y-position.
-				g.drawString(items.get(i).getName(), getX()+5, getY()+(i*lineHeight)+10);
+				g.drawString(items.get(i).getName(), getX()+5, getY()+15+(i*lineHeight));
 			}
 		}
-		// No items found.
-		else
-		{
-			g.drawString("No items.", getX()+5, getY()+10);
-		}
+	}
+
+	/**
+	 * @return the line height.
+	 */
+	public int getLineHeight()
+	{
+		return lineHeight;
 	}
 
 	/**

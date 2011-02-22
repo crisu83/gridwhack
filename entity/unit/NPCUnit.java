@@ -2,8 +2,6 @@ package gridwhack.entity.unit;
 
 import java.util.ArrayList;
 
-import gridwhack.entity.item.Item;
-import gridwhack.entity.item.ItemFactory;
 import gridwhack.grid.Grid;
 import gridwhack.grid.GridLoot;
 import gridwhack.grid.GridUnit;
@@ -105,7 +103,8 @@ public abstract class NPCUnit extends GridUnit
 			}
 		}
 	}
-	
+
+	// TODO: Create javadoc.
 	public boolean isPathValid()
 	{
 		int pathLength = path.getLength();
@@ -197,8 +196,15 @@ public abstract class NPCUnit extends GridUnit
 	protected void createLoot()
 	{
 		GridLoot loot = new GridLoot(grid);
-		loot.addItem( ItemFactory.factory(Item.Type.HEALTH_ORB) );
-		grid.addLoot(getGridX(), getGridY(), loot);
+
+		// Create some random loot.
+		loot.createRandomItems();
+
+		// Make sure that we have items.
+		if( loot.getItemCount()>0 )
+		{
+			grid.addLoot(getGridX(), getGridY(), loot);
+		}
 	}
 	
 	/**

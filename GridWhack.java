@@ -4,7 +4,8 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-import gridwhack.entity.unit.Player;
+import gridwhack.entity.unit.player.Player;
+import gridwhack.entity.unit.UnitFactory;
 import gridwhack.grid.Grid;
 import gridwhack.grid.GridUnit;
 import gridwhack.gui.Gui;
@@ -12,8 +13,10 @@ import gridwhack.gui.GuiPanel;
 import gridwhack.gui.item.LootBox;
 import gridwhack.gui.message.CombatLogBox;
 import gridwhack.gui.message.MessageLogBox;
+import gridwhack.gui.unit.player.ExperienceDisplay;
 import gridwhack.gui.unit.HealthDisplay;
 //import gridwhack.map.Camera;
+import gridwhack.gui.unit.player.PlayerDetails;
 import gridwhack.map.GridMap;
 import gridwhack.map.MapFactory;
 import gridwhack.map.MapFactory.MapType;
@@ -26,7 +29,7 @@ public class GridWhack extends CGameEngine
 {
 	private static final int DEFAULT_FPS = 80;
 
-	public static final boolean DEBUG = true;
+	//public static final boolean DEBUG = true;
 	
 	private Player player;
 	private GridMap map;
@@ -50,18 +53,19 @@ public class GridWhack extends CGameEngine
 		gui = Gui.getInstance();
 		
 		Window w = screen.getFullScreenWindow();
-		w.setFont(new Font("Arial", Font.PLAIN, 11));
+		w.setFont(new Font("Arial", Font.PLAIN, 12));
 		w.setBackground(Color.black);
 		w.setForeground(Color.white);
 		gui.setWindow(w);
 
+
+		createMap();
+		createPlayer();
+		//createCamera();
+
 		// Register the key hanlder.
 		registerKeyHandler();
 
-		createMap();
-		createPlayer();	
-		//createCamera();
-		
 		// initialize the user interface.
 		initGui();
 	}
@@ -81,6 +85,7 @@ public class GridWhack extends CGameEngine
 				 */
 				public void keyPressed(KeyEvent e)
 				{
+					// Looting keys.
 					if( player.isLooting() )
 					{
 						LootBox lb = (LootBox) gui.getPanel(Gui.PLAYER_LOOTWINDOW).getElement(Gui.PLAYER_LOOTBOX);
@@ -173,11 +178,17 @@ public class GridWhack extends CGameEngine
 	protected void createPlayer()
 	{
 		Grid grid = map.getGrid();
-		player = new Player(grid, this);
-		map.setPlayer(player);
-
-		// TODO: Think of a better way to call this the first time.
-		player.updateFov();
+		
+		try
+		{
+			player = (Player) UnitFactory.factory(GridUnit.Type.PLAYER, grid);
+		}
+		// TODO: Create an entity not found exception and throw that instead.
+		catch( Exception e )
+		{
+			System.out.println(e.getMessage());
+			System.exit(1);
+		}
 	}
 	
 	/**
@@ -199,8 +210,8 @@ public class GridWhack extends CGameEngine
 	protected void initGui()
 	{
 		createPlayerPanel();
-		createCombatLog();
 		createMessageLog();
+		createCombatLog();
 	}
 
 	/**
@@ -208,20 +219,11 @@ public class GridWhack extends CGameEngine
 	 */
 	private void createPlayerPanel()
 	{
-		GuiPanel playerPanel = new GuiPanel(5, 5, 180, 20, null);
-		playerPanel.addElement(Gui.PLAYER_HEALTHDISPLAY, new HealthDisplay(5, 5, player));
+		GuiPanel playerPanel = new GuiPanel(0, 0, 200, 60, null);
+		playerPanel.addElement(Gui.PLAYER_DETAILS, new PlayerDetails(5, 5, player));
+		playerPanel.addElement(Gui.PLAYER_HEALTHDISPLAY, new HealthDisplay(5, 25, player));
+		playerPanel.addElement(Gui.PLAYER_EXPERIENCEDISPLAY, new ExperienceDisplay(5, 45, player));
 		gui.addPanel(Gui.PLAYER_PANEL, playerPanel);
-	}
-
-	/**
-	 * Creates the combat log.
-	 */
-	private void createCombatLog()
-	{
-		Window w = screen.getFullScreenWindow();
-		GuiPanel combatLog = new GuiPanel(0, w.getHeight()-100, 300, 100, null);
-		combatLog.addElement(Gui.GAME_COMBATLOGBOX, new CombatLogBox(5, 5, 290, 90));
-		gui.addPanel(Gui.GAME_COMBATLOG, combatLog);
 	}
 
 	/**
@@ -230,9 +232,20 @@ public class GridWhack extends CGameEngine
 	private void createMessageLog()
 	{
 		Window w = screen.getFullScreenWindow();
-		GuiPanel messageLog = new GuiPanel(300, w.getHeight()-100, 300, 100, null);
+		GuiPanel messageLog = new GuiPanel(0, w.getHeight()-100, 500, 100, null);
 		messageLog.addElement(Gui.GAME_MESSAGELOGBOX, new MessageLogBox(5, 5, 290, 90));
 		gui.addPanel(Gui.GAME_MESSAGELOG, messageLog);
+	}
+
+	/**
+	 * Creates the combat log.
+	 */
+	private void createCombatLog()
+	{
+		Window w = screen.getFullScreenWindow();
+		GuiPanel combatLog = new GuiPanel(w.getWidth()-500, w.getHeight()-100, 500, 100, null);
+		combatLog.addElement(Gui.GAME_COMBATLOGBOX, new CombatLogBox(5, 5, 290, 90));
+		gui.addPanel(Gui.GAME_COMBATLOG, combatLog);
 	}
 
 	/**

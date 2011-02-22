@@ -1,5 +1,7 @@
 package gridwhack.entity.unit.attack;
 
+import gridwhack.entity.unit.hostile.HostileUnit;
+import gridwhack.entity.unit.player.Player;
 import gridwhack.gui.message.CombatLog;
 
 /**
@@ -31,8 +33,15 @@ public abstract class Attack
 		// Check if the defender died.
 		if( scenario.defender.getDead() )
 		{
-			CombatLog.addMessage(scenario.defender.getName() + " is killed.");	
 			scenario.defender.setKilledBy(scenario.attacker);
+
+			// TODO: Think of a better way to do this.
+			if( scenario.attacker instanceof Player && scenario.defender instanceof HostileUnit )
+			{
+				((Player) scenario.attacker).increaseExprience( ((HostileUnit) scenario.defender).getExperienceValue() );
+			}
+
+			CombatLog.addMessage(scenario.defender.getName() + " is killed.");
 		}
 	}
 

@@ -74,7 +74,25 @@ public abstract class GuiElement extends CComponent
 		
 		return y;
 	}
-	
+
+	/**
+	 * Sets the width of this element.
+	 * @param width the width.
+	 */
+	public void setWidth(int width)
+	{
+		this.width = width;
+	}
+
+	/**
+	 * Sets the height of this element.
+	 * @param height the height.
+	 */
+	public void setHeight(int height)
+	{
+		this.height = height;
+	}
+
 	/**
 	 * Returns the panel this elements belongs to.
 	 * @return the panel.

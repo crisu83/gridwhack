@@ -62,7 +62,7 @@ public abstract class MessageBox extends GuiElement
 			// render the latest messages.
 			for( int i=0, length=messages.size(); i<length && i<lineCount; i++ )
 			{
-				g.drawString(messages.get(i), getX(), getY()+(i*lineHeight));
+				g.drawString(messages.get(i), getX(), getY()+(int) Math.round(font.getSize()*0.8)+(i*lineHeight));
 			}
 		}
 	}

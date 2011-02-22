@@ -14,5 +14,7 @@ public class Kobold extends HostileUnit
 		setAttackCooldown(1000);
 		setMovementCooldown(1000);
 		setViewRange(8);
+		setExperienceValue(120);
+
 	}
 }

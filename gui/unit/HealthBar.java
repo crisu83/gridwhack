@@ -3,7 +3,10 @@ package gridwhack.gui.unit;
 import java.awt.*;
 
 import gridwhack.entity.unit.NPCUnit;
+import gridwhack.entity.unit.event.IUnitListener;
 import gridwhack.entity.unit.event.UnitEvent;
+import gridwhack.entity.unit.player.event.IPlayerListener;
+import gridwhack.entity.unit.player.event.PlayerEvent;
 import gridwhack.grid.GridUnit;
 
 /**
@@ -11,7 +14,7 @@ import gridwhack.grid.GridUnit;
  * Allows for visualizing unit health in the gui.
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
-public class HealthBar extends StatusBar
+public class HealthBar extends StatusBar implements IUnitListener, IPlayerListener
 {
 	/**
 	 * Creates the bar.
@@ -26,7 +29,7 @@ public class HealthBar extends StatusBar
 		super(x, y, width, height, false, owner);
 		
 		// health bars should be red.
-		color = Color.red;
+		color = new Color(205, 0, 0);
 	}
 	
 	/**
@@ -34,14 +37,10 @@ public class HealthBar extends StatusBar
 	 */
 	private void refresh()
 	{
-		// calculate how many percent the units current health is of its maximum health.
-		float healthPercent = (float)owner.getCurrentHealth() / (float)owner.getMaximumHealth();
-		
-		// calculate the new width for the health bar.
-		float barWidth = healthPercent * width;
+		int barWidth = calculateBarWidth(owner.getCurrentHealth(), owner.getMaximumHealth());
 		
 		// set the new current value.
-		setBarWidth(Math.round(barWidth));
+		setBarWidth(barWidth);
 	}
 	
 	/**
@@ -56,6 +55,8 @@ public class HealthBar extends StatusBar
 		// move the bar with the unit.
 		super.move(x, y);
 	}
+
+
 
 	/**
 	 * Actions to be taken when the unit dies.
@@ -97,5 +98,20 @@ public class HealthBar extends StatusBar
 		{
 			move();
 		}
+	}
+
+	/**
+	 * Actions to be taken when the player gains experience.
+	 * @param e the event.
+	 */
+	public void onPlayerGainExperience(PlayerEvent e) {}
+
+	/**
+	 * Actions to be taken when the player is gains a level.
+	 * @param e the event.
+	 */
+	public void onPlayerGainLevel(PlayerEvent e)
+	{
+		setBarWidth(width);
 	}
 }

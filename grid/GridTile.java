@@ -27,6 +27,11 @@ public abstract class GridTile extends GridEntity
 	}
 
 	/**
+	 * Initializes the item.
+	 */
+	public void init() {}
+
+	/**
 	 * Returns whether a specific entity can walk on this tile.
 	 * @param mover the entity.
 	 * @return whether the tile is blocked.

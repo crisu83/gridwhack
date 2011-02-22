@@ -2,7 +2,7 @@ package gridwhack.gui.unit;
 
 import java.awt.*;
 
-import gridwhack.entity.unit.event.IUnitListener;
+import gridwhack.event.IEventListener;
 import gridwhack.grid.GridUnit;
 
 /**
@@ -10,7 +10,7 @@ import gridwhack.grid.GridUnit;
  * Allows for visualizing unit values in the gui.
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
-public abstract class StatusBar implements IUnitListener
+public abstract class StatusBar implements IEventListener
 {
 	protected int x;
 	protected int y;
@@ -39,7 +39,7 @@ public abstract class StatusBar implements IUnitListener
 		
 		// determine the bars initial width
 		barWidth = !empty ? width : 0;
-		
+
 		// set the bar to listen to its owner.
 		owner.addListener(this);
 	}
@@ -52,6 +52,21 @@ public abstract class StatusBar implements IUnitListener
 	{
 		this.barWidth = barWidth;
 	}
+
+	/**
+	 * Calculates the bar width based on the current value.
+	 * @param current the current value.
+	 * @param maximum the maximum value.
+	 * @return the width.
+	 */
+	protected int calculateBarWidth(int current, int maximum)
+	{
+		// calculate how many percent the current value is of the maximum value.
+		float percent = (float) current / (float) maximum;
+
+		// calculate the new width for the health bar.
+		return Math.round(percent * width);
+	}
 	
 	/**
 	 * Updates the bar position.
@@ -62,6 +77,24 @@ public abstract class StatusBar implements IUnitListener
 	{
 		this.x = x;
 		this.y = y;
+	}
+
+	/**
+	 * Returns the width of this bar.
+	 * @return the width.
+	 */
+	public int getWidth()
+	{
+		return width;
+	}
+
+	/**
+	 * Returns the height of this bar.
+	 * @return the height.
+	 */
+	public int getHeight()
+	{
+		return height;
 	}
 
 	/**

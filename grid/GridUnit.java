@@ -18,6 +18,7 @@ public abstract class GridUnit extends GridEntity implements IMover, IViewer
 {
 	// Unit types.
 	public static enum Type {
+		PLAYER,
 		ORC,
 		KOBOLD,
 		SKELETON
@@ -65,6 +66,14 @@ public abstract class GridUnit extends GridEntity implements IMover, IViewer
 
 		// create a new field of view for the unit.
 		fov = new GridFov(grid, this);
+	}
+
+	/**
+	 * Initializes the unit.
+	 */
+	public void init()
+	{
+		updateFov(); // update the field of view.
 	}
 
 	/**
@@ -373,6 +382,15 @@ public abstract class GridUnit extends GridEntity implements IMover, IViewer
 	}
 
 	/**
+	 * Returns the current level of this unit.
+	 * @return the level.
+	 */
+	public int getLevel()
+	{
+		return level;
+	}
+
+	/**
 	 * @param health the maximum health of the unit.
 	 */
 	public void setMaximumHealth(int health)
@@ -451,7 +469,16 @@ public abstract class GridUnit extends GridEntity implements IMover, IViewer
 	{
 		this.killedBy = killedBy;
 	}
-	
+
+	/**
+	 * Returns the unit that killed this unit.
+	 * @return the unit.
+	 */
+	public GridUnit getKilledBy()
+	{
+		return killedBy;
+	}
+
 	/**
 	 * @return whether the unit is dead.
 	 */

@@ -2,15 +2,18 @@ package gridwhack.gui.unit;
 
 import java.awt.*;
 
+import gridwhack.entity.unit.event.IUnitListener;
 import gridwhack.entity.unit.event.UnitEvent;
+import gridwhack.entity.unit.player.event.IPlayerListener;
+import gridwhack.entity.unit.player.event.PlayerEvent;
 import gridwhack.grid.GridUnit;
 
 /**
- * Health status text class.
+ * Health status text class file.
  * Allows for displaying unit health values in the gui.
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
-public class HealthText extends StatusText
+public class HealthText extends StatusText implements IUnitListener, IPlayerListener
 {
 	protected int current;
 	protected int maximum;
@@ -28,6 +31,9 @@ public class HealthText extends StatusText
 		
 		this.maximum = owner.getMaximumHealth();
 		this.current = maximum;
+
+		// set the text to listen to its owner.
+		owner.addListener(this);
 	}
 
 	/**
@@ -35,6 +41,7 @@ public class HealthText extends StatusText
 	 */
 	private void refresh()
 	{
+		maximum = owner.getMaximumHealth();
 		current = owner.getCurrentHealth();
 	}
 	
@@ -81,4 +88,19 @@ public class HealthText extends StatusText
 	 * @param e the event.
 	 */
 	public synchronized void onUnitMove(UnitEvent e) {}
+
+	/**
+	 * Actions to be taken when the player gains experience.
+	 * @param e the event.
+	 */
+	public void onPlayerGainExperience(PlayerEvent e) {}
+
+	/**
+	 * Actions to be taken when the player is gains a level.
+	 * @param e the event.
+	 */
+	public void onPlayerGainLevel(PlayerEvent e)
+	{
+		refresh();
+	}
 }

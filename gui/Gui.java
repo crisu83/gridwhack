@@ -21,7 +21,9 @@ public class Gui implements IPanelListener
 	protected Window window;
 
 	public static final String PLAYER_PANEL = "playerPanel";
+	public static final String PLAYER_DETAILS = "playerDetails";
 	public static final String PLAYER_HEALTHDISPLAY = "healthDisplay";
+	public static final String PLAYER_EXPERIENCEDISPLAY = "experienceDisplay";
 	public static final String PLAYER_LOOTBOX = "lootBox";
 	public static final String PLAYER_LOOTWINDOW = "lootWindow";
 	public static final String GAME_MESSAGELOG = "messageLog";

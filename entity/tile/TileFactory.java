@@ -16,17 +16,28 @@ public class TileFactory
 	 * @param grid the grid the tile belongs to.
 	 * @return the tile.
 	 */
-	public static GridTile factory(GridTile.Type type, Grid grid)
+	public static GridTile factory(GridTile.Type type, Grid grid) throws Exception
 	{
+		GridTile tile;
+
 		// return the requested tile.
 		switch( type )
 		{
-		case FLOOR:
-			return new FloorTile(grid);
-		case WALL:
-			return new WallTile(grid);
-		default:
-			return null;
+			case FLOOR:
+				tile = new FloorTile(grid);
+				break;
+
+			case WALL:
+				tile = new WallTile(grid);
+				break;
+
+			default:
+				throw new Exception("Failed to create tile, type '" + type + "' is invalid!");
 		}
+
+		// Initialize the tile.
+		tile.init();
+
+		return tile;
 	}
 }

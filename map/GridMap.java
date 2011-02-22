@@ -4,7 +4,6 @@ import java.awt.Graphics2D;
 import java.util.Random;
 
 import gridwhack.RandomProvider;
-import gridwhack.entity.unit.Player;
 import gridwhack.grid.Grid;
 
 public class GridMap
@@ -15,11 +14,6 @@ public class GridMap
 	public GridMap()
 	{
 		rand = RandomProvider.getRand();
-	}
-	
-	public void setPlayer(Player player)
-	{
-		grid.setPlayer(10, 10, player);
 	}
 	
 	public Grid getGrid()

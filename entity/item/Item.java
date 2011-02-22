@@ -1,7 +1,7 @@
 package gridwhack.entity.item;
 
 import gridwhack.entity.CEntity;
-import gridwhack.entity.unit.Player;
+import gridwhack.entity.unit.player.Player;
 import gridwhack.gui.message.MessageLog;
 
 /**
@@ -27,6 +27,11 @@ public abstract class Item extends CEntity implements Lootable
 		
 		this.name = name;
 	}
+
+	/**
+	 * Initializes the item.
+	 */
+	public void init() {}
 
 	/**
 	 * Sets the name for this item.
