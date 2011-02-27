@@ -24,8 +24,12 @@ public class Gui implements IPanelListener
 	public static final String PLAYER_DETAILS = "playerDetails";
 	public static final String PLAYER_HEALTHDISPLAY = "healthDisplay";
 	public static final String PLAYER_EXPERIENCEDISPLAY = "experienceDisplay";
+	public static final String PLAYER_EXPERIENCEBAR = "playerExperienceBar";
+	public static final String PLAYER_EXPERIENCETEXT = "playerExperienceText";
 	public static final String PLAYER_LOOTBOX = "lootBox";
 	public static final String PLAYER_LOOTWINDOW = "lootWindow";
+	public static final String UNIT_HEALTHBAR = "healthBar";
+	public static final String UNIT_HEALTHTEXT = "healthText";
 	public static final String GAME_MESSAGELOG = "messageLog";
 	public static final String GAME_MESSAGELOGBOX = "messageLogBox";
 	public static final String GAME_COMBATLOG = "combatLog";
@@ -122,6 +126,6 @@ public class Gui implements IPanelListener
 	 */
 	public synchronized void onPanelRemove(PanelEvent e)
 	{
-		//removePanel( (GuiPanel) e.getSource() );
+		//removePanel( (GuiPanel2) e.getSource() );
 	}
 }

@@ -4,20 +4,17 @@ import java.awt.*;
 
 import gridwhack.event.IEventListener;
 import gridwhack.grid.GridUnit;
+import gridwhack.gui.GuiElement;
 
 /**
  * Status bar class.
  * Allows for visualizing unit values in the gui.
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
-public abstract class StatusBar implements IEventListener
+public abstract class StatusBar extends GuiElement implements IEventListener
 {
-	protected int x;
-	protected int y;
-	protected int width;
-	protected int height;
 	protected int barWidth;
-	protected Color color;
+	protected Color barColor;
 	protected GridUnit owner;
 	
 	/**
@@ -31,26 +28,33 @@ public abstract class StatusBar implements IEventListener
 	 */
 	public StatusBar(int x, int y, int width, int height, boolean empty, GridUnit owner)
 	{
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = height;
+		super(x, y, width, height);
+
 		this.owner = owner;
-		
-		// determine the bars initial width
+
+		backgroundColor = Color.darkGray;
+
 		barWidth = !empty ? width : 0;
 
-		// set the bar to listen to its owner.
-		owner.addListener(this);
+		owner.addListener(this); // set the bar to listen to its owner.
 	}
-	
+
 	/**
-	 * Updates the bar width.
-	 * @param barWidth the new width of the bar. 
+	 * Sets the bar color.
+	 * @param color the color
 	 */
-	public void setBarWidth(int barWidth)
+	public void setBarColor(Color color)
 	{
-		this.barWidth = barWidth;
+		this.barColor = color;
+	}
+
+	/**
+	 * Sets the bar width.
+	 * @param width the new width of the bar.
+	 */
+	public void setBarWidth(int width)
+	{
+		this.barWidth = width;
 	}
 
 	/**
@@ -80,35 +84,17 @@ public abstract class StatusBar implements IEventListener
 	}
 
 	/**
-	 * Returns the width of this bar.
-	 * @return the width.
-	 */
-	public int getWidth()
-	{
-		return width;
-	}
-
-	/**
-	 * Returns the height of this bar.
-	 * @return the height.
-	 */
-	public int getHeight()
-	{
-		return height;
-	}
-
-	/**
 	 * Renders the status bar.
 	 * @param g the graphics context.
 	 */
 	public void render(Graphics2D g)
 	{
 		// render a background for the bar.
-		g.setColor(Color.darkGray);
-		g.fillRect(x, y, width, height);
+		g.setColor(getBackgroundColor());
+		g.fillRect(getX(), getY(), width, height);
 		
 		// render the actual bar.
-		g.setColor(color);
-		g.fillRect(x, y, barWidth, height);
+		g.setColor(barColor);
+		g.fillRect(getX(), getY(), barWidth, height);
 	}
 }

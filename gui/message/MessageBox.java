@@ -1,7 +1,5 @@
 package gridwhack.gui.message;
 
-import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
@@ -16,7 +14,6 @@ import gridwhack.gui.GuiElement;
 public abstract class MessageBox extends GuiElement 
 {
 	protected int lineCount;
-	protected int lineHeight;
 
 	/**
 	 * Creates the message box.
@@ -30,11 +27,7 @@ public abstract class MessageBox extends GuiElement
 	{
 		super(x, y, width, height);
 
-		setFont( Gui.getInstance().getWindow().getFont() );
-		setTextColor(Color.white);
-
 		this.lineCount = lineCount;
-		this.lineHeight = (int) Math.round(font.getSize() * 1.5);
 	}
 
 	/**
@@ -50,8 +43,8 @@ public abstract class MessageBox extends GuiElement
 	public void render(Graphics2D g)
 	{
 		// set the font and bgColor.
-		g.setFont(font);
-		g.setColor(textColor);
+		g.setFont(getFont());
+		g.setColor(getTextColor());
 		
 		// get the messages from the combat log.
 		ArrayList<String> messages = getMessages();
@@ -62,7 +55,8 @@ public abstract class MessageBox extends GuiElement
 			// render the latest messages.
 			for( int i=0, length=messages.size(); i<length && i<lineCount; i++ )
 			{
-				g.drawString(messages.get(i), getX(), getY()+(int) Math.round(font.getSize()*0.8)+(i*lineHeight));
+				g.drawString(messages.get(i), getX(),
+						getY() + (int) Math.round(font.getSize() * 0.8) + (i*getLineHeight()));
 			}
 		}
 	}

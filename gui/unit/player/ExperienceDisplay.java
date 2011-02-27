@@ -13,9 +13,6 @@ import java.awt.*;
  */
 public class ExperienceDisplay extends GuiElement
 {
-	protected ExperienceBar experienceBar;
-	protected ExperienceText experienceText;
-
 	/**
 	 * Creates the display.
 	 * @param x the x-coordinate.
@@ -26,27 +23,8 @@ public class ExperienceDisplay extends GuiElement
 	{
 		super(x, y, 170, 20);
 
-		setFont( Gui.getInstance().getWindow().getFont() );
-		setTextColor(Color.white);
-		
-		// create a health bar and text to represent the player health.
-		experienceBar = new ExperienceBar(x, y, 100, 10, owner);
-		experienceText = new ExperienceText(x+experienceBar.getWidth()+10, y, font, owner);
-	}
-
-	/**
-	 * Updates this element.
-	 * @param timePassed the time that has passed.
-	 */
-	public void update(long timePassed) {}
-	
-	/**
-	 * Renders this element.
-	 * @param g the graphics context.
-	 */
-	public void render(Graphics2D g)
-	{
-		experienceBar.render(g);
-		experienceText.render(g);
+		// Create a experience bar and text to represent the player experience.
+		addChild(Gui.PLAYER_EXPERIENCEBAR, new ExperienceBar(x, y, 100, 10, owner));
+		addChild(Gui.PLAYER_EXPERIENCETEXT, new ExperienceText(x + getChild(Gui.PLAYER_EXPERIENCEBAR).getWidth() + 10, y, width, height, owner));
 	}
 }

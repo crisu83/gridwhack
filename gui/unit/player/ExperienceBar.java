@@ -26,9 +26,9 @@ public class ExperienceBar extends StatusBar implements IPlayerListener
 	public ExperienceBar(int x, int y, int width, int height, GridUnit owner)
 	{
 		super(x, y, width, height, true, owner);
-		
+
 		// Experience bars should be purple.
-		color = new Color(168, 0, 168);
+		setBarColor( new Color(168, 0, 168) );
 	}
 	
 	/**
@@ -41,7 +41,7 @@ public class ExperienceBar extends StatusBar implements IPlayerListener
 		int maximumExperience = player.getLevelMaximumExperience( player.getLevel() );
 		int barWidth = calculateBarWidth(currentExperience, maximumExperience);
 
-		// set the new current value.
+		// Set the new current value.
 		setBarWidth(barWidth);
 	}
 

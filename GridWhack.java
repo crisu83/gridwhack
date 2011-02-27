@@ -88,7 +88,7 @@ public class GridWhack extends CGameEngine
 					// Looting keys.
 					if( player.isLooting() )
 					{
-						LootBox lb = (LootBox) gui.getPanel(Gui.PLAYER_LOOTWINDOW).getElement(Gui.PLAYER_LOOTBOX);
+						LootBox lb = (LootBox) gui.getPanel(Gui.PLAYER_LOOTWINDOW).getChild(Gui.PLAYER_LOOTBOX);
 						int index = lb.getSelectedIndex();
 
 						switch( e.getKeyCode() )
@@ -219,10 +219,10 @@ public class GridWhack extends CGameEngine
 	 */
 	private void createPlayerPanel()
 	{
-		GuiPanel playerPanel = new GuiPanel(0, 0, 200, 60, null);
-		playerPanel.addElement(Gui.PLAYER_DETAILS, new PlayerDetails(5, 5, player));
-		playerPanel.addElement(Gui.PLAYER_HEALTHDISPLAY, new HealthDisplay(5, 25, player));
-		playerPanel.addElement(Gui.PLAYER_EXPERIENCEDISPLAY, new ExperienceDisplay(5, 45, player));
+		GuiPanel playerPanel = new GuiPanel(0, 0, 200, 70);
+		playerPanel.addChild(Gui.PLAYER_DETAILS, new PlayerDetails(10, 5, player));
+		playerPanel.addChild(Gui.PLAYER_HEALTHDISPLAY, new HealthDisplay(5, 15, player));
+		playerPanel.addChild(Gui.PLAYER_EXPERIENCEDISPLAY, new ExperienceDisplay(5, 25, player));
 		gui.addPanel(Gui.PLAYER_PANEL, playerPanel);
 	}
 
@@ -232,8 +232,8 @@ public class GridWhack extends CGameEngine
 	private void createMessageLog()
 	{
 		Window w = screen.getFullScreenWindow();
-		GuiPanel messageLog = new GuiPanel(0, w.getHeight()-100, 500, 100, null);
-		messageLog.addElement(Gui.GAME_MESSAGELOGBOX, new MessageLogBox(5, 5, 290, 90));
+		GuiPanel messageLog = new GuiPanel(0, w.getHeight()-100, 500, 100);
+		messageLog.addChild(Gui.GAME_MESSAGELOGBOX, new MessageLogBox(5, 5, 290, 90));
 		gui.addPanel(Gui.GAME_MESSAGELOG, messageLog);
 	}
 
@@ -243,8 +243,8 @@ public class GridWhack extends CGameEngine
 	private void createCombatLog()
 	{
 		Window w = screen.getFullScreenWindow();
-		GuiPanel combatLog = new GuiPanel(w.getWidth()-500, w.getHeight()-100, 500, 100, null);
-		combatLog.addElement(Gui.GAME_COMBATLOGBOX, new CombatLogBox(5, 5, 290, 90));
+		GuiPanel combatLog = new GuiPanel(w.getWidth()-500, w.getHeight()-100, 500, 100);
+		combatLog.addChild(Gui.GAME_COMBATLOGBOX, new CombatLogBox(5, 5, 290, 90));
 		gui.addPanel(Gui.GAME_COMBATLOG, combatLog);
 	}
 

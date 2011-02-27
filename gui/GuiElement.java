@@ -3,6 +3,8 @@ package gridwhack.gui;
 import gridwhack.CComponent;
 
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Gui element base class file.
@@ -18,9 +20,15 @@ public abstract class GuiElement extends CComponent
 	protected int height;
 
 	protected Font font;
-	protected Color textColor;
+	protected int lineHeight;
 
-	protected GuiPanel parent;
+	protected Color textColor;
+	protected Color backgroundColor;
+
+	protected GuiElement parent;
+	protected Map<String, GuiElement> children;
+
+	protected volatile boolean visible = true; // elements are visible by default	
 
 	/**
 	 * Creates the element.
@@ -35,84 +43,123 @@ public abstract class GuiElement extends CComponent
 		this.y = y;
 		this.width = width;
 		this.height = height;
+
+		// We use the gui font by default.
+		this.font = font==null ? Gui.getInstance().getWindow().getFont() : font;
+
+		// Line height is 1.5 times the font size.
+		this.lineHeight = (int) Math.round(font.getSize() * 1.5);
+
+		// We use white text by default.
+		this.textColor = textColor==null ? Color.white : textColor;
+
+		// Initialize the map for child elements.
+		children = new HashMap<String, GuiElement>();
 	}
+
+	/**
+	 * Adds a child element to this element.
+	 * @param element the element.
+	 */
+	public synchronized void addChild(String name, GuiElement element)
+	{
+		element.setParent(this); // set this element as the child elements parent.
+		children.put(name, element);
+	}
+
+	/**
+	 * Returns a specific child element.
+	 * @param name the name of the element.
+	 * @return the element.
+	 */
+	public GuiElement getChild(String name)
+	{
+		// Make sure that the element exists.
+		return children.containsKey(name) ? children.get(name) : null;
+	}
+
+	/**
+	 * Removes a child element from this element.
+	 * @param element the element.
+	 */
+	public synchronized void removeChild(GuiElement element)
+	{
+		children.remove(element);
+	}
+
 	
 	/**
-	 * Returns the absolute x-coordinate of this element
-	 * including the parent panels offset.
+	 * Calculates this elements absolute x-coordinate
+	 * taking into account the parent element if necessary.
 	 * @return the x-coordinate.
 	 */
 	public int getX()
 	{
-		int x = this.x;
+		int cx = x;
 		
-		GuiPanel panel = getParent();
-		
-		if( panel!=null )
+		if( parent!=null )
 		{
-			x += panel.getX();
+			cx += parent.getX();
 		}
 		
-		return x;
+		return cx;
 	}
 	
 	/**
-	 * Returns the absolute y-coordinate of this element
-	 * including the parent panels offset.
+	 * Calculates this elements absolute y-coordinate
+	 * taking into account the parent element if necessary.
 	 * @return the y-coordinate.
 	 */
 	public int getY()
 	{
-		int y = this.y;
+		int cy = y;
 		
-		GuiPanel panel = getParent();
-		
-		if( panel!=null )
+		if( parent!=null )
 		{
-			y += panel.getY();
+			cy += parent.getY();
 		}
 		
-		return y;
+		return cy;
 	}
 
 	/**
-	 * Sets the width of this element.
-	 * @param width the width.
+	 * Returns the width of this element.
+	 * @return the width.
 	 */
-	public void setWidth(int width)
+	public int getWidth()
 	{
-		this.width = width;
+		return width;
 	}
 
 	/**
-	 * Sets the height of this element.
-	 * @param height the height.
+	 * Returns the height of this element.
+	 * @return the height.
 	 */
-	public void setHeight(int height)
+	public int getHeight()
 	{
-		this.height = height;
+		return height;
 	}
 
 	/**
-	 * Returns the panel this elements belongs to.
-	 * @return the panel.
+	 * Returns the parent element for this element.
+	 * @return the parent element.
 	 */
-	public GuiPanel getParent()
+	public GuiElement getParent()
 	{
 		return parent;
 	}
 
 	/**
-	 * Sets the panel this element belongs to.
-	 * @param parent the panel.
+	 * Sets the parent for this element.
+	 * @param parent the parent element.
 	 */
-	public void setParent(GuiPanel parent)
+	public void setParent(GuiElement parent)
 	{
 		this.parent = parent;
 	}
 
 	/**
-	 * Sets the font.
+	 * Sets the font for this element.
 	 * @param font the font.
 	 */
 	public void setFont(Font font)
@@ -121,7 +168,34 @@ public abstract class GuiElement extends CComponent
 	}
 
 	/**
-	 * Sets the text color.
+	 * Returns the font for this element.
+	 * @return the font.
+	 */
+	public Font getFont()
+	{
+		return font;
+	}
+
+	/**
+	 * Returns the font size for this element.
+	 * @return the font size.
+	 */
+	public int getFontSize()
+	{
+		return font.getSize();
+	}
+
+	/**
+	 * Returns the line height for this element.
+	 * @return the line height.
+	 */
+	public int getLineHeight()
+	{
+		return lineHeight;
+	}
+
+	/**
+	 * Sets the text color for this element.
 	 * @param color the color.
 	 */
 	public void setTextColor(Color color)
@@ -130,14 +204,74 @@ public abstract class GuiElement extends CComponent
 	}
 
 	/**
-	 * Updates this element.
+	 * Returns the text color for this element.
+	 * @return the color.
+	 */
+	public Color getTextColor()
+	{
+		return textColor;
+	}
+
+	/**
+	 * Sets the background color for this element.
+	 * @param color the color.
+	 */
+	public void setBackgroundColor(Color color) 
+	{
+		this.backgroundColor = color;
+	}
+
+	/**
+	 * Returns the background color for this element.
+	 * @return the color.
+	 */
+	public Color getBackgroundColor() {
+		return backgroundColor;
+	}
+
+	/**
+	 * Updates this element and its children if necessary.
 	 * @param timePassed the time that has passed.
 	 */
-	public abstract void update(long timePassed);
+	public void update(long timePassed)
+	{
+		if( visible )
+		{
+			// Update the children if necessary.
+			if( !children.isEmpty() )
+			{
+				// Update the children.
+				for( Map.Entry<String, GuiElement> element : children.entrySet() )
+				{
+					element.getValue().update(timePassed);
+				}
+			}
+		}
+	}
 	
 	/**
-	 * Renders this element.
+	 * Renders this element and its children if necessary.
 	 * @param g the graphics context.
 	 */
-	public abstract void render(Graphics2D g);
+	public void render(Graphics2D g)
+	{
+		if( visible )
+		{
+			// Set a background color if necessary.
+			if( backgroundColor!=null )
+			{
+				g.setColor(backgroundColor);
+				g.fillRect(getX(), getY(), width, height);
+			}
+
+			// Render the children if necessary.
+			if( !children.isEmpty() )
+			{
+				for( Map.Entry<String, GuiElement> element : children.entrySet() )
+				{
+					element.getValue().render(g);					
+				}
+			}
+		}
+	}
 }

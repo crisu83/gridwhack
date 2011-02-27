@@ -1,7 +1,5 @@
 package gridwhack.gui.unit;
 
-import java.awt.*;
-
 import gridwhack.entity.unit.event.IUnitListener;
 import gridwhack.entity.unit.event.UnitEvent;
 import gridwhack.entity.unit.player.event.IPlayerListener;
@@ -19,21 +17,19 @@ public class HealthText extends StatusText implements IUnitListener, IPlayerList
 	protected int maximum;
 	
 	/**
-	 * Constructs the health text.
+	 * Creates the status text.
 	 * @param x the x-coordinate.
 	 * @param y the y-coordinate.
-	 * @param font the font to use.
-	 * @param owner the unit the health belongs to.
+	 * @param width the width.
+	 * @param height the height.
+	 * @param owner the unit this text belongs to.
 	 */
-	public HealthText(int x, int y, Font font, GridUnit owner)
+	public HealthText(int x, int y, int width, int height, GridUnit owner)
 	{
-		super(x, y, font, owner);
+		super(x, y, width, height, owner);
 		
 		this.maximum = owner.getMaximumHealth();
 		this.current = maximum;
-
-		// set the text to listen to its owner.
-		owner.addListener(this);
 	}
 
 	/**

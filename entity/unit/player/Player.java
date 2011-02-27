@@ -159,8 +159,8 @@ public class Player extends GridUnit
 
 				LootBox lootBox = new LootBox(5, 5, loot, this);
 				int windowHeight = ( lootBox.getLineHeight() * loot.getItemCount() )+8;
-				GuiWindow lootWindow = new GuiWindow((int) getX()+24, (int) getY()+24, 120, windowHeight, null);
-				lootWindow.addElement(Gui.PLAYER_LOOTBOX, lootBox);
+				GuiWindow lootWindow = new GuiWindow((int) getX()+24, (int) getY()+24, 120, windowHeight);
+				lootWindow.addChild(Gui.PLAYER_LOOTBOX, lootBox);
 				Gui.getInstance().addPanel(Gui.PLAYER_LOOTWINDOW, lootWindow);
 			}
 			// No loot.
@@ -176,7 +176,7 @@ public class Player extends GridUnit
 	 */
 	public void lootSelectedItem()
 	{
-		LootBox lootBox = (LootBox) Gui.getInstance().getPanel(Gui.PLAYER_LOOTWINDOW).getElement(Gui.PLAYER_LOOTBOX);
+		LootBox lootBox = (LootBox) Gui.getInstance().getPanel(Gui.PLAYER_LOOTWINDOW).getChild(Gui.PLAYER_LOOTBOX);
 		lootBox.lootSelectedItem();
 	}
 

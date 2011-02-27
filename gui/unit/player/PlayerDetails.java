@@ -1,8 +1,6 @@
 package gridwhack.gui.unit.player;
 
 import gridwhack.entity.unit.player.Player;
-import gridwhack.entity.unit.player.event.IPlayerListener;
-import gridwhack.entity.unit.player.event.PlayerEvent;
 import gridwhack.gui.Gui;
 import gridwhack.gui.GuiElement;
 
@@ -15,8 +13,6 @@ import java.awt.*;
  */
 public class PlayerDetails extends GuiElement
 {
-	protected Font font;
-	protected Color color;
 	private Player player;
 
 	/**
@@ -28,8 +24,6 @@ public class PlayerDetails extends GuiElement
 	{
 		super(x, y, 200, 20);
 
-		this.font = Gui.getInstance().getWindow().getFont();
-		this.color = Color.white;
 		this.player = player;
 	}
 
@@ -45,8 +39,8 @@ public class PlayerDetails extends GuiElement
 	 */
 	public void render(Graphics2D g)
 	{
-		g.setFont(font);
-		g.setColor(color);
-		g.drawString(player.getName() + " (Level " + player.getLevel() + ")", getX(), getY()+font.getSize());
+		g.setFont(getFont());
+		g.setColor(getTextColor());
+		g.drawString(player.getName() + " (Level " + player.getLevel() + ")", getX(), getY() + getFontSize());
 	}
 }

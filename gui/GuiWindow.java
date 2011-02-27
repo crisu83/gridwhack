@@ -15,10 +15,9 @@ public class GuiWindow extends GuiPanel
 	 * @param y the panel y-coordinate.
 	 * @param width the window width.
 	 * @param height the window height.
-	 * @param bgColor the background color.
 	 */
-	public GuiWindow(int x, int y, int width, int height, Color bgColor)
+	public GuiWindow(int x, int y, int width, int height)
 	{
-		super(x, y, width, height, bgColor);
+		super(x, y, width, height);
 	}
 }

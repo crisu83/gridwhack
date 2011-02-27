@@ -27,9 +27,9 @@ public class HealthBar extends StatusBar implements IUnitListener, IPlayerListen
 	public HealthBar(int x, int y, int width, int height, GridUnit owner)
 	{
 		super(x, y, width, height, false, owner);
-		
-		// health bars should be red.
-		color = new Color(205, 0, 0);
+
+		// Health bars should be red.
+		setBarColor( new Color(205, 0, 0) );
 	}
 	
 	/**
@@ -55,8 +55,6 @@ public class HealthBar extends StatusBar implements IUnitListener, IPlayerListen
 		// move the bar with the unit.
 		super.move(x, y);
 	}
-
-
 
 	/**
 	 * Actions to be taken when the unit dies.

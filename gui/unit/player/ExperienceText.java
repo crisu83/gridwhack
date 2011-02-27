@@ -19,19 +19,20 @@ public class ExperienceText extends StatusText implements IPlayerListener
 	protected int maximum;
 
 	/**
-	 * Constructs the health text.
+	 * Creates the status text.
 	 * @param x the x-coordinate.
 	 * @param y the y-coordinate.
-	 * @param font the font to use.
-	 * @param owner the unit the health belongs to.
+	 * @param width the width.
+	 * @param height the height.
+	 * @param owner the unit this text belongs to.
 	 */
-	public ExperienceText(int x, int y, Font font, GridUnit owner)
+	public ExperienceText(int x, int y, int width, int height, GridUnit owner)
 	{
-		super(x, y, font, owner);
+		super(x, y, width, height, owner);
 
 		Player player = (Player) owner;
-		this.maximum = player.getLevelMaximumExperience( player.getLevel() );
 		this.current = 0;
+		this.maximum = player.getLevelMaximumExperience( player.getLevel() );
 	}
 
 	/**
