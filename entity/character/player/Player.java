@@ -1,13 +1,13 @@
-package gridwhack.entity.unit.player;
+package gridwhack.entity.character.player;
 
-import gridwhack.entity.unit.hostile.HostileUnit;
-import gridwhack.entity.unit.player.event.IPlayerListener;
-import gridwhack.entity.unit.player.event.PlayerEvent;
+import gridwhack.entity.character.Character;
+import gridwhack.entity.character.hostile.HostileCharacter;
+import gridwhack.entity.character.player.event.IPlayerListener;
+import gridwhack.entity.character.player.event.PlayerEvent;
 import gridwhack.event.IEventListener;
 import gridwhack.grid.Grid;
 import gridwhack.grid.GridCell;
 import gridwhack.grid.GridLoot;
-import gridwhack.grid.GridUnit;
 import gridwhack.gui.Gui;
 import gridwhack.gui.GuiWindow;
 import gridwhack.gui.item.LootBox;
@@ -17,7 +17,7 @@ import gridwhack.gui.message.MessageLog;
  * Player class file.
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
-public class Player extends GridUnit
+public class Player extends Character
 {
 	protected int[] experienceLevels = {
 		0, // level 1
@@ -59,7 +59,7 @@ public class Player extends GridUnit
 	{
 		super.updateFov();
 
-		// TODO: Think of a better way to call this.	
+		// TODO: Think of a better way to call this. Maybe using event listeners?
 		grid.updateVisible();
 	}
 	
@@ -102,8 +102,7 @@ public class Player extends GridUnit
 
 		MessageLog.addMessage("You gain " + amount + " Experience.");
 
-		int level = getLevel();
-		int nextLevel = getLevelMaximumExperience(level);
+		int nextLevel = getLevelMaximumExperience( getLevel() );
 
 		// Check if the player has leveled up.
 		if( experience>=nextLevel )
@@ -111,7 +110,7 @@ public class Player extends GridUnit
 			levelUp();
 		}
 
-		// let all listeners know that the player has gained experience.
+		// Let all listeners know that the player has gained experience.
 		firePlayerEvent( new PlayerEvent(PlayerEvent.PLAYER_EXPERIENCEGAIN, this) );
 
 	}
@@ -215,7 +214,7 @@ public class Player extends GridUnit
 	{
 		for( IEventListener listener : getListeners() )
 		{
-			// Make sure we only notify unit listeners.
+			// Make sure we only notify character listeners.
 			if( listener instanceof IPlayerListener)
 			{
 				switch( e.getType() )
@@ -238,11 +237,11 @@ public class Player extends GridUnit
 	}
 	
 	/**
-	 * Returns whether the target unit is hostile.
-	 * @param target the target unit.
+	 * Returns whether the target character is hostile.
+	 * @param target the target character.
 	 */
-	public boolean isHostile(GridUnit target)
+	public boolean isHostile(Character target)
 	{
-		return target instanceof HostileUnit;
+		return target instanceof HostileCharacter;
 	}
 }

@@ -1,17 +1,17 @@
 package gridwhack.gui.unit;
 
-import gridwhack.entity.unit.event.IUnitListener;
-import gridwhack.entity.unit.event.UnitEvent;
-import gridwhack.entity.unit.player.event.IPlayerListener;
-import gridwhack.entity.unit.player.event.PlayerEvent;
-import gridwhack.grid.GridUnit;
+import gridwhack.entity.character.Character;
+import gridwhack.entity.character.event.CharacterEvent;
+import gridwhack.entity.character.event.ICharacterListener;
+import gridwhack.entity.character.player.event.IPlayerListener;
+import gridwhack.entity.character.player.event.PlayerEvent;
 
 /**
  * Health status text class file.
- * Allows for displaying unit health values in the gui.
+ * Allows for displaying character health values in the gui.
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
-public class HealthText extends StatusText implements IUnitListener, IPlayerListener
+public class HealthText extends StatusText implements ICharacterListener, IPlayerListener
 {
 	protected int current;
 	protected int maximum;
@@ -22,9 +22,9 @@ public class HealthText extends StatusText implements IUnitListener, IPlayerList
 	 * @param y the y-coordinate.
 	 * @param width the width.
 	 * @param height the height.
-	 * @param owner the unit this text belongs to.
+	 * @param owner the character this text belongs to.
 	 */
-	public HealthText(int x, int y, int width, int height, GridUnit owner)
+	public HealthText(int x, int y, int width, int height, Character owner)
 	{
 		super(x, y, width, height, owner);
 		
@@ -50,40 +50,40 @@ public class HealthText extends StatusText implements IUnitListener, IPlayerList
 	}
 
 	/**
-	 * Actions to be taken when the unit dies.
+	 * Actions to be taken when the character dies.
 	 * @param e the event.
 	 */
-	public synchronized void onUnitDeath(UnitEvent e) {}
+	public synchronized void onCharacterDeath(CharacterEvent e) {}
 
 	/**
-	 * Actions to be taken when the unit is spawned.
+	 * Actions to be taken when the character is spawned.
 	 * @param e the event.
 	 */
-	public synchronized void onUnitSpawn(UnitEvent e) {}
+	public synchronized void onCharacterSpawn(CharacterEvent e) {}
 
 	/**
-	 * Actions to be taken when the unit gains health.
+	 * Actions to be taken when the character gains health.
 	 * @param e the event.
 	 */
-	public synchronized void onUnitHealthGain(UnitEvent e)
+	public synchronized void onCharacterHealthGain(CharacterEvent e)
 	{
 		refresh();
 	}
 
 	/**
-	 * Actions to be taken when the unit loses health.
+	 * Actions to be taken when the character loses health.
 	 * @param e the event.
 	 */
-	public synchronized void onUnitHealthLoss(UnitEvent e)
+	public synchronized void onCharacterHealthLoss(CharacterEvent e)
 	{
 		refresh();
 	}
 
 	/**
-	 * Actions to be taken when the unit moves.
+	 * Actions to be taken when the character moves.
 	 * @param e the event.
 	 */
-	public synchronized void onUnitMove(UnitEvent e) {}
+	public synchronized void onCharacterMove(CharacterEvent e) {}
 
 	/**
 	 * Actions to be taken when the player gains experience.

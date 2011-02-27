@@ -1,11 +1,9 @@
 package gridwhack.map;
 
-import gridwhack.entity.tile.TileFactory;
-import gridwhack.entity.unit.UnitFactory;
+import gridwhack.entity.character.Character;
 import gridwhack.grid.Grid;
 import gridwhack.grid.GridCell;
 import gridwhack.grid.GridTile;
-import gridwhack.grid.GridUnit;
 
 public class DungeonMap extends GridMap 
 {
@@ -33,29 +31,29 @@ public class DungeonMap extends GridMap
 		}
 		
 		// create some hostiles.
-		grid.createUnit(GridUnit.Type.ORC);
-		grid.createUnit(GridUnit.Type.ORC);
-		grid.createUnit(GridUnit.Type.ORC);
-		grid.createUnit(GridUnit.Type.ORC);
-		grid.createUnit(GridUnit.Type.ORC);
-		grid.createUnit(GridUnit.Type.ORC);
-		grid.createUnit(GridUnit.Type.ORC);
-		grid.createUnit(GridUnit.Type.ORC);
-		grid.createUnit(GridUnit.Type.KOBOLD);
-		grid.createUnit(GridUnit.Type.KOBOLD);
-		grid.createUnit(GridUnit.Type.KOBOLD);
-		grid.createUnit(GridUnit.Type.KOBOLD);
-		grid.createUnit(GridUnit.Type.KOBOLD);
-		grid.createUnit(GridUnit.Type.KOBOLD);
-		grid.createUnit(GridUnit.Type.KOBOLD);
-		grid.createUnit(GridUnit.Type.KOBOLD);
-		grid.createUnit(GridUnit.Type.SKELETON);
-		grid.createUnit(GridUnit.Type.SKELETON);
-		grid.createUnit(GridUnit.Type.SKELETON);
-		grid.createUnit(GridUnit.Type.SKELETON);
-		grid.createUnit(GridUnit.Type.SKELETON);
-		grid.createUnit(GridUnit.Type.SKELETON);
-		grid.createUnit(GridUnit.Type.SKELETON);
-		grid.createUnit(GridUnit.Type.SKELETON);
+		grid.createUnit(Character.Type.ORC);
+		grid.createUnit(Character.Type.ORC);
+		grid.createUnit(Character.Type.ORC);
+		grid.createUnit(Character.Type.ORC);
+		grid.createUnit(Character.Type.ORC);
+		grid.createUnit(Character.Type.ORC);
+		grid.createUnit(Character.Type.ORC);
+		grid.createUnit(Character.Type.ORC);
+		grid.createUnit(Character.Type.KOBOLD);
+		grid.createUnit(Character.Type.KOBOLD);
+		grid.createUnit(Character.Type.KOBOLD);
+		grid.createUnit(Character.Type.KOBOLD);
+		grid.createUnit(Character.Type.KOBOLD);
+		grid.createUnit(Character.Type.KOBOLD);
+		grid.createUnit(Character.Type.KOBOLD);
+		grid.createUnit(Character.Type.KOBOLD);
+		grid.createUnit(Character.Type.SKELETON);
+		grid.createUnit(Character.Type.SKELETON);
+		grid.createUnit(Character.Type.SKELETON);
+		grid.createUnit(Character.Type.SKELETON);
+		grid.createUnit(Character.Type.SKELETON);
+		grid.createUnit(Character.Type.SKELETON);
+		grid.createUnit(Character.Type.SKELETON);
+		grid.createUnit(Character.Type.SKELETON);
 	}
 }

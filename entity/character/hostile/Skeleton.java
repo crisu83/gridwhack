@@ -1,8 +1,8 @@
-package gridwhack.entity.unit.hostile;
+package gridwhack.entity.character.hostile;
 
 import gridwhack.grid.Grid;
 
-public class Skeleton extends HostileUnit 
+public class Skeleton extends HostileCharacter
 {
 	public Skeleton(Grid grid) 
 	{

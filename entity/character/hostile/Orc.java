@@ -1,9 +1,8 @@
-package gridwhack.entity.unit.hostile;
+package gridwhack.entity.character.hostile;
 
-import gridwhack.entity.item.Item;
 import gridwhack.grid.Grid;
 
-public class Orc extends HostileUnit 
+public class Orc extends HostileCharacter
 {
 	//public Item.Type[] items = {
 	//	Item.Type.HEALTH_ORB,

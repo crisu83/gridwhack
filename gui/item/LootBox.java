@@ -1,7 +1,7 @@
 package gridwhack.gui.item;
 
 import gridwhack.entity.item.Item;
-import gridwhack.entity.unit.player.Player;
+import gridwhack.entity.character.player.Player;
 import gridwhack.grid.GridLoot;
 import gridwhack.gui.Gui;
 import gridwhack.gui.GuiElement;

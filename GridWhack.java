@@ -4,8 +4,9 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-import gridwhack.entity.unit.player.Player;
-import gridwhack.entity.unit.UnitFactory;
+import gridwhack.entity.character.Character;
+import gridwhack.entity.character.CharacterFactory;
+import gridwhack.entity.character.player.Player;
 import gridwhack.grid.Grid;
 import gridwhack.grid.GridUnit;
 import gridwhack.gui.Gui;
@@ -181,7 +182,7 @@ public class GridWhack extends CGameEngine
 		
 		try
 		{
-			player = (Player) UnitFactory.factory(GridUnit.Type.PLAYER, grid);
+			player = (Player) CharacterFactory.factory(Character.Type.PLAYER, grid);
 		}
 		// TODO: Create an entity not found exception and throw that instead.
 		catch( Exception e )

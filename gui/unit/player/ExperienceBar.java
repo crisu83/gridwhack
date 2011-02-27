@@ -1,9 +1,9 @@
 package gridwhack.gui.unit.player;
 
-import gridwhack.entity.unit.player.Player;
-import gridwhack.entity.unit.player.event.IPlayerListener;
-import gridwhack.entity.unit.player.event.PlayerEvent;
-import gridwhack.grid.GridUnit;
+import gridwhack.entity.character.Character;
+import gridwhack.entity.character.player.Player;
+import gridwhack.entity.character.player.event.IPlayerListener;
+import gridwhack.entity.character.player.event.PlayerEvent;
 import gridwhack.gui.unit.StatusBar;
 
 import java.awt.*;
@@ -21,9 +21,9 @@ public class ExperienceBar extends StatusBar implements IPlayerListener
 	 * @param y the y-coordinate.
 	 * @param width the width of the bar.
 	 * @param height the height of the bar.
-	 * @param owner the unit this bar belongs to.
+	 * @param owner the character this bar belongs to.
 	 */
-	public ExperienceBar(int x, int y, int width, int height, GridUnit owner)
+	public ExperienceBar(int x, int y, int width, int height, Character owner)
 	{
 		super(x, y, width, height, true, owner);
 

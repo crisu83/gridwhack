@@ -1,14 +1,12 @@
 package gridwhack.gui.unit.player;
 
-import gridwhack.grid.GridUnit;
+import gridwhack.entity.character.Character;
 import gridwhack.gui.Gui;
 import gridwhack.gui.GuiElement;
 
-import java.awt.*;
-
 /**
  * Experience display class file.
- * Allows for representing unit health in the gui.
+ * Allows for representing character health in the gui.
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
 public class ExperienceDisplay extends GuiElement
@@ -17,9 +15,9 @@ public class ExperienceDisplay extends GuiElement
 	 * Creates the display.
 	 * @param x the x-coordinate.
 	 * @param y the y-coordinate.
-	 * @param owner the unit this bar belongs to.
+	 * @param owner the character this bar belongs to.
 	 */
-	public ExperienceDisplay(int x, int y, GridUnit owner)
+	public ExperienceDisplay(int x, int y, Character owner)
 	{
 		super(x, y, 170, 20);
 

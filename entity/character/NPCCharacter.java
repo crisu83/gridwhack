@@ -1,5 +1,6 @@
-package gridwhack.entity.unit;
+package gridwhack.entity.character;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 import gridwhack.grid.Grid;
@@ -8,27 +9,29 @@ import gridwhack.grid.GridUnit;
 import gridwhack.gui.unit.HealthBar;
 import gridwhack.path.Path.Step;
 
-public abstract class NPCUnit extends GridUnit
-{	
-	protected GridUnit target;
+public abstract class NPCCharacter extends Character
+{
+	protected HealthBar healthBar;
 	
+	protected Character target;
+
 	/**
-	 * Constructs the non-player unit.
+	 * Constructs the non-player character.
 	 * @param filename the sprite filename.
-	 * @param grid the grid the unit exists on.
+	 * @param grid the grid the character exists on.
 	 */
-	public NPCUnit(String filename, Grid grid)
+	public NPCCharacter(String filename, Grid grid)
 	{
 		super(filename, grid);
 
-		// Create a health bar to represent the unit health.
+		// Create a health bar to represent the character health.
 		healthBar = new HealthBar(0, 0, 30, 2, this);
 	}
 	
 	/**
-	 * @return the closest hostile unit.
+	 * @return the closest hostile character.
 	 */
-	public GridUnit getClosestVisibleHostileUnit()
+	public GridUnit getClosestVisibleHostileCharacters()
 	{		
 		GridUnit closest = null;
 		int lowestCost= 0;
@@ -42,11 +45,11 @@ public abstract class NPCUnit extends GridUnit
 			{
 				int cost = getDistanceCost(target);
 				
-				// make sure the unit is hostile.
-				if( isHostile(target) )
+				// make sure the character is hostile.
+				if( isHostile( (Character) target) )
 				{
-					// check if we have no closest unit or if the unit is closer 
-					// than the unit currently marked as the closest unit.
+					// check if we have no closest character or if the character is closer
+					// than the character currently marked as the closest character.
 					if( closest==null || cost<lowestCost ) 
 					{
 						lowestCost = cost;
@@ -60,13 +63,13 @@ public abstract class NPCUnit extends GridUnit
 	}
 	
 	/**
-	 * Calculates the distance to a specific unit.
-	 * @param target the unit to get the distance to.
+	 * Calculates the distance to a specific character.
+	 * @param target the character to get the distance to.
 	 * @return the distance in grid cells.
 	 */
 	public int getDistanceCost(GridUnit target)
 	{
-		// calculate delta between the unit and the target.
+		// calculate delta between the character and the target.
 		int dgx = this.getGridX() - target.getGridX();
 		int dgy = this.getGridY() - target.getGridY();
 		
@@ -78,7 +81,7 @@ public abstract class NPCUnit extends GridUnit
 	}
 	
 	/**
-	 * Moves the unit across its path.
+	 * Moves the character across its path.
 	 */
 	public void moveAlongPath()
 	{
@@ -104,7 +107,10 @@ public abstract class NPCUnit extends GridUnit
 		}
 	}
 
-	// TODO: Create javadoc.
+	/**
+	 * Returns whether the current path is valid.
+	 * @return whether the path is valid.
+	 */
 	public boolean isPathValid()
 	{
 		int pathLength = path.getLength();
@@ -126,25 +132,25 @@ public abstract class NPCUnit extends GridUnit
 	}
 	
 	/**
-	 * Actions to be taken when the unit moves.
+	 * Actions to be taken when the character moves.
 	 */
 	public void move()
 	{
-		// move unit if it is allowed to move.
+		// move character if it is allowed to move.
 		if( movementAllowed() )
 		{
-			// check if the unit has a path.
+			// check if the character has a path.
 			if( path!=null )
 			{
 				moveAlongPath();
 				
-				// mark the unit to have moved.
+				// mark the character to have moved.
 				markMoved();
 			}
-			// unit has no path.
+			// character has no path.
 			else
 			{
-				// determine in which direction the unit should move
+				// determine in which direction the character should move
 				// by simply randomizing the direction without any further logic.
 				int d = rand.nextInt(Directions.values().length);
 				Directions direction = Directions.values()[d];
@@ -156,32 +162,32 @@ public abstract class NPCUnit extends GridUnit
 	}
 	
 	/**
-	 * Update the non-player unit.
+	 * Update the non-player character.
 	 * @param timePassed the time that has passed.
 	 */
 	public void update(long timePassed)
 	{
-		// always engage the closest visible hostile unit.
-		GridUnit target = getClosestVisibleHostileUnit();
+		// always engage the closest visible hostile character.
+		GridUnit target = getClosestVisibleHostileCharacters();
 		
 		// we found a target.
 		if( target!=null )
 		{
-			setTarget(target);
+			setTarget( (Character) target );
 			
-			// create a path to the target unless the unit already has a valid path.
+			// create a path to the target unless the character already has a valid path.
 			if( path==null || !isPathValid() )
 			{
 				path = getPath(target.getGridX(), target.getGridY(), this.getViewRange());
 			}
 		}
 		
-		// move the unit.
+		// move the character.
 		move();
 	}
 	
 	/**
-	 * Marks the unit dead.
+	 * Marks the character dead.
 	 */
 	public synchronized void markDead()
 	{
@@ -208,7 +214,7 @@ public abstract class NPCUnit extends GridUnit
 	}
 	
 	/**
-	 * @return the unit to target.
+	 * @return the character to target.
 	 */
 	public GridUnit getTarget()
 	{
@@ -216,10 +222,24 @@ public abstract class NPCUnit extends GridUnit
 	}
 	
 	/**
-	 * @param target unit to target.
+	 * @param target character to target.
 	 */
-	public void setTarget(GridUnit target)
+	public void setTarget(Character target)
 	{
 		this.target = target;
+	}
+
+	/**
+	 * Renders the character.
+	 * @param g the graphics context.
+	 */
+	public void render(Graphics2D g)
+	{
+		if( !dead )
+		{
+			super.render(g);
+
+			healthBar.render(g);
+		}
 	}
 }

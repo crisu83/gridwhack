@@ -1,7 +1,6 @@
 package gridwhack.gui.unit.player;
 
-import gridwhack.entity.unit.player.Player;
-import gridwhack.gui.Gui;
+import gridwhack.entity.character.player.Player;
 import gridwhack.gui.GuiElement;
 
 import java.awt.*;

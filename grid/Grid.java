@@ -6,10 +6,11 @@ import java.util.Random;
 
 import gridwhack.RandomProvider;
 import gridwhack.entity.*;
-import gridwhack.entity.unit.*;
-import gridwhack.entity.unit.event.*;
+import gridwhack.entity.character.*;
+import gridwhack.entity.character.Character;
+import gridwhack.entity.character.event.*;
 import gridwhack.entity.tile.*;
-import gridwhack.entity.unit.player.Player;
+import gridwhack.entity.character.player.Player;
 import gridwhack.fov.IViewer;
 import gridwhack.path.*;
 
@@ -17,7 +18,7 @@ import gridwhack.path.*;
  * Grid class file.
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
-public class Grid implements IUnitListener
+public class Grid implements ICharacterListener
 {
 	private static final int CELL_SIZE = 32;
 	
@@ -168,14 +169,14 @@ public class Grid implements IUnitListener
 	 * Creates an unit and adds it in a random cell on this grid.
 	 * @param type the type of unit to create.
 	 */
-	public synchronized void createUnit(GridUnit.Type type)
+	public synchronized void createUnit(Character.Type type)
 	{
 		GridUnit unit = null;
 
 		try
 		{
 			// request the unit from the unit factory.
-			unit = UnitFactory.factory(type, this);
+			unit = CharacterFactory.factory(type, this);
 		}
 		// TODO: Create an entity not found exception and throw that instead.
 		catch( Exception e )
@@ -310,8 +311,8 @@ public class Grid implements IUnitListener
 				// check if there are potential targets.
 				if( target!=null )
 				{
-					// engage the target if hostile.
-					unit.attack(target);
+					// attack the target if hostile.
+					( (Character) unit ).attack( (Character) target );
 				}
 				else
 				{					
@@ -574,7 +575,7 @@ public class Grid implements IUnitListener
 	 * Actions to be taken when the unit dies.
 	 * @param e the event.
 	 */
-	public void onUnitDeath(UnitEvent e)
+	public void onCharacterDeath(CharacterEvent e)
 	{
 		GridUnit unit = (GridUnit) e.getSource();
 		GridCell cell = getCell(unit.getGridX(), unit.getGridY());
@@ -590,23 +591,23 @@ public class Grid implements IUnitListener
 	 * Actions to be taken when the unit is spawned.
 	 * @param e the event.
 	 */
-	public void onUnitSpawn(UnitEvent e) {}
+	public void onCharacterSpawn(CharacterEvent e) {}
 
 	/**
 	 * Actions to be taken when the unit gains health.
 	 * @param e the event.
 	 */
-	public void onUnitHealthGain(UnitEvent e) {}
+	public void onCharacterHealthGain(CharacterEvent e) {}
 
 	/**
 	 * Actions to be taken when the unit loses health.
 	 * @param e the event.
 	 */
-	public void onUnitHealthLoss(UnitEvent e) {}
+	public void onCharacterHealthLoss(CharacterEvent e) {}
 
 	/**
 	 * Actions to be taken when the unit moves.
 	 * @param e the event.
 	 */
-	public void onUnitMove(UnitEvent e) {}
+	public void onCharacterMove(CharacterEvent e) {}
 }

@@ -2,11 +2,11 @@ package gridwhack.map;
 
 import java.awt.Rectangle;
 
-import gridwhack.entity.unit.event.IUnitListener;
-import gridwhack.entity.unit.event.UnitEvent;
+import gridwhack.entity.character.event.CharacterEvent;
+import gridwhack.entity.character.event.ICharacterListener;
 import gridwhack.grid.GridUnit;
 
-public class Camera implements IUnitListener
+public class Camera implements ICharacterListener
 {
 	protected int x;
 	protected int y;
@@ -85,15 +85,15 @@ public class Camera implements IUnitListener
 		setY(ty);
 	}
 
-	public void onUnitDeath(UnitEvent e) {}
+	public void onCharacterDeath(CharacterEvent e) {}
 
-	public void onUnitSpawn(UnitEvent e) {}
+	public void onCharacterSpawn(CharacterEvent e) {}
 
-	public void onUnitHealthGain(UnitEvent e) {}
+	public void onCharacterHealthGain(CharacterEvent e) {}
 
-	public void onUnitHealthLoss(UnitEvent e) {}
+	public void onCharacterHealthLoss(CharacterEvent e) {}
 
-	public void onUnitMove(UnitEvent e)
+	public void onCharacterMove(CharacterEvent e)
 	{
 		if( follow )
 		{

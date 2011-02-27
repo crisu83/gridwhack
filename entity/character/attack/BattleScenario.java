@@ -1,8 +1,8 @@
-package gridwhack.entity.unit.attack;
+package gridwhack.entity.character.attack;
 
 import java.util.Random;
 
-import gridwhack.grid.GridUnit;
+import gridwhack.entity.character.Character;
 
 /**
  * Battle scenario class file.
@@ -10,17 +10,17 @@ import gridwhack.grid.GridUnit;
  */
 public class BattleScenario
 {
-	protected GridUnit attacker;
-	protected GridUnit defender;
+	protected Character attacker;
+	protected Character defender;
 	protected Random rand;
 
 	/**
 	 * Creates the combat scenario.
-	 * @param attacker the attacking unit.
-	 * @param defender the defending unit.
+	 * @param attacker the attacking character.
+	 * @param defender the defending character.
 	 * @param rand the random context to be used.
 	 */
-	public BattleScenario(GridUnit attacker, GridUnit defender, Random rand)
+	public BattleScenario(Character attacker, Character defender, Random rand)
 	{
 		this.attacker = attacker;
 		this.defender = defender;

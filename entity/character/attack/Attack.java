@@ -1,7 +1,7 @@
-package gridwhack.entity.unit.attack;
+package gridwhack.entity.character.attack;
 
-import gridwhack.entity.unit.hostile.HostileUnit;
-import gridwhack.entity.unit.player.Player;
+import gridwhack.entity.character.hostile.HostileCharacter;
+import gridwhack.entity.character.player.Player;
 import gridwhack.gui.message.CombatLog;
 
 /**
@@ -36,9 +36,9 @@ public abstract class Attack
 			scenario.defender.setKilledBy(scenario.attacker);
 
 			// TODO: Think of a better way to do this.
-			if( scenario.attacker instanceof Player && scenario.defender instanceof HostileUnit )
+			if( scenario.attacker instanceof Player && scenario.defender instanceof HostileCharacter)
 			{
-				((Player) scenario.attacker).increaseExprience( ((HostileUnit) scenario.defender).getExperienceValue() );
+				((Player) scenario.attacker).increaseExprience( ((HostileCharacter) scenario.defender).getExperienceValue() );
 			}
 
 			CombatLog.addMessage(scenario.defender.getName() + " is killed.");

@@ -1,7 +1,7 @@
 package gridwhack.entity.item;
 
 import gridwhack.entity.CEntity;
-import gridwhack.entity.unit.player.Player;
+import gridwhack.entity.character.player.Player;
 import gridwhack.gui.message.MessageLog;
 
 /**

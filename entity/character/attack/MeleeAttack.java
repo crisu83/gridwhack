@@ -1,4 +1,4 @@
-package gridwhack.entity.unit.attack;
+package gridwhack.entity.character.attack;
 
 import gridwhack.Die;
 import gridwhack.gui.message.CombatLog;

@@ -1,4 +1,4 @@
-package gridwhack.entity.unit.player.event;
+package gridwhack.entity.character.player.event;
 
 import gridwhack.event.CEvent;
 

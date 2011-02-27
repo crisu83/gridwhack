@@ -1,10 +1,10 @@
-package gridwhack.entity.unit.player.event;
+package gridwhack.entity.character.player.event;
 
 import gridwhack.event.IEventListener;
 
 /**
  * Player listener interface file.
- * All unit listeners must implement this interface.
+ * All character listeners must implement this interface.
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
 public interface IPlayerListener extends IEventListener

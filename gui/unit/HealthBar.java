@@ -2,19 +2,19 @@ package gridwhack.gui.unit;
 
 import java.awt.*;
 
-import gridwhack.entity.unit.NPCUnit;
-import gridwhack.entity.unit.event.IUnitListener;
-import gridwhack.entity.unit.event.UnitEvent;
-import gridwhack.entity.unit.player.event.IPlayerListener;
-import gridwhack.entity.unit.player.event.PlayerEvent;
-import gridwhack.grid.GridUnit;
+import gridwhack.entity.character.Character;
+import gridwhack.entity.character.NPCCharacter;
+import gridwhack.entity.character.event.CharacterEvent;
+import gridwhack.entity.character.event.ICharacterListener;
+import gridwhack.entity.character.player.event.IPlayerListener;
+import gridwhack.entity.character.player.event.PlayerEvent;
 
 /**
  * Health bar class.
- * Allows for visualizing unit health in the gui.
+ * Allows for visualizing character health in the gui.
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
-public class HealthBar extends StatusBar implements IUnitListener, IPlayerListener
+public class HealthBar extends StatusBar implements ICharacterListener, IPlayerListener
 {
 	/**
 	 * Creates the bar.
@@ -22,9 +22,9 @@ public class HealthBar extends StatusBar implements IUnitListener, IPlayerListen
 	 * @param y the y-coordinate.
 	 * @param width the width of the bar.
 	 * @param height the height of the bar.
-	 * @param owner the unit this bar belongs to.
+	 * @param owner the character this bar belongs to.
 	 */
-	public HealthBar(int x, int y, int width, int height, GridUnit owner)
+	public HealthBar(int x, int y, int width, int height, Character owner)
 	{
 		super(x, y, width, height, false, owner);
 
@@ -52,47 +52,47 @@ public class HealthBar extends StatusBar implements IUnitListener, IPlayerListen
 		int x = (int) Math.round(owner.getX()+1);
 		int y = (int) Math.round(owner.getY()+1);
 		
-		// move the bar with the unit.
+		// move the bar with the character.
 		super.move(x, y);
 	}
 
 	/**
-	 * Actions to be taken when the unit dies.
+	 * Actions to be taken when the character dies.
 	 * @param e the event.
 	 */
-	public synchronized void onUnitDeath(UnitEvent e) {}
+	public synchronized void onCharacterDeath(CharacterEvent e) {}
 
 	/**
-	 * Actions to be taken when the unit is spawned.
+	 * Actions to be taken when the character is spawned.
 	 * @param e the event.
 	 */
-	public synchronized void onUnitSpawn(UnitEvent e) {}
+	public synchronized void onCharacterSpawn(CharacterEvent e) {}
 
 	/**
-	 * Actions to be taken when the unit gains health.
+	 * Actions to be taken when the character gains health.
 	 * @param e the event.
 	 */
-	public synchronized void onUnitHealthGain(UnitEvent e)
+	public synchronized void onCharacterHealthGain(CharacterEvent e)
 	{
 		refresh();
 	}
 
 	/**
-	 * Actions to be taken when the unit loses health.
+	 * Actions to be taken when the character loses health.
 	 * @param e the event.
 	 */
-	public synchronized void onUnitHealthLoss(UnitEvent e)
+	public synchronized void onCharacterHealthLoss(CharacterEvent e)
 	{
 		refresh();
 	}
 
 	/**
-	 * Actions to be taken when the unit moves.
+	 * Actions to be taken when the character moves.
 	 * @param e the event.
 	 */
-	public synchronized void onUnitMove(UnitEvent e)
+	public synchronized void onCharacterMove(CharacterEvent e)
 	{		
-		if( owner instanceof NPCUnit )
+		if( owner instanceof NPCCharacter)
 		{
 			move();
 		}

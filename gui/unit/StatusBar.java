@@ -2,20 +2,20 @@ package gridwhack.gui.unit;
 
 import java.awt.*;
 
+import gridwhack.entity.character.Character;
 import gridwhack.event.IEventListener;
-import gridwhack.grid.GridUnit;
 import gridwhack.gui.GuiElement;
 
 /**
  * Status bar class.
- * Allows for visualizing unit values in the gui.
+ * Allows for visualizing character values in the gui.
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
 public abstract class StatusBar extends GuiElement implements IEventListener
 {
 	protected int barWidth;
 	protected Color barColor;
-	protected GridUnit owner;
+	protected Character owner;
 	
 	/**
 	 * Creates the bar.
@@ -24,9 +24,9 @@ public abstract class StatusBar extends GuiElement implements IEventListener
 	 * @param width the width of the bar.
 	 * @param height the height of the bar.
 	 * @param empty whether the bar should be empty.
-	 * @param owner the unit this bar belongs to.
+	 * @param owner the character this bar belongs to.
 	 */
-	public StatusBar(int x, int y, int width, int height, boolean empty, GridUnit owner)
+	public StatusBar(int x, int y, int width, int height, boolean empty, Character owner)
 	{
 		super(x, y, width, height);
 

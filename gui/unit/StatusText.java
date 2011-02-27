@@ -2,18 +2,18 @@ package gridwhack.gui.unit;
 
 import java.awt.Graphics2D;
 
+import gridwhack.entity.character.Character;
 import gridwhack.event.IEventListener;
-import gridwhack.grid.GridUnit;
 import gridwhack.gui.GuiElement;
 
 /**
  * Status text class file.
- * Allows for representing unit values as text in the gui.
+ * Allows for representing character values as text in the gui.
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
 public abstract class StatusText extends GuiElement implements IEventListener
 {
-	protected GridUnit owner;
+	protected Character owner;
 	
 	/**
 	 * Creates the status text.
@@ -21,9 +21,9 @@ public abstract class StatusText extends GuiElement implements IEventListener
 	 * @param y the y-coordinate.
 	 * @param width the width.
 	 * @param height the height.
-	 * @param owner the unit this text belongs to.
+	 * @param owner the character this text belongs to.
 	 */
-	public StatusText(int x, int y, int width, int height, GridUnit owner)
+	public StatusText(int x, int y, int width, int height, Character owner)
 	{
 		super(x, y, width, height);
 

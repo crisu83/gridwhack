@@ -1,12 +1,10 @@
 package gridwhack.gui.unit.player;
 
-import gridwhack.entity.unit.player.Player;
-import gridwhack.entity.unit.player.event.IPlayerListener;
-import gridwhack.entity.unit.player.event.PlayerEvent;
-import gridwhack.grid.GridUnit;
+import gridwhack.entity.character.Character;
+import gridwhack.entity.character.player.Player;
+import gridwhack.entity.character.player.event.IPlayerListener;
+import gridwhack.entity.character.player.event.PlayerEvent;
 import gridwhack.gui.unit.StatusText;
-
-import java.awt.*;
 
 /**
  * Experience status text class.
@@ -24,9 +22,9 @@ public class ExperienceText extends StatusText implements IPlayerListener
 	 * @param y the y-coordinate.
 	 * @param width the width.
 	 * @param height the height.
-	 * @param owner the unit this text belongs to.
+	 * @param owner the character this text belongs to.
 	 */
-	public ExperienceText(int x, int y, int width, int height, GridUnit owner)
+	public ExperienceText(int x, int y, int width, int height, Character owner)
 	{
 		super(x, y, width, height, owner);
 

@@ -1,8 +1,8 @@
-package gridwhack.entity.unit.hostile;
+package gridwhack.entity.character.hostile;
 
 import gridwhack.grid.Grid;
 
-public class Kobold extends HostileUnit 
+public class Kobold extends HostileCharacter
 {
 	public Kobold(Grid grid) 
 	{
