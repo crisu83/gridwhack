@@ -1,4 +1,4 @@
-package gridwhack.gui.unit;
+package gridwhack.gui.character;
 
 import java.awt.Graphics2D;
 

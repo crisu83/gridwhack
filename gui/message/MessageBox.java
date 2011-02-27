@@ -56,7 +56,7 @@ public abstract class MessageBox extends GuiElement
 			for( int i=0, length=messages.size(); i<length && i<lineCount; i++ )
 			{
 				g.drawString(messages.get(i), getX(),
-						getY() + (int) Math.round(font.getSize() * 0.8) + (i*getLineHeight()));
+						getY() + (int) Math.round(getFontSize() * 0.8) + (i*getLineHeight()));
 			}
 		}
 	}

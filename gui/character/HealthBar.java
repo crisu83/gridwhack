@@ -1,4 +1,4 @@
-package gridwhack.gui.unit;
+package gridwhack.gui.character;
 
 import java.awt.*;
 
@@ -110,6 +110,6 @@ public class HealthBar extends StatusBar implements ICharacterListener, IPlayerL
 	 */
 	public void onPlayerGainLevel(PlayerEvent e)
 	{
-		setBarWidth(width);
+		setBarWidth(getWidth());
 	}
 }

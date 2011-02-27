@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import gridwhack.grid.Grid;
 import gridwhack.grid.GridLoot;
 import gridwhack.grid.GridUnit;
-import gridwhack.gui.unit.HealthBar;
+import gridwhack.gui.character.HealthBar;
 import gridwhack.path.Path.Step;
 
 public abstract class NPCCharacter extends Character

@@ -20,7 +20,7 @@ public class CharacterFactory
 	 * @param grid the grid the character belongs to.
 	 * @return the character.
 	 */
-	public static GridUnit factory(Character.Type type, Grid grid) throws Exception
+	public static Character factory(Character.Type type, Grid grid) throws Exception
 	{
 		Character character = null;
 

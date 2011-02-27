@@ -1,4 +1,4 @@
-package gridwhack.gui.unit.player;
+package gridwhack.gui.character.player;
 
 import gridwhack.entity.character.player.Player;
 import gridwhack.gui.GuiElement;

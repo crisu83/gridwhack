@@ -12,6 +12,7 @@ public abstract class Item extends CEntity implements Lootable
 {
 	// Item types.
 	public static enum Type {
+		DAMAGE_ORB,
 		HEALTH_ORB,
 	}
 

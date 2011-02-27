@@ -1,7 +1,5 @@
 package gridwhack.gui;
 
-import java.awt.*;
-
 /**
  * Gui window base class file.
  * Allows for adding windows to the gui.

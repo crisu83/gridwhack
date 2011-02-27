@@ -9,6 +9,8 @@ import gridwhack.grid.Grid;
 import gridwhack.grid.GridCell;
 import gridwhack.grid.GridLoot;
 import gridwhack.gui.Gui;
+import gridwhack.gui.GuiElement;
+import gridwhack.gui.GuiPanel;
 import gridwhack.gui.GuiWindow;
 import gridwhack.gui.item.LootBox;
 import gridwhack.gui.message.MessageLog;
@@ -111,7 +113,7 @@ public class Player extends Character
 		}
 
 		// Let all listeners know that the player has gained experience.
-		firePlayerEvent( new PlayerEvent(PlayerEvent.PLAYER_EXPERIENCEGAIN, this) );
+		firePlayerEvent( new PlayerEvent(PlayerEvent.Type.EXPERIENCEGAIN, this) );
 
 	}
 
@@ -135,7 +137,7 @@ public class Player extends Character
 		setHealth( getMaximumHealth() );
 
 		// let all listeners know that the player has gained a level.		
-		firePlayerEvent( new PlayerEvent(PlayerEvent.PLAYER_LEVELGAIN, this) );
+		firePlayerEvent( new PlayerEvent(PlayerEvent.Type.LEVELGAIN, this) );
 	}
 
 	/**
@@ -159,8 +161,8 @@ public class Player extends Character
 				LootBox lootBox = new LootBox(5, 5, loot, this);
 				int windowHeight = ( lootBox.getLineHeight() * loot.getItemCount() )+8;
 				GuiWindow lootWindow = new GuiWindow((int) getX()+24, (int) getY()+24, 120, windowHeight);
-				lootWindow.addChild(Gui.PLAYER_LOOTBOX, lootBox);
-				Gui.getInstance().addPanel(Gui.PLAYER_LOOTWINDOW, lootWindow);
+				lootWindow.addChild(GuiElement.Type.PLAYER_LOOTBOX, lootBox);
+				Gui.getInstance().addPanel(GuiPanel.Type.WINDOW_PLAYER_LOOT, lootWindow);
 			}
 			// No loot.
 			else
@@ -175,7 +177,8 @@ public class Player extends Character
 	 */
 	public void lootSelectedItem()
 	{
-		LootBox lootBox = (LootBox) Gui.getInstance().getPanel(Gui.PLAYER_LOOTWINDOW).getChild(Gui.PLAYER_LOOTBOX);
+		LootBox lootBox = (LootBox) Gui.getInstance().getPanel(
+				GuiPanel.Type.WINDOW_PLAYER_LOOT).getChild(GuiElement.Type.PLAYER_LOOTBOX);
 		lootBox.lootSelectedItem();
 	}
 
@@ -203,7 +206,7 @@ public class Player extends Character
 		looting = false;
 
 		// We need to close the loot window.
-		Gui.getInstance().removePanel(Gui.PLAYER_LOOTWINDOW);
+		Gui.getInstance().removePanel(GuiPanel.Type.WINDOW_PLAYER_LOOT);
 	}
 
 	/**
@@ -212,20 +215,21 @@ public class Player extends Character
 	 */
 	private synchronized void firePlayerEvent(PlayerEvent e)
 	{
+		// Loop through the listeners and notify them.
 		for( IEventListener listener : getListeners() )
 		{
-			// Make sure we only notify character listeners.
+			// Make sure we only notify player listeners.
 			if( listener instanceof IPlayerListener)
 			{
-				switch( e.getType() )
+				switch( (PlayerEvent.Type) e.getType() )
 				{
 					// Player has gained experience.
-					case PlayerEvent.PLAYER_EXPERIENCEGAIN:
+					case EXPERIENCEGAIN:
 						( (IPlayerListener) listener ).onPlayerGainExperience(e);
 						break;
 
 					// Player has gained a level.
-					case PlayerEvent.PLAYER_LEVELGAIN:
+					case LEVELGAIN:
 						( (IPlayerListener) listener ).onPlayerGainLevel(e);
 						break;
 

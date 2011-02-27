@@ -1,10 +1,10 @@
-package gridwhack.gui.unit.player;
+package gridwhack.gui.character.player;
 
 import gridwhack.entity.character.Character;
 import gridwhack.entity.character.player.Player;
 import gridwhack.entity.character.player.event.IPlayerListener;
 import gridwhack.entity.character.player.event.PlayerEvent;
-import gridwhack.gui.unit.StatusBar;
+import gridwhack.gui.character.StatusBar;
 
 import java.awt.*;
 

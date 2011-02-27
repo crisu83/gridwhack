@@ -8,7 +8,7 @@ import gridwhack.event.CEvent;
  */
 public class PanelEvent extends CEvent
 {
-	public static final int PANEL_REMOVE = 200;
+	public static final int PANEL_REMOVE = 10;
 
 	/**
 	 * Creates the event.

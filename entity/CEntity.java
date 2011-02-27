@@ -54,7 +54,7 @@ public abstract class CEntity extends CComponent
 		removed = true;
 
 		// let all listeners know that this entity has been removed.
-		fireEntityEvent( new EntityEvent(EntityEvent.ENTITY_REMOVE, this) );
+		fireEntityEvent( new EntityEvent(EntityEvent.Type.REMOVE, this) );
 	}
 
 	/**
@@ -132,15 +132,16 @@ public abstract class CEntity extends CComponent
 	 */
 	private synchronized void fireEntityEvent(EntityEvent e)
 	{
+		// Loop through the listeners and notify them.
 		for( IEventListener listener : getListeners() )
 		{
 			// Make sure we only notify entity listeners.
 			if( listener instanceof IEntityListener )
 			{
-				switch( e.getType() )
+				switch( (EntityEvent.Type) e.getType() )
 				{
 					// Entity has been removed.
-					case EntityEvent.ENTITY_REMOVE:
+					case REMOVE:
 						( (IEntityListener) listener ).onEntityRemove(e);
 						break;
 					

@@ -16,29 +16,18 @@ public class Gui implements IPanelListener
 {
 	protected static Gui instance = new Gui();
 
-	protected HashMap<String, GuiPanel> panels = new HashMap<String, GuiPanel>();
+	protected HashMap<GuiPanel.Type, GuiPanel> panels;
 
 	protected Window window;
-
-	public static final String PLAYER_PANEL = "playerPanel";
-	public static final String PLAYER_DETAILS = "playerDetails";
-	public static final String PLAYER_HEALTHDISPLAY = "healthDisplay";
-	public static final String PLAYER_EXPERIENCEDISPLAY = "experienceDisplay";
-	public static final String PLAYER_EXPERIENCEBAR = "playerExperienceBar";
-	public static final String PLAYER_EXPERIENCETEXT = "playerExperienceText";
-	public static final String PLAYER_LOOTBOX = "lootBox";
-	public static final String PLAYER_LOOTWINDOW = "lootWindow";
-	public static final String UNIT_HEALTHBAR = "healthBar";
-	public static final String UNIT_HEALTHTEXT = "healthText";
-	public static final String GAME_MESSAGELOG = "messageLog";
-	public static final String GAME_MESSAGELOGBOX = "messageLogBox";
-	public static final String GAME_COMBATLOG = "combatLog";
-	public static final String GAME_COMBATLOGBOX = "combatLogBox";
 
 	/**
 	 * Private constructor enforces the singleton pattern.
 	 */
-	private Gui() {}
+	private Gui()
+	{
+		// Initialize the map for the panels.
+		panels = new HashMap<GuiPanel.Type, GuiPanel>();
+	}
 	
 	/**
 	 * @return the single gui instance.
@@ -68,32 +57,34 @@ public class Gui implements IPanelListener
 
 	/**
 	 * Adds a panel to the gui.
+	 * @param type the panel type.
 	 * @param panel the panel.
 	 */
-	public synchronized void addPanel(String name, GuiPanel panel)
+	public synchronized void addPanel(GuiPanel.Type type, GuiPanel panel)
 	{
 		panel.addListener(instance);
-		panels.put(name, panel);
+		panels.put(type, panel);
 	}
 
 	/**
 	 * Returns a specific panel in the gui.
-	 * @param name the name of the panel.
+	 * @param type the panel type.
 	 * @return the panel.
 	 */
-	public GuiPanel getPanel(String name)
+	public GuiPanel getPanel(GuiPanel.Type type)
 	{
-		return panels.containsKey(name) ? panels.get(name) : null;
+		return panels.containsKey(type) ? panels.get(type) : null;
 	}
 	
 	/**
 	 * Removes a panel from the gui.
-	 * @param name the name of the panel.
+	 * @param type the panel type.
 	 */
-	public synchronized void removePanel(String name)
+	public synchronized void removePanel(GuiPanel.Type type)
 	{
+		// TODO: Figure out how to get the Gui to remove panels properly.
 		//panel.removeListener(instance);
-		panels.remove(name);
+		panels.remove(type);
 	}
 	
 	/**
@@ -102,7 +93,7 @@ public class Gui implements IPanelListener
 	 */
 	public synchronized void update(long timePassed)
 	{
-		for( Map.Entry<String, GuiPanel> panel : panels.entrySet() )
+		for( Map.Entry<GuiPanel.Type, GuiPanel> panel : panels.entrySet() )
 		{
 			panel.getValue().update(timePassed);
 		}
@@ -114,7 +105,7 @@ public class Gui implements IPanelListener
 	 */
 	public synchronized void render(Graphics2D g)
 	{
-		for( Map.Entry<String, GuiPanel> panel : panels.entrySet() )
+		for( Map.Entry<GuiPanel.Type, GuiPanel> panel : panels.entrySet() )
 		{
 			panel.getValue().render(g);
 		}

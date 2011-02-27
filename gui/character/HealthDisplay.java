@@ -1,7 +1,6 @@
-package gridwhack.gui.unit;
+package gridwhack.gui.character;
 
 import gridwhack.entity.character.Character;
-import gridwhack.gui.Gui;
 import gridwhack.gui.GuiElement;
 
 /**
@@ -22,7 +21,8 @@ public class HealthDisplay extends GuiElement
 		super(x, y, 170, 20);
 
 		// Create a health bar and text to represent the character health.
-		addChild(Gui.UNIT_HEALTHBAR, new HealthBar(x, y, 100, 10, owner));
-		addChild(Gui.UNIT_HEALTHTEXT, new HealthText(x + getChild(Gui.UNIT_HEALTHBAR).getWidth() + 10, y, width, height, owner));
+		addChild(GuiElement.Type.CHARACTER_HEALTHBAR, new HealthBar(x, y, 100, 10, owner));
+		addChild(GuiElement.Type.CHARACTER_HEALTHTEXT, new HealthText(
+				x + getChild(GuiElement.Type.CHARACTER_HEALTHBAR).getWidth() + 10, y, getWidth(), getHeight(), owner));
 	}
 }

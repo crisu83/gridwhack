@@ -9,6 +9,13 @@ import java.awt.*;
  */
 public class GuiPanel extends GuiElement
 {
+	public static enum Type {
+		PANEL_PLAYER_INFO,
+		PANEL_MESSAGELOG,
+		PANEL_COMBATLOG,
+		WINDOW_PLAYER_LOOT,
+	};
+
 	/**
 	 * Creates the panel.
 	 * @param x the panel x-coordinate.
@@ -20,7 +27,11 @@ public class GuiPanel extends GuiElement
 	{
 		super(x, y, width, height);
 
-		// Panels are dark dark gray by default.
-		backgroundColor = backgroundColor==null ? new Color(20, 20, 20) : backgroundColor;
+		Color backgroundColor = getBackgroundColor();
+		if( backgroundColor==null )
+		{
+			// Panels are dark dark gray by default.
+			setBackgroundColor( new Color(20, 20, 20) );
+		}
 	}
 }

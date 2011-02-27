@@ -14,19 +14,32 @@ import java.util.Map;
  */
 public abstract class GuiElement extends CComponent
 {
-	protected int x;
-	protected int y;
-	protected int width;
-	protected int height;
+	public static enum Type {
+		PLAYER_DETAILS,
+		PLAYER_HEALTHDISPLAY,
+		PLAYER_EXPERIENCEDISPLAY,
+		PLAYER_EXPERIENCEBAR,
+		PLAYER_EXPERIENCETEXT,
+		PLAYER_LOOTBOX,
+		CHARACTER_HEALTHBAR,
+		CHARACTER_HEALTHTEXT,
+		GAME_MESSAGELOGBOX,
+		GAME_COMBATLOGBOX,
+	};
 
-	protected Font font;
-	protected int lineHeight;
+	private int x;
+	private int y;
+	private int width;
+	private int height;
 
-	protected Color textColor;
-	protected Color backgroundColor;
+	private Font font;
+	private int lineHeight;
 
-	protected GuiElement parent;
-	protected Map<String, GuiElement> children;
+	private	Color textColor;
+	private	Color backgroundColor;
+
+	private GuiElement parent;
+	private Map<GuiElement.Type, GuiElement> children;
 
 	protected volatile boolean visible = true; // elements are visible by default	
 
@@ -54,40 +67,49 @@ public abstract class GuiElement extends CComponent
 		this.textColor = textColor==null ? Color.white : textColor;
 
 		// Initialize the map for child elements.
-		children = new HashMap<String, GuiElement>();
+		children = new HashMap<GuiElement.Type, GuiElement>();
 	}
 
 	/**
 	 * Adds a child element to this element.
+	 * @param type the element type.
 	 * @param element the element.
 	 */
-	public synchronized void addChild(String name, GuiElement element)
+	public synchronized void addChild(GuiElement.Type type, GuiElement element)
 	{
 		element.setParent(this); // set this element as the child elements parent.
-		children.put(name, element);
+		children.put(type, element);
 	}
 
 	/**
 	 * Returns a specific child element.
-	 * @param name the name of the element.
+	 * @param type the element type.
 	 * @return the element.
 	 */
-	public GuiElement getChild(String name)
+	public GuiElement getChild(GuiElement.Type type)
 	{
 		// Make sure that the element exists.
-		return children.containsKey(name) ? children.get(name) : null;
+		return children.containsKey(type) ? children.get(type) : null;
 	}
 
 	/**
 	 * Removes a child element from this element.
-	 * @param element the element.
+	 * @param type the element type.
 	 */
-	public synchronized void removeChild(GuiElement element)
+	public synchronized void removeChild(GuiElement.Type type)
 	{
-		children.remove(element);
+		children.remove(type);
 	}
 
-	
+	/**
+	 * Sets the x-coordinate for this element.
+	 * @param x the x-coordinate.
+	 */
+	public void setX(int x)
+	{
+		this.x = x;
+	}
+
 	/**
 	 * Calculates this elements absolute x-coordinate
 	 * taking into account the parent element if necessary.
@@ -104,7 +126,16 @@ public abstract class GuiElement extends CComponent
 		
 		return cx;
 	}
-	
+
+	/**
+	 * Sets the y-coordinate for this element.
+	 * @param y the y-coordinate.
+	 */
+	public void setY(int y)
+	{
+		this.y = y;
+	}
+
 	/**
 	 * Calculates this elements absolute y-coordinate
 	 * taking into account the parent element if necessary.
@@ -186,6 +217,15 @@ public abstract class GuiElement extends CComponent
 	}
 
 	/**
+	 * Sets the line height for this element.
+	 * @param lineHeight the line height.
+	 */
+	public void setLineHeight(int lineHeight)
+	{
+		this.lineHeight = lineHeight;
+	}
+
+	/**
 	 * Returns the line height for this element.
 	 * @return the line height.
 	 */
@@ -225,7 +265,8 @@ public abstract class GuiElement extends CComponent
 	 * Returns the background color for this element.
 	 * @return the color.
 	 */
-	public Color getBackgroundColor() {
+	public Color getBackgroundColor()
+	{
 		return backgroundColor;
 	}
 
@@ -241,7 +282,7 @@ public abstract class GuiElement extends CComponent
 			if( !children.isEmpty() )
 			{
 				// Update the children.
-				for( Map.Entry<String, GuiElement> element : children.entrySet() )
+				for( Map.Entry<GuiElement.Type, GuiElement> element : children.entrySet() )
 				{
 					element.getValue().update(timePassed);
 				}
@@ -267,7 +308,7 @@ public abstract class GuiElement extends CComponent
 			// Render the children if necessary.
 			if( !children.isEmpty() )
 			{
-				for( Map.Entry<String, GuiElement> element : children.entrySet() )
+				for( Map.Entry<GuiElement.Type, GuiElement> element : children.entrySet() )
 				{
 					element.getValue().render(g);					
 				}

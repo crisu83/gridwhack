@@ -1,4 +1,4 @@
-package gridwhack.gui.unit;
+package gridwhack.gui.character;
 
 import java.awt.*;
 
@@ -32,7 +32,7 @@ public abstract class StatusBar extends GuiElement implements IEventListener
 
 		this.owner = owner;
 
-		backgroundColor = Color.darkGray;
+		setBackgroundColor( Color.darkGray );
 
 		barWidth = !empty ? width : 0;
 
@@ -69,7 +69,7 @@ public abstract class StatusBar extends GuiElement implements IEventListener
 		float percent = (float) current / (float) maximum;
 
 		// calculate the new width for the health bar.
-		return Math.round(percent * width);
+		return Math.round(percent * getWidth());
 	}
 	
 	/**
@@ -79,8 +79,8 @@ public abstract class StatusBar extends GuiElement implements IEventListener
 	 */
 	public void move(int x, int y)
 	{
-		this.x = x;
-		this.y = y;
+		setX(x);
+		setY(y);
 	}
 
 	/**
@@ -91,10 +91,10 @@ public abstract class StatusBar extends GuiElement implements IEventListener
 	{
 		// render a background for the bar.
 		g.setColor(getBackgroundColor());
-		g.fillRect(getX(), getY(), width, height);
+		g.fillRect(getX(), getY(), getWidth(), getHeight());
 		
 		// render the actual bar.
 		g.setColor(barColor);
-		g.fillRect(getX(), getY(), barWidth, height);
+		g.fillRect(getX(), getY(), barWidth, getHeight());
 	}
 }

@@ -1,12 +1,12 @@
-package gridwhack.entity.event;
+package gridwhack.entity.character.effect.event;
 
 import gridwhack.event.CEvent;
 
 /**
- * Entity event class file.
+ * Character effect event class file.
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
-public class EntityEvent extends CEvent 
+public class CharacterEffectEvent extends CEvent
 {
 	public static enum Type {
 		REMOVE,
@@ -17,7 +17,7 @@ public class EntityEvent extends CEvent
 	 * @param type the type of this event.
 	 * @param source the source of this event.
 	 */
-	public EntityEvent(Type type, Object source)
+	public CharacterEffectEvent(Type type, Object source)
 	{
 		super(type, source);
 	}

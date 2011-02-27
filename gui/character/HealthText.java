@@ -1,4 +1,4 @@
-package gridwhack.gui.unit;
+package gridwhack.gui.character;
 
 import gridwhack.entity.character.Character;
 import gridwhack.entity.character.event.CharacterEvent;

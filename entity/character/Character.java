@@ -6,8 +6,11 @@ import gridwhack.entity.character.event.ICharacterListener;
 import gridwhack.event.IEventListener;
 import gridwhack.grid.Grid;
 import gridwhack.grid.GridUnit;
+import gridwhack.entity.character.effect.CharacterEffect;
 
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Character class file.
@@ -44,6 +47,8 @@ public abstract class Character extends GridUnit
 
 	protected Character killedBy;
 
+	protected Map<CharacterEffect.Type, CharacterEffect> effects;
+
 	/**
 	 * Creates the character.
 	 * @param filename the sprite filename.
@@ -58,6 +63,9 @@ public abstract class Character extends GridUnit
 
 		// Calculate the next time the character can move.
 		nextMoveTime = System.currentTimeMillis() + getMovementCooldown();
+
+		// Initialize the map for buffs and debuffs.
+		effects = new HashMap<CharacterEffect.Type, CharacterEffect>();
 	}
 
 	/**
@@ -65,6 +73,7 @@ public abstract class Character extends GridUnit
 	 */
 	public void init()
 	{
+		// TODO: Think of a better way to do this. Maybe using event listeners?
 		updateFov(); // we need to update the field of view.
 	}
 
@@ -136,7 +145,7 @@ public abstract class Character extends GridUnit
 		currentHealth = health<maximumHealth ? health : maximumHealth;
 
 		// Let all listeners know that this character has gained health.
-		fireCharacterEvent(new CharacterEvent(CharacterEvent.CHARACTER_HEALTHGAIN, this));
+		fireCharacterEvent(new CharacterEvent(CharacterEvent.Type.HEALTHGAIN, this));
 	}
 
 	/**
@@ -151,7 +160,7 @@ public abstract class Character extends GridUnit
 		currentHealth = health>0 ? health : 0;
 
 		// Let all listeners know that this character has lost health.
-		fireCharacterEvent(new CharacterEvent(CharacterEvent.CHARACTER_HEALTHLOSS, this));
+		fireCharacterEvent(new CharacterEvent(CharacterEvent.Type.HEALTHLOSS, this));
 
 		// Mark the character dead if its health is reduced to zero.
 		if( currentHealth<=0 )
@@ -168,7 +177,7 @@ public abstract class Character extends GridUnit
 		dead = true;
 
 		// Let all listeners know that this character has died.
-		fireCharacterEvent(new CharacterEvent(CharacterEvent.CHARACTER_DEATH, this));
+		fireCharacterEvent(new CharacterEvent(CharacterEvent.Type.DEATH, this));
 
 		// Mark this character to be removed.
 		super.markRemoved();
@@ -236,7 +245,7 @@ public abstract class Character extends GridUnit
 		updateFov();
 
 		// Let all listeners know that the character has moved.
-		fireCharacterEvent(new CharacterEvent(CharacterEvent.CHARACTER_MOVE, this));
+		fireCharacterEvent(new CharacterEvent(CharacterEvent.Type.MOVE, this));
 	}
 
 	/**
@@ -248,40 +257,71 @@ public abstract class Character extends GridUnit
 	}
 
 	/**
+	 * Adds a character effect to this character.
+	 * @param type the effect type.
+	 * @param effect the effect.
+	 */
+	public synchronized void addEffect(CharacterEffect.Type type, CharacterEffect effect)
+	{
+		// Make sure that the character does not already have the effect.
+		if( !hasEffect(type) )
+		{
+			effects.put(type, effect);
+		}
+	}
+
+	// TODO: Write Javadoc
+	public synchronized boolean hasEffect(CharacterEffect.Type type)
+	{
+		return effects.containsKey(type);
+	}
+
+	// TODO: Write Javadoc
+	public synchronized void removeEffect(CharacterEffect.Type type)
+	{
+		// Make sure the character has the effect.
+		if( hasEffect(type) )
+		{
+			effects.remove(type);
+		}
+	}
+
+	/**
 	 * Fires an event for this character.
 	 * @param e the event.
 	 */
 	private synchronized void fireCharacterEvent(CharacterEvent e)
 	{
+		// Loop through the listeners and notify them.
 		for( IEventListener listener : getListeners() )
 		{
 			// Make sure we only notify character listeners.
 			if( listener instanceof ICharacterListener)
 			{
-				switch( e.getType() )
+				switch( (CharacterEvent.Type) e.getType() )
 				{
 					// Character has died.
-					case CharacterEvent.CHARACTER_DEATH:
+					case DEATH:
 						( (ICharacterListener) listener ).onCharacterDeath(e);
 						break;
 
 					// Character has been spawned.
-					case CharacterEvent.CHARACTER_SPAWN:
+					case SPAWN:
 						( (ICharacterListener) listener ).onCharacterSpawn(e);
 						break;
 
 					// Character has gained health.
-					case CharacterEvent.CHARACTER_HEALTHGAIN:
+					case HEALTHGAIN:
 						( (ICharacterListener) listener ).onCharacterHealthGain(e);
 						break;
 
 					// Character has lost health.
-					case CharacterEvent.CHARACTER_HEALTHLOSS:
+					case HEALTHLOSS:
 						( (ICharacterListener) listener ).onCharacterHealthLoss(e);
 						break;
 
 					// Character has moved.
-					case CharacterEvent.CHARACTER_MOVE:
+					case MOVE:
 						( (ICharacterListener) listener ).onCharacterMove(e);
 						break;
 
@@ -293,15 +333,44 @@ public abstract class Character extends GridUnit
 	}
 
 	/**
+	 * Updates this character.
+	 * @param timePassed the time that has passed.
+	 */
+	public void update(long timePassed)
+	{
+		// Make sure this character is not dead.
+		if( !dead )
+		{
+			// Update the character effects if necessary.
+			if( !effects.isEmpty() )
+			{
+				for( Map.Entry<CharacterEffect.Type, CharacterEffect> effect : effects.entrySet() )
+				{
+					effect.getValue().update(timePassed);
+				}
+			}
+		}
+	}
+
+	/**
 	 * Renders this character.
 	 * @param g the graphics context.
 	 */
 	public void render(Graphics2D g)
 	{
-		// Make sure the character is not dead.
+		// Make sure this character is not dead.
 		if( !dead )
 		{
 			super.render(g);
+
+			// Render the character effects if necessary.
+			if( !effects.isEmpty() )
+			{
+				for( Map.Entry<CharacterEffect.Type, CharacterEffect> effect : effects.entrySet() )
+				{
+					effect.getValue().render(g);
+				}
+			}
 
 			/*
 			if( GridWhack.DEBUG )

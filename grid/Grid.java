@@ -525,6 +525,8 @@ public class Grid implements ICharacterListener
 		tiles.update(timePassed);
 		items.update(timePassed);
 		units.update(timePassed);
+
+		player.update(timePassed);
 	}
 	
 	/**
