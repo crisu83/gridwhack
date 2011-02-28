@@ -45,7 +45,7 @@ public class GridFov
 	
 	/**
 	 * Returns a matrix representation of which cells are visible
-	 * taking into account the owner view range.
+	 * taking into account the viewer view range.
 	 * @return the visible matrix.
 	 *
 	 */
@@ -67,7 +67,7 @@ public class GridFov
 	
 	/**
 	 * Returns a matrix representation of which cells are visible
-	 * not taking into account the owner view range.
+	 * NOT taking into account the viewer view range.
 	 * @return the complete matrix.
 	 */
 	public boolean[][] getComplete()
@@ -76,7 +76,7 @@ public class GridFov
 	}
 	
 	/**
-	 * Updates this FoV by raytracing every cell on the edge of the grid.
+	 * Updates this field of view by raytracing every cell on the edge of the grid.
 	 * @param gx the grid x-coordinates.
 	 * @param gy the grid y-coordinates.
 	 * @param range the view range in grid cells.
@@ -112,67 +112,66 @@ public class GridFov
 	 */
 	public void raytrace(int sx, int sy, int tx, int ty, int range)
 	{
-		// calculate the deltas.
+		// Calculate the deltas.
 		int dx = Math.abs(tx - sx);
 		int dy = Math.abs(ty - sy);
 
 		int x = sx;
 		int y = sy;
 
-		// calculate how many moves are required 
-		// to reach the target.
+		// Calculate how many moves are required to reach the target.
 		int n = 1 + dx + dy;
 
-		// calculate x-increment and y-increment.
+		// Calculate x- and y-increments.
 		int xi = (tx > sx) ? 1 : -1;
 		int yi = (ty > sy) ? 1 : -1;
 
-		// determine in which direction to set off.
+		// Determine in which direction to set off.
 		int error = dx - dy;
 		
 		dx *= 2;
 		dy *= 2;
 
-		// we need to remember where we started
-		// in order to check the range.
-		int ns = n;
+		// We need to remember where we started in order to check the range.
+		int start = n;
+
+		// We have not hit anything solid yet.
+		boolean solid = false;
 		
-		// loop while we have gird cells left.
-		while( n>0 )
+		// Loop while we have not hit anything solid.
+		while( !solid && n>0 )
 		{
-			// brake if the ray hits something
-			// that the viewer cannot see through.
+			// Check whether the ray hit something solid.
 			if( grid.isSolid(x, y, viewer) )
 			{
-				break;
+				solid = true;
 			}
 
-			// mark grid cell within the range as visible.
-			if( n>(ns - range) && !visible[x][y] )
+			// Mark grid cell within the range as visible.
+			if( !visible[x][y] && n>=(start - range) )
 			{
 				visible[x][y] = true;
 			}
 			
-			// add visible fields to the complete field of view.
+			// Add visible fields to the complete field of view if necessary.
 			if( !complete[x][y] )
 			{
 				complete[x][y] = true;
 			}
 
-			// move horizontally.
+			// Move horizontally.
 			if( error>0 )
 			{
 				x += xi;
 				error -= dy;
 			}
-			// move vertically.
+			// Move vertically.
 			else if( error<0 )
 			{
 				y += yi;
 				error += dx;
 			}
-			// line is passing through both a vertical 
-			// and horizontal grid line.
+			// Line is passing through both a vertical and horizontal line.
 			else
 			{
 				x += xi;
@@ -193,8 +192,6 @@ public class GridFov
 	public void render(Graphics2D g)
 	{
 		g.setColor(Color.gray);
-		
-		boolean[][] visible = this.getVisible();
 		
 		for( int x=0; x<width; x++ )
 		{

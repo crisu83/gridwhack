@@ -1,6 +1,5 @@
 package gridwhack.gui.message;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 /**
@@ -11,7 +10,7 @@ import java.util.ArrayList;
 public class CombatLogBox extends MessageBox
 {
 	/**
-	 * Creates the combat log.
+	 * Creates the message box.
 	 * @param x the x-coordinate.
 	 * @param y the y-coordinate.
 	 * @param width the box width.

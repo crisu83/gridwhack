@@ -1,6 +1,6 @@
 package gridwhack.entity.item;
 
-import gridwhack.entity.unit.player.Player;
+import gridwhack.entity.character.player.Player;
 
 /**
  * Lootable interface class file.

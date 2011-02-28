@@ -8,25 +8,25 @@ import java.util.EventObject;
  */
 abstract public class CEvent extends EventObject 
 {
-	private int type; // type of event.
-	
+	private Object type;
+
 	/**
 	 * Creates the event.
 	 * @param type the type of this event.
 	 * @param source the source of this event.
 	 */
-	public CEvent(int type, Object source) 
+	public CEvent(Object type, Object source)
 	{
 		super(source);
-		
+
 		this.type = type;
 	}
-	
+
 	/**
-	 * Returns the type of this event.
+	 * Returns the event type.
 	 * @return the type.
 	 */
-	public int getType()
+	public Object getType()
 	{
 		return type;
 	}

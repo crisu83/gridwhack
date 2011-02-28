@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class MessageLogBox extends MessageBox
 {
 	/**
-	 * Creates the message log.
+	 * Creates the message box.
 	 * @param x the x-coordinate.
 	 * @param y the y-coordinate.
 	 * @param width the box width.

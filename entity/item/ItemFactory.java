@@ -19,6 +19,10 @@ public class ItemFactory
 		// return the requested item.
 		switch( type )
 		{
+			case DAMAGE_ORB:
+				item = new DamageOrb();
+				break;
+
 			case HEALTH_ORB:
 				item = new HealthOrb();
 				break;
