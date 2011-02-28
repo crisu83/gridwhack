@@ -17,6 +17,7 @@ public abstract class CharacterEffect extends CComponent
 
 	private String name;
 	private CharacterEffect.Type type;
+	private long startTime;
 	private long endTime;
 	private int duration;
 
@@ -31,7 +32,8 @@ public abstract class CharacterEffect extends CComponent
 		this.duration = duration;
 		this.subject = subject;
 
-		endTime = System.currentTimeMillis() + (duration * 1000);
+		startTime = System.currentTimeMillis();
+		endTime = startTime + (duration * 1000);
 	}
 
 	public void init()

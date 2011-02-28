@@ -4,17 +4,14 @@ import java.awt.Graphics2D;
 
 import gridwhack.entity.character.Character;
 import gridwhack.event.IEventListener;
-import gridwhack.gui.GuiElement;
 
 /**
  * Status text class file.
  * Allows for representing character values as text in the gui.
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
-public abstract class StatusText extends GuiElement implements IEventListener
+public abstract class StatusText extends GuiCharacterElement implements IEventListener
 {
-	protected Character owner;
-	
 	/**
 	 * Creates the status text.
 	 * @param x the x-coordinate.
@@ -25,11 +22,9 @@ public abstract class StatusText extends GuiElement implements IEventListener
 	 */
 	public StatusText(int x, int y, int width, int height, Character owner)
 	{
-		super(x, y, width, height);
+		super(x, y, width, height, owner);
 
-		this.owner = owner;
-
-		owner.addListener(this); // set the text to listen to its owner.
+		getOwner().addListener(this); // set the element to listen to its owner.
 	}
 	
 	/**
@@ -42,7 +37,7 @@ public abstract class StatusText extends GuiElement implements IEventListener
 		g.setColor(getTextColor());
 		g.drawString(getText(), getX(), getY() + (int) Math.round(getFontSize() * 0.8));
 	}
-	
+
 	/**
 	 * @return the text.
 	 */

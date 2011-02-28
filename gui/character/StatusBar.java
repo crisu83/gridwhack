@@ -11,12 +11,11 @@ import gridwhack.gui.GuiElement;
  * Allows for visualizing character values in the gui.
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
-public abstract class StatusBar extends GuiElement implements IEventListener
+public abstract class StatusBar extends GuiCharacterElement implements IEventListener
 {
-	protected int barWidth;
-	protected Color barColor;
-	protected Character owner;
-	
+	private int barWidth;
+	private Color barColor;
+
 	/**
 	 * Creates the bar.
 	 * @param x the x-coordinate.
@@ -28,15 +27,13 @@ public abstract class StatusBar extends GuiElement implements IEventListener
 	 */
 	public StatusBar(int x, int y, int width, int height, boolean empty, Character owner)
 	{
-		super(x, y, width, height);
-
-		this.owner = owner;
+		super(x, y, width, height, owner);
 
 		setBackgroundColor( Color.darkGray );
 
 		barWidth = !empty ? width : 0;
 
-		owner.addListener(this); // set the bar to listen to its owner.
+		getOwner().addListener(this); // set the bar to listen to its owner.
 	}
 
 	/**

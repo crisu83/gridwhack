@@ -8,7 +8,7 @@ import gridwhack.gui.GuiElement;
  * Allows for representing character health in the gui.
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
-public class HealthDisplay extends GuiElement 
+public class HealthDisplay extends GuiCharacterElement
 {
 	/**
 	 * Creates the display.
@@ -18,7 +18,7 @@ public class HealthDisplay extends GuiElement
 	 */
 	public HealthDisplay(int x, int y, Character owner)
 	{
-		super(x, y, 170, 20);
+		super(x, y, 170, 20, owner);
 
 		// Create a health bar and text to represent the character health.
 		addChild(GuiElement.Type.CHARACTER_HEALTHBAR, new HealthBar(x, y, 100, 10, owner));

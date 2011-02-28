@@ -81,6 +81,7 @@ public class Player extends Character
 	 */
 	public int getLevelCurrentExperience(int level)
 	{
+		//level = level>0 ? level : getLevel();
 		return getExperience() - getLevelMaximumExperience(level-1);
 	}
 
@@ -91,6 +92,7 @@ public class Player extends Character
 	 */
 	public int getLevelMaximumExperience(int level)
 	{
+		//level = level>0 ? level : getLevel();
 		return experienceLevels[ level ];
 	}
 
@@ -98,7 +100,7 @@ public class Player extends Character
 	 * Increase the player experience.
 	 * @param amount the amount to increase the experience.
 	 */
-	public void increaseExprience(int amount)
+	public void increaseExperience(int amount)
 	{
 		experience += amount;
 

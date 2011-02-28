@@ -38,7 +38,7 @@ public abstract class Attack
 			// TODO: Think of a better way to do this.
 			if( scenario.attacker instanceof Player && scenario.defender instanceof HostileCharacter)
 			{
-				((Player) scenario.attacker).increaseExprience( ((HostileCharacter) scenario.defender).getExperienceValue() );
+				((Player) scenario.attacker).increaseExperience(((HostileCharacter) scenario.defender).getExperienceValue());
 			}
 
 			CombatLog.addMessage(scenario.defender.getName() + " is killed.");

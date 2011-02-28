@@ -36,13 +36,24 @@ public class ExperienceBar extends StatusBar implements IPlayerListener
 	 */
 	private void refresh()
 	{
-		Player player = (Player) owner;
-		int currentExperience = player.getLevelCurrentExperience( player.getLevel() );
-		int maximumExperience = player.getLevelMaximumExperience( player.getLevel() );
-		int barWidth = calculateBarWidth(currentExperience, maximumExperience);
+		Player player = getOwner();
+		int level = player.getLevel();
+		int previousExperience = player.getLevelMaximumExperience(level - 1);
+		int experience = player.getExperience() - previousExperience;
+		int maximumExperience = player.getLevelMaximumExperience(level) - previousExperience;
+		int barWidth = calculateBarWidth(experience, maximumExperience);
 
 		// Set the new current value.
 		setBarWidth(barWidth);
+	}
+
+	/**
+	 * Returns the owner of this element.
+	 * @return the owner.
+	 */
+	public Player getOwner()
+	{
+		return (Player) super.getOwner();
 	}
 
 	/**
@@ -58,8 +69,5 @@ public class ExperienceBar extends StatusBar implements IPlayerListener
 	 * Actions to be taken when the player is gains a level.
 	 * @param e the event.
 	 */
-	public synchronized void onPlayerGainLevel(PlayerEvent e)
-	{
-		refresh();
-	}
+	public synchronized void onPlayerGainLevel(PlayerEvent e) {}
 }

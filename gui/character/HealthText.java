@@ -13,8 +13,8 @@ import gridwhack.entity.character.player.event.PlayerEvent;
  */
 public class HealthText extends StatusText implements ICharacterListener, IPlayerListener
 {
-	protected int current;
-	protected int maximum;
+	private int current;
+	private int maximum;
 	
 	/**
 	 * Creates the status text.
@@ -37,6 +37,7 @@ public class HealthText extends StatusText implements ICharacterListener, IPlaye
 	 */
 	private void refresh()
 	{
+		Character owner = getOwner();
 		maximum = owner.getMaximumHealth();
 		current = owner.getCurrentHealth();
 	}

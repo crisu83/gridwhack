@@ -13,8 +13,8 @@ import gridwhack.gui.character.StatusText;
  */
 public class ExperienceText extends StatusText implements IPlayerListener
 {
-	protected int current;
-	protected int maximum;
+	private int current;
+	private int maximum;
 
 	/**
 	 * Creates the status text.
@@ -28,9 +28,9 @@ public class ExperienceText extends StatusText implements IPlayerListener
 	{
 		super(x, y, width, height, owner);
 
-		Player player = (Player) owner;
-		this.current = 0;
-		this.maximum = player.getLevelMaximumExperience( player.getLevel() );
+		Player player = getOwner();
+		current = 0;
+		maximum = player.getLevelMaximumExperience( player.getLevel() );
 	}
 
 	/**
@@ -38,8 +38,7 @@ public class ExperienceText extends StatusText implements IPlayerListener
 	 */
 	private void refresh()
 	{
-		Player player = (Player) owner;
-		current = player.getLevelCurrentExperience( player.getLevel() );
+		current = getOwner().getExperience();
 	}
 	
 	/**
@@ -48,6 +47,15 @@ public class ExperienceText extends StatusText implements IPlayerListener
 	public String getText()
 	{
 		return current + " / " + maximum;
+	}
+
+	/**
+	 * Returns the owner of this element.
+	 * @return the owner.
+	 */
+	public Player getOwner()
+	{
+		return (Player) super.getOwner();
 	}
 
 	/**
@@ -65,9 +73,9 @@ public class ExperienceText extends StatusText implements IPlayerListener
 	 */
 	public void onPlayerGainLevel(PlayerEvent e)
 	{
-		refresh();
+		Player player = getOwner();
+		maximum = player.getLevelMaximumExperience( player.getLevel() );
 
-		Player player = (Player) owner;
-		this.maximum = player.getLevelMaximumExperience( player.getLevel() );
+		refresh();
 	}
 }

@@ -37,6 +37,7 @@ public class HealthBar extends StatusBar implements ICharacterListener, IPlayerL
 	 */
 	private void refresh()
 	{
+		Character owner = getOwner();
 		int barWidth = calculateBarWidth(owner.getCurrentHealth(), owner.getMaximumHealth());
 		
 		// set the new current value.
@@ -48,6 +49,8 @@ public class HealthBar extends StatusBar implements ICharacterListener, IPlayerL
 	 */
 	private void move()
 	{
+		Character owner = getOwner();
+
 		// calculate the new position for the bar.
 		int x = (int) Math.round(owner.getX()+1);
 		int y = (int) Math.round(owner.getY()+1);
@@ -91,8 +94,10 @@ public class HealthBar extends StatusBar implements ICharacterListener, IPlayerL
 	 * @param e the event.
 	 */
 	public synchronized void onCharacterMove(CharacterEvent e)
-	{		
-		if( owner instanceof NPCCharacter)
+	{
+		Character owner = getOwner();
+
+		if( owner instanceof NPCCharacter )
 		{
 			move();
 		}
@@ -110,6 +115,6 @@ public class HealthBar extends StatusBar implements ICharacterListener, IPlayerL
 	 */
 	public void onPlayerGainLevel(PlayerEvent e)
 	{
-		setBarWidth(getWidth());
+		setBarWidth( getWidth() );
 	}
 }
