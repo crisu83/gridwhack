@@ -1,9 +1,8 @@
 package gridwhack.gui.item;
 
 import gridwhack.entity.item.Item;
-import gridwhack.entity.unit.player.Player;
+import gridwhack.entity.character.player.Player;
 import gridwhack.grid.GridLoot;
-import gridwhack.gui.Gui;
 import gridwhack.gui.GuiElement;
 
 import java.awt.*;
@@ -15,10 +14,10 @@ import java.util.ArrayList;
  */
 public class LootBox extends GuiElement
 {
-	protected GridLoot loot;
-	protected Player owner;
-	protected int lineHeight;
-	protected int selectedIndex;
+	private GridLoot loot;
+	private Player owner;
+	private Color selectionColor;
+	private int selectedIndex;
 
 	/**
 	 * Creates the loot box.
@@ -31,13 +30,12 @@ public class LootBox extends GuiElement
 	{
 		super(x, y, 110, 90);
 
-		setFont( Gui.getInstance().getWindow().getFont() );
-		setTextColor(Color.white);
-
 		this.loot = loot;
 		this.owner = owner;
-		this.lineHeight = (int) Math.round(font.getSize() * 1.8);
+		this.selectionColor = Color.darkGray;
 		this.selectedIndex = 0;
+
+		setLineHeight( (int) Math.round(getFontSize() * 1.8) );
 	}
 
 	/**
@@ -66,7 +64,6 @@ public class LootBox extends GuiElement
 	}
 
 	/**
-
 	 * Updates this element.
 	 * @param timePassed the time that has passed.
 	 */
@@ -78,7 +75,10 @@ public class LootBox extends GuiElement
 	 */
 	public void render(Graphics2D g)
 	{
-		g.setFont(font);
+		Color textColor = getTextColor();
+		int lineHeight = getLineHeight();
+
+		g.setFont(getFont());
 		g.setColor(textColor);
 
 		ArrayList<Item> items = loot.getItems();
@@ -90,24 +90,16 @@ public class LootBox extends GuiElement
 			for( int i=0, length=items.size(); i<length; i++ )
 			{
 				// Mark the selected index with a gray background.
-				if( i==selectedIndex)
+				if( i==selectedIndex )
 				{
-					g.setColor(Color.darkGray);
-					g.fillRect(getX(), getY()+(i*lineHeight), width, 20);
+					g.setColor(selectionColor);
+					g.fillRect(getX(), getY() + (i * lineHeight), getWidth(), 20);
 					g.setColor(textColor);
 				}
 
-				g.drawString(items.get(i).getName(), getX()+5, getY()+15+(i*lineHeight));
+				g.drawString(items.get(i).getName(), getX() + 5, getY() + 15 + (i * lineHeight));
 			}
 		}
-	}
-
-	/**
-	 * @return the line height.
-	 */
-	public int getLineHeight()
-	{
-		return lineHeight;
 	}
 
 	/**

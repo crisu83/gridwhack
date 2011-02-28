@@ -9,7 +9,7 @@ public class MapFactory
 	
 	public static GridMap factory(MapType type)
 	{
-		// return the requested type of unit.
+		// return the requested type of character.
 		switch( type )
 		{
 		case DUNGEON:

@@ -4,19 +4,21 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-import gridwhack.entity.unit.player.Player;
-import gridwhack.entity.unit.UnitFactory;
+import gridwhack.entity.character.Character;
+import gridwhack.entity.character.CharacterFactory;
+import gridwhack.entity.character.player.Player;
 import gridwhack.grid.Grid;
 import gridwhack.grid.GridUnit;
 import gridwhack.gui.Gui;
+import gridwhack.gui.GuiElement;
 import gridwhack.gui.GuiPanel;
 import gridwhack.gui.item.LootBox;
 import gridwhack.gui.message.CombatLogBox;
 import gridwhack.gui.message.MessageLogBox;
-import gridwhack.gui.unit.player.ExperienceDisplay;
-import gridwhack.gui.unit.HealthDisplay;
+import gridwhack.gui.character.player.ExperienceDisplay;
+import gridwhack.gui.character.HealthDisplay;
 //import gridwhack.map.Camera;
-import gridwhack.gui.unit.player.PlayerDetails;
+import gridwhack.gui.character.player.PlayerDetails;
 import gridwhack.map.GridMap;
 import gridwhack.map.MapFactory;
 import gridwhack.map.MapFactory.MapType;
@@ -88,7 +90,8 @@ public class GridWhack extends CGameEngine
 					// Looting keys.
 					if( player.isLooting() )
 					{
-						LootBox lb = (LootBox) gui.getPanel(Gui.PLAYER_LOOTWINDOW).getElement(Gui.PLAYER_LOOTBOX);
+						LootBox lb = (LootBox) gui.getPanel(
+								GuiPanel.Type.WINDOW_PLAYER_LOOT).getChild(GuiElement.Type.PLAYER_LOOTBOX);
 						int index = lb.getSelectedIndex();
 
 						switch( e.getKeyCode() )
@@ -181,7 +184,7 @@ public class GridWhack extends CGameEngine
 		
 		try
 		{
-			player = (Player) UnitFactory.factory(GridUnit.Type.PLAYER, grid);
+			player = (Player) CharacterFactory.factory(Character.Type.PLAYER, grid);
 		}
 		// TODO: Create an entity not found exception and throw that instead.
 		catch( Exception e )
@@ -219,11 +222,11 @@ public class GridWhack extends CGameEngine
 	 */
 	private void createPlayerPanel()
 	{
-		GuiPanel playerPanel = new GuiPanel(0, 0, 200, 60, null);
-		playerPanel.addElement(Gui.PLAYER_DETAILS, new PlayerDetails(5, 5, player));
-		playerPanel.addElement(Gui.PLAYER_HEALTHDISPLAY, new HealthDisplay(5, 25, player));
-		playerPanel.addElement(Gui.PLAYER_EXPERIENCEDISPLAY, new ExperienceDisplay(5, 45, player));
-		gui.addPanel(Gui.PLAYER_PANEL, playerPanel);
+		GuiPanel playerPanel = new GuiPanel(0, 0, 200, 70);
+		playerPanel.addChild(GuiElement.Type.PLAYER_DETAILS, new PlayerDetails(10, 5, player));
+		playerPanel.addChild(GuiElement.Type.PLAYER_HEALTHDISPLAY, new HealthDisplay(5, 15, player));
+		playerPanel.addChild(GuiElement.Type.PLAYER_EXPERIENCEDISPLAY, new ExperienceDisplay(5, 25, player));
+		gui.addPanel(GuiPanel.Type.PANEL_PLAYER_INFO, playerPanel);
 	}
 
 	/**
@@ -232,9 +235,9 @@ public class GridWhack extends CGameEngine
 	private void createMessageLog()
 	{
 		Window w = screen.getFullScreenWindow();
-		GuiPanel messageLog = new GuiPanel(0, w.getHeight()-100, 500, 100, null);
-		messageLog.addElement(Gui.GAME_MESSAGELOGBOX, new MessageLogBox(5, 5, 290, 90));
-		gui.addPanel(Gui.GAME_MESSAGELOG, messageLog);
+		GuiPanel messageLog = new GuiPanel(0, w.getHeight()-100, 500, 100);
+		messageLog.addChild(GuiElement.Type.GAME_MESSAGELOGBOX, new MessageLogBox(5, 5, 290, 90));
+		gui.addPanel(GuiPanel.Type.PANEL_MESSAGELOG, messageLog);
 	}
 
 	/**
@@ -243,9 +246,9 @@ public class GridWhack extends CGameEngine
 	private void createCombatLog()
 	{
 		Window w = screen.getFullScreenWindow();
-		GuiPanel combatLog = new GuiPanel(w.getWidth()-500, w.getHeight()-100, 500, 100, null);
-		combatLog.addElement(Gui.GAME_COMBATLOGBOX, new CombatLogBox(5, 5, 290, 90));
-		gui.addPanel(Gui.GAME_COMBATLOG, combatLog);
+		GuiPanel combatLog = new GuiPanel(w.getWidth()-500, w.getHeight()-100, 500, 100);
+		combatLog.addChild(GuiElement.Type.GAME_COMBATLOGBOX, new CombatLogBox(5, 5, 290, 90));
+		gui.addPanel(GuiPanel.Type.PANEL_COMBATLOG, combatLog);
 	}
 
 	/**
