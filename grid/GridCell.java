@@ -34,7 +34,7 @@ public class GridCell
 	 */
 	public void setTile(GridTile tile)
 	{
-		// set the position of the tile.
+		// Set the position of the tile.
 		tile.setGridX(gx);
 		tile.setGridY(gy);
 
@@ -47,7 +47,7 @@ public class GridCell
 	 */
 	public void addLoot(GridLoot loot)
 	{
-		// check if there is already loot in the cell,
+		// Check if there is already loot in the cell,
 		// if so we need to add the items in the new loot
 		// to the exisiting loot.
 		if( this.loot!=null )
@@ -63,10 +63,10 @@ public class GridCell
 				}
 			}
 		}
-		// no loot in the cell.
+		// No loot in the cell.
 		else
 		{
-			// move the loot to the cell.
+			// Move the loot to the cell.
 			loot.setGridX(gx);
 			loot.setGridY(gy);
 
@@ -88,7 +88,7 @@ public class GridCell
 	 */
 	public void setUnit(GridUnit unit)
 	{
-		// move the unit to the cell.
+		// Move the unit to the cell.
 		unit.setGridX(gx);
 		unit.setGridY(gy);
 
@@ -124,7 +124,7 @@ public class GridCell
 			return tile.isBlocked(mover);
 		}
 
-		// cell is blocked by default.
+		// Cells is blocked by default.
 		return true;
 	}
 
@@ -140,7 +140,7 @@ public class GridCell
 			return tile.isSolid(viewer);
 		}
 
-		// cells are solid by default.
+		// Cells are solid by default.
 		return true;
 	}
 

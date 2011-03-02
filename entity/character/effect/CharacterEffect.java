@@ -86,7 +86,7 @@ public abstract class CharacterEffect extends CComponent
 				switch( (CharacterEffectEvent.Type) e.getType() )
 				{
 					// Character effect has been removed.
-					case REMOVE:
+					case FADE:
 						( (ICharacterEffectListener) listener ).onCharacterEffectRemove(e);
 						break;
 

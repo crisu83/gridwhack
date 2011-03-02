@@ -3,6 +3,7 @@ package gridwhack.entity.character;
 import gridwhack.entity.character.attack.BattleScenario;
 import gridwhack.entity.character.event.CharacterEvent;
 import gridwhack.entity.character.event.ICharacterListener;
+import gridwhack.entity.character.player.Player;
 import gridwhack.event.IEventListener;
 import gridwhack.grid.Grid;
 import gridwhack.grid.GridUnit;
@@ -36,7 +37,6 @@ public abstract class Character extends GridUnit
 	protected int maximumHealth;
 	protected int minimumDamage;
 	protected int maximumDamage;
-	protected int viewRange = 0; // characters are blind by default
 
 	protected int attackCooldown;
 	protected int movementCooldown = 0; // characters cannot move by default
@@ -73,8 +73,10 @@ public abstract class Character extends GridUnit
 	 */
 	public void init()
 	{
-		// TODO: Think of a better way to do this. Maybe using event listeners?
-		updateFov(); // we need to update the field of view.
+		super.init();
+
+		// Let all the character listeners know that the character has been spawned.
+		fireCharacterEvent(new CharacterEvent(CharacterEvent.Type.SPAWN, this));
 	}
 
 	/**
@@ -104,7 +106,7 @@ public abstract class Character extends GridUnit
 	public void attack(Character target)
 	{
 		// make sure the character may attack.
-		if( isHostile(target) && isAttackAllowed() )
+		if( isAttackAllowed() )
 		{
 			BattleScenario scenario = new BattleScenario(this, target, rand);
 			scenario.start();
@@ -112,25 +114,23 @@ public abstract class Character extends GridUnit
 	}
 
 	/**
-	 * Returns whether the character is allowed to move.
+	 * Returns whether the character is allowed to attack.
 	 * @return whether attacking is allowed.
 	 */
 	public boolean isAttackAllowed()
 	{
-		long attackInterval = getAttackCooldown();
+		long attackCooldown = getAttackCooldown();
 
 		// Check if the character may attack.
-		if( attackInterval>0 && nextAttackTime<System.currentTimeMillis() )
+		if( attackCooldown>0 && nextAttackTime<System.currentTimeMillis() )
 		{
 			// calculate the next time the character can engage.
-			nextAttackTime += attackInterval;
+			nextAttackTime += attackCooldown;
 			return true;
 		}
+		
 		// Character may not attack yet.
-		else
-		{
-			return false;
-		}
+		return false;
 	}
 
 	/**
@@ -229,11 +229,9 @@ public abstract class Character extends GridUnit
 			nextMoveTime += movementCooldown;
 			return true;
 		}
+
 		// Character may not move at this time.
-		else
-		{
-			return false;
-		}
+		return false;
 	}
 
 	/**
@@ -241,19 +239,10 @@ public abstract class Character extends GridUnit
 	 */
 	public synchronized void markMoved()
 	{
-		// Update the field of view.
-		updateFov();
+		super.markMoved();
 
 		// Let all listeners know that the character has moved.
 		fireCharacterEvent(new CharacterEvent(CharacterEvent.Type.MOVE, this));
-	}
-
-	/**
-	 * Updates the field of view for this character.
-	 */
-	public void updateFov()
-	{
-		super.updateFov(viewRange);
 	}
 
 	/**
@@ -270,13 +259,20 @@ public abstract class Character extends GridUnit
 		}
 	}
 
-	// TODO: Write Javadoc
+	/**
+	 * Returns whether this character is affected by a specific character effect.
+	 * @param type the effect type.
+	 * @return whether this character is affected by the effect.
+	 */
 	public synchronized boolean hasEffect(CharacterEffect.Type type)
 	{
 		return effects.containsKey(type);
 	}
 
-	// TODO: Write Javadoc
+	/**
+	 * Removes a character effect from this character.
+	 * @param type the effect type.
+	 */
 	public synchronized void removeEffect(CharacterEffect.Type type)
 	{
 		// Make sure the character has the effect.
@@ -539,24 +535,6 @@ public abstract class Character extends GridUnit
 	public boolean getDead()
 	{
 		return dead;
-	}
-
-	/**
-	 * Sets this character view range.
-	 * @param range the view range in grid cells.
-	 */
-	public void setViewRange(int range)
-	{
-		this.viewRange = range;
-	}
-
-	/**
-	 * Returns the character view range in grid cells.
-	 * @return the view range.
-	 */
-	public int getViewRange()
-	{
-		return viewRange;
 	}
 
 	/**

@@ -8,15 +8,31 @@ import gridwhack.event.CEvent;
  */
 public class PanelEvent extends CEvent
 {
-	public static final int PANEL_REMOVE = 10;
+	private Type type;
+
+	// Panel event types.
+	public static enum Type {
+		REMOVE,
+	};
 
 	/**
 	 * Creates the event.
 	 * @param type the type of this event.
 	 * @param source the source of this event.
 	 */
-	public PanelEvent(int type, Object source)
+	public PanelEvent(Type type, Object source)
 	{
-		super(type, source);
+		super(source);
+
+		this.type = type;
+	}
+
+	/**
+	 * Returns the event type.
+	 * @return the type.
+	 */
+	public Type getType()
+	{
+		return type;
 	}
 }

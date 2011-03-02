@@ -20,7 +20,7 @@ public class CharacterFactory
 	 * @param grid the grid the character belongs to.
 	 * @return the character.
 	 */
-	public static Character factory(Character.Type type, Grid grid) throws Exception
+	public static Character factory(Character.Type type, Grid grid) throws ClassNotFoundException
 	{
 		Character character = null;
 
@@ -44,7 +44,7 @@ public class CharacterFactory
 				break;
 
 			default:
-				throw new Exception("Failed to create character, type '" + type + "' is invalid!");
+				throw new ClassNotFoundException("Failed to create character, type '" + type + "' is invalid!");
 		}
 
 		// Initialize the character.

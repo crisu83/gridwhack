@@ -12,6 +12,8 @@ import gridwhack.entity.character.event.*;
 import gridwhack.entity.tile.*;
 import gridwhack.entity.character.player.Player;
 import gridwhack.fov.IViewer;
+import gridwhack.grid.event.GridEntityEvent;
+import gridwhack.grid.event.IGridEntityListener;
 import gridwhack.path.*;
 
 /**
@@ -27,7 +29,7 @@ public class Grid implements ICharacterListener
 	private GridCell[][] cells;
 	private GridAStarPathFinder pf;
 	private CEntityManager tiles;
-	private CEntityManager items;
+	private CEntityManager loots;
 	private CEntityManager units;
 	private GridUnit player;
 	private Random rand;
@@ -51,9 +53,9 @@ public class Grid implements ICharacterListener
 		pf = new GridAStarPathFinder(new EuclideanHeuristic(), this);
 		
 		// create entity managers to handle 
-		// tiles, items and units on the grid.
+		// tiles, loots and units on the grid.
 		tiles = new CEntityManager();
-		items = new CEntityManager();
+		loots = new CEntityManager();
 		units = new CEntityManager();
 		
 		// get random from the random provider. 
@@ -114,9 +116,9 @@ public class Grid implements ICharacterListener
 	 * @param heightInCells the rectangle height in cells.
 	 * @param type the type of tile to create.
 	 */
-	public void createTileRect(int sgx, int sgy, int widthInCells, int heightInCells, GridTile.Type type)
+	public synchronized void createTileRect(int sgx, int sgy, int widthInCells, int heightInCells, GridTile.Type type)
 	{
-		// loop through the cells within the area and set the tiles.
+		// Loop through the cells within the area and set the tiles.
 		for( int gx=sgx, xmax=(sgx + widthInCells); gx<xmax; gx++ )
 		{
 			for( int gy=sgy, ymax=(sgy + heightInCells); gy<ymax; gy++ )
@@ -125,11 +127,10 @@ public class Grid implements ICharacterListener
 
 				try
 				{
-					// request the tile from the tile factory.
+					// Request the tile from the tile factory.
 					tile = TileFactory.factory(type, this);
 				}
-				// TODO: Create an entity not found exception and throw that instead.
-				catch( Exception e )
+				catch( ClassNotFoundException e )
 				{
 					System.out.println(e.getMessage());
 					System.exit(1);
@@ -137,7 +138,7 @@ public class Grid implements ICharacterListener
 				
 				GridCell cell = getCell(gx, gy);
 				
-				// make sure the cell exists.
+				// Make sure the cell exists.
 				if( cell!=null )
 				{
 					cell.setTile(tile);
@@ -148,51 +149,46 @@ public class Grid implements ICharacterListener
 	}
 
 	/**
-	 * Adds loot to this grid.
+	 * Adds loots to this grid.
 	 * @param gx the grid x-coordinate.
 	 * @param gy the grid y-coordinate.
-	 * @param loot the loot to add.
+	 * @param loot the loots to add.
 	 */
 	public synchronized void addLoot(int gx, int gy, GridLoot loot)
 	{
 		GridCell cell = getCell(gx, gy);
 
-		// make sure the cell exists.
+		// Make sure the cell exists.
 		if( cell!=null )
 		{
 			cell.addLoot(loot);
-			items.addEntity(loot);
+			loots.addEntity(loot);
 		}
 	}
-	
+
 	/**
 	 * Creates an unit and adds it in a random cell on this grid.
 	 * @param type the type of unit to create.
 	 */
-	public synchronized void createUnit(Character.Type type)
+	public void createUnit(Character.Type type)
 	{
 		GridUnit unit = null;
 
 		try
 		{
-			// request the unit from the unit factory.
+			// Request the unit from the unit factory.
 			unit = CharacterFactory.factory(type, this);
 		}
-		// TODO: Create an entity not found exception and throw that instead.
-		catch( Exception e )
+		catch( ClassNotFoundException e )
 		{
 			System.out.println(e.getMessage());
 			System.exit(1);
 		}
 		
-		// get a random cell on the grid.
+		// Get a random cell on the grid
+		// and add the unit to that cell.
 		GridCell cell = getRandomCell();
-		
-		int gx = cell.getGridX();
-		int gy = cell.getGridY();
-		
-		// add the unit to that random cell.
-		addUnit(gx, gy, unit);
+		addUnit(cell.getGridX(), cell.getGridY(), unit);
 	}
 	
 	/**
@@ -205,72 +201,52 @@ public class Grid implements ICharacterListener
 	{
 		GridCell cell = getCell(gx, gy);
 		
-		// make sure the cell exists.
+		// Make sure the cell exists and is not blocked.
 		if( cell!=null && !cell.isBlocked(unit) )
 		{
 			cell.setUnit(unit);
 			units.addEntity(unit);
+			unit.addListener(this); // let the grid listen to the unit.
 		}
-
-		unit.addListener(this);
-	}
-
-	/**
-	 * Returns all units on this grid.
-	 * @return the units.
-	 */
-	public ArrayList<GridUnit> getUnits()
-	{
-		// get all entities in the grid entity manager.
-		ArrayList<CEntity> entities = units.getEntities();
-
-		// initialize an array for the units.
-		ArrayList<GridUnit> units = new ArrayList<GridUnit>();
-
-		// loop through the entities and collect all units.
-		for( CEntity entity : entities )
+		// Could not add unit.
+		else
 		{
-			// make sure the entity is an unit.
-			if( entity instanceof GridUnit )
-			{
-				units.add((GridUnit) entity);
-			}
+			System.out.println("Could not add unit to the grid. Target cell is blocked or does not exist!");
 		}
-
-		return units;
 	}
 	
 	/**
-	 * Returns all visible units for the given unit.
+	 * Returns all units that a specific unit can see.
 	 * @param unit the unit for which to get visible units.
 	 * @return the units.
 	 */
 	public ArrayList<GridUnit> getVisibleUnits(GridUnit unit)
 	{
+		// Get a matrix representation for node the unit can see.
+		boolean[][] visible = unit.getFov().getVisible();
+
 		ArrayList<GridUnit> units = new ArrayList<GridUnit>();
 		
-		// get a matrix representation of which cells on the grid
-		// are visible to the unit.
-		boolean[][] visible = unit.getFov().getVisible();
-		
-		// loop through all the cells.
-		for( int x=0, xmax=visible.length; x<xmax; x++ )
+		// Loop through all the nodes in the matrix.
+		for( int gx=0, width=visible.length; gx<width; gx++ )
 		{
-			for( int y=0, ymax=visible[x].length; y<ymax; y++ )
+			for( int gy=0, height=visible[gx].length; gy<height; gy++ )
 			{
-				// make sure the cell is visible to the unit.
-				if( visible[x][y] )
+				// Check if the node is visible.
+				if( visible[gx][gy] )
 				{
-					GridCell cell = getCell(x, y);
+					GridCell cell = getCell(gx, gy);
 					
-					// make sure we have a cell.
+					// Make sure the cell exists.
 					if( cell!=null )
 					{
-						GridUnit target = cell.getUnit();
-						
-						if( target!=null && !units.contains(target) )
+						GridUnit cellUnit = cell.getUnit();
+
+						// Make sure that there is a unit in the cell
+						// and that it is not already added to the units.
+						if( cellUnit!=null && !units.contains(cellUnit) )
 						{
-							units.add(target);
+							units.add(cellUnit);
 						}
 					}
 				}
@@ -282,69 +258,57 @@ public class Grid implements ICharacterListener
 	
 	/**
 	 * Moves a specific unit on this grid.
-	 * @param dgx the grid delta x. 
-	 * @param dgy the grid delta y.
+	 * @param dgx the delta x in grid cells.
+	 * @param dgy the delta y in grid cells.
 	 * @param unit the unit to move.
 	 */
 	public void moveUnit(int dgx, int dgy, GridUnit unit)
 	{
-		// get the unit position on the grid.
+		// Get the unit's position on the grid.
 		int gx = unit.getGridX();
 		int gy = unit.getGridY();
 
-		// get the cell this unit is occupying.
+		// Get the cell this unit is moving from.
 		GridCell source = getCell(gx, gy);
 		
-		// make sure we have a cell.
+		// Make sure that the source cell exists.
 		if( source!=null )
 		{
-			// get the cell the unit is moving to.
+			// Get the cell the unit is moving to.
 			GridCell destination = getCell(gx+dgx, gy+dgy);
 			
-			// make sure that we have a destination cell
+			// Make sure that the destination cell exists
 			// and that it is not blocked.
 			if( destination!=null && !destination.isBlocked(unit) )
 			{
-				// get the unit in the destination cell.
+				// Get the unit in the destination cell
 				GridUnit target = destination.getUnit();
-				
-				// check if there are potential targets.
-				if( target!=null )
+
+				// Check whether there is a unit in that cell.
+				if( target==null )
 				{
-					// attack the target if hostile.
-					( (Character) unit ).attack( (Character) target );
-				}
-				else
-				{					
-					// move the unit to the destination cell.
+					// Move the unit to the destination cell.
 					source.removeUnit();
 					destination.setUnit(unit);
-					
-					if( unit instanceof Player)
-					{
-						updateVisible();
-					}
+				}
+				// Another unit is occupying the destination cell.
+				else
+				{
+					handleUnitCollision(unit, target);
 				}
 			}
 		}
 	}
 
-	/**
-	 * Updates the visible matrix based on the players field of view.
-	 */
-	public void updateVisible()
+	// TODO: Write doc
+	private void handleUnitCollision(GridUnit unit, GridUnit other)
 	{
-		boolean[][] fv = player.getFov().getVisible();
+		Character character = (Character) unit;
+		Character target = (Character) other;
 
-		for( int gx=0; gx<fv.length; gx++ )
+		if( character.isHostile(target) )
 		{
-			for( int gy=0; gy<fv[gx].length; gy++ )
-			{
-				if( fv[gx][gy] && !visible[gx][gy] )
-				{
-					visible[gx][gy] = true;
-				}
-			}
+			character.attack(target);
 		}
 	}
 
@@ -356,17 +320,45 @@ public class Grid implements ICharacterListener
 	 */
 	public void setPlayer(int gx, int gy, Player player)
 	{
-		this.player = player;
-
 		GridCell cell = getCell(gx, gy);
 
-		// make sure the cell exists.
+		// Make sure the cell exists.
 		if( cell!=null && !cell.isBlocked(player) )
 		{
+			this.player = player;
 			cell.setUnit(player);
+			player.addListener(this); // let the grid listen to the player.
+			player.updateFov();
+			updateVisible(); // we need to update the visible matrix for the grid after adding the player
+		}
+		else
+		{
+			System.out.println("Could not add player to the grid. Target cell is blocked or does not exist!");
 		}
 	}
-	
+
+	/**
+	 * Updates the visible matrix based on the players field of view.
+	 */
+	public void updateVisible()
+	{
+		if( player instanceof Player )
+		{
+			boolean[][] playerVisible = player.getFov().getVisible();
+
+			for( int gx=0; gx<playerVisible.length; gx++ )
+			{
+				for( int gy=0; gy<playerVisible[gx].length; gy++ )
+				{
+					if( !visible[gx][gy] && playerVisible[gx][gy] )
+					{
+						visible[gx][gy] = true;
+					}
+				}
+			}
+		}
+	}
+
 	/**
 	 * Returns a random non-blocked cell on this grid.
 	 * @return the cell.
@@ -374,24 +366,21 @@ public class Grid implements ICharacterListener
 	public GridCell getRandomCell()
 	{
 		int tryCount = 0;
-		int maxTries = 100;
+		int maxTries = 100; // we allow 100 tries
 		
 		while( tryCount++<maxTries )
 		{
-			// get a random position on the grid.
-			int gx = rand.nextInt(getGridWidth());
-			int gy = rand.nextInt(getGridHeight());
+			// Get a random cell on the grid.
+			GridCell cell = getCell(rand.nextInt(getWidthInCells()), rand.nextInt(getHeightInCells()));
 			
-			GridCell cell = getCell(gx, gy);
-			
-			// make sure the cell exists and is not blocked.
+			// Make sure the cell exists and is not blocked.
 			if( cell!=null && !cell.isBlocked(null) )
 			{
 				return cell;
 			}
 		}
 		
-		// all cells are blocked or no cells exist.
+		// All cells are blocked or no cells exist.
 		return null;
 	}
 	
@@ -444,76 +433,10 @@ public class Grid implements ICharacterListener
 	 * @param mover the mover.
 	 * @return the cost.
 	 */
+	// TODO: Implement some logic for this.
 	public int getMovementCost(int gx, int gy, IMover mover)
 	{
-		//GridCell cell = getCell(gx, gy);
-
 		return 1;
-	}
-	
-	/**
-	 * Converts grid cells into pixels.
-	 * @param offset the offset in cells.
-	 * @return the offset in pixels.
-	 */
-	public int getOffsetInPixels(int offset)
-	{
-		return offset * getCellSize();
-	}
-	
-	/**
-	 * Converts pixels into grid cells.
-	 * @param offset the offset in pixels
-	 * @return the offset in cells.
-	 */
-	public int getOffsetInCells(double offset)
-	{
-		return (int) (Math.round(offset) / getCellSize());
-	}
-
-	/**
-	 * Returns the size of one cell in pixels.
-	 * @return the cell size.
-	 */
-	public int getCellSize() 
-	{
-		return CELL_SIZE;
-	}
-	
-	/**
-	 * Returns the width of this grid in cells.
-	 * @return the width.
-	 */
-	public int getGridWidth()
-	{
-		return widthInCells;
-	}
-	
-	/**
-	 * Returns the height of this grid in cells.
-	 * @return the height.
-	 */
-	public int getGridHeight()
-	{
-		return heightInCells;
-	}
-
-	/**
-	 * Returns the width of this grid in cells.
-	 * @return the width.
-	 */
-	public int getWidth()
-	{
-		return widthInCells * getCellSize();
-	}
-
-	/**
-	 * Returns the height of this grid in cells.
-	 * @return the height.
-	 */
-	public int getHeight()
-	{
-		return heightInCells * getCellSize();
 	}
 	
 	/**
@@ -523,54 +446,55 @@ public class Grid implements ICharacterListener
 	public void update(long timePassed)
 	{
 		tiles.update(timePassed);
-		items.update(timePassed);
+		loots.update(timePassed);
 		units.update(timePassed);
-
 		player.update(timePassed);
 	}
-	
+
 	/**
 	 * Renders this grid.
 	 * @param g the graphics context.
 	 */
 	public void render(Graphics2D g)
 	{
-		ArrayList<ArrayList<CEntity>> allEntities = new ArrayList<ArrayList<CEntity>>();
-		
-		allEntities.add(tiles.getEntities());
-		allEntities.add(items.getEntities());
-		allEntities.add(units.getEntities());
+		// Get a matrix representation of the player's field of view.
+		boolean[][] playerVisible = player.getFov().getVisible();
 
-		for( ArrayList<CEntity> entities : allEntities )
+		// Render the tiles.
+		for( CEntity entity : tiles.getEntities() )
 		{
-			for( CEntity entity : entities )
-			{
-				GridEntity ge = (GridEntity) entity;
+			GridTile tile = (GridTile) entity;
 
-				if( ge instanceof GridTile || ge instanceof GridLoot )
-				{
-					if( visible[ ge.getGridX() ][ ge.getGridY() ] )
-					{
-						ge.render(g);
-					}
-				}
-				else
-				{
-					if( player.getFov().isVisible(ge.getGridX(), ge.getGridY()) )
-					{
-						ge.render(g);
-					}
-				}
+			if( visible[ tile.getGridX() ][ tile.getGridY() ] )
+			{
+				tile.render(g);
 			}
 		}
 
-		player.render(g);
+		// Render the loots.
+		for( CEntity entity : loots.getEntities() )
+		{
+			GridLoot loot = (GridLoot) entity;
 
-		/*
-		tiles.render(g);
-		items.render(g);
-		units.render(g);
-		*/
+			if( visible[ loot.getGridX() ][ loot.getGridY() ] )
+			{
+				loot.render(g);
+			}
+		}
+
+		// Render the loots.
+		for( CEntity entity : units.getEntities() )
+		{
+			GridUnit unit = (GridUnit) entity;
+
+			if( playerVisible[ unit.getGridX() ][ unit.getGridY() ] )
+			{
+				unit.render(g);
+			}
+		}
+
+		// Render the player.
+		player.render(g);
 	}
 
 	/**
@@ -587,6 +511,71 @@ public class Grid implements ICharacterListener
 		{
 			cell.removeUnit();
 		}
+	}
+
+	/**
+	 * Converts grid cells into pixels.
+	 * @param offset the offset in cells.
+	 * @return the offset in pixels.
+	 */
+	public int getOffsetInPixels(int offset)
+	{
+		return offset * getCellSize();
+	}
+
+	/**
+	 * Converts pixels into grid cells.
+	 * @param offset the offset in pixels
+	 * @return the offset in cells.
+	 */
+	public int getOffsetInCells(double offset)
+	{
+		return (int) Math.round(offset) / getCellSize();
+	}
+
+	/**
+	 * Returns the size of one cell in pixels.
+	 * @return the cell size.
+	 */
+	public int getCellSize()
+	{
+		return CELL_SIZE;
+	}
+
+	/**
+	 * Returns the width of this grid in cells.
+	 * @return the width.
+	 */
+	public int getWidthInCells()
+	{
+		return widthInCells;
+	}
+
+	/**
+	 * Returns the height of this grid in cells.
+	 * @return the height.
+	 */
+	public int getHeightInCells()
+	{
+		return heightInCells;
+	}
+
+	/**
+	 * Returns the width of this grid in pixels.
+	 * @return the width.
+	 */
+	public int getWidth()
+	{
+		return widthInCells * getCellSize();
+	}
+
+	/**
+	 * Returns the height of this grid in pixels.
+	 * @return the height.
+	 */
+	public int getHeight()
+	{
+		return heightInCells * getCellSize();
 	}
 
 	/**
@@ -611,5 +600,13 @@ public class Grid implements ICharacterListener
 	 * Actions to be taken when the unit moves.
 	 * @param e the event.
 	 */
-	public void onCharacterMove(CharacterEvent e) {}
+	public void onCharacterMove(CharacterEvent e)
+	{
+		Character character = (Character) e.getSource();
+
+		if( character instanceof Player )
+		{
+			updateVisible();
+		}
+	}
 }

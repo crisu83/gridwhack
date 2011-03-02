@@ -49,8 +49,8 @@ public class GridAStarPathFinder implements IPathFinder
 	public void addNodes()
 	{
 		// get the width and height of the grid.
-		int width = grid.getGridWidth();
-		int height = grid.getGridHeight();
+		int width = grid.getWidthInCells();
+		int height = grid.getHeightInCells();
 		
 		// initialize the nodes as an empty node matrix.
 		nodes = new Node[width][height];
@@ -127,6 +127,15 @@ public class GridAStarPathFinder implements IPathFinder
 				{
 					for( int ny=(current.y-1); ny<(current.y+2); ny++ )
 					{
+						// TODO: Think of a better solution for this.
+						if( (nx==current.x-1 && ny==current.y-1)
+								|| (nx==current.x+1 && ny==current.y+1)
+								|| (nx==current.x+1 && ny==current.y-1)
+								|| (nx==current.x-1 && ny==current.y+1) )
+						{
+							continue;
+						}
+
 						// make sure we skip the current.
 						if( nx!=current.x || ny!=current.y )
 						{

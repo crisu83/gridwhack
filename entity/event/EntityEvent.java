@@ -8,6 +8,9 @@ import gridwhack.event.CEvent;
  */
 public class EntityEvent extends CEvent 
 {
+	private Type type;
+
+	// Entity event types.
 	public static enum Type {
 		REMOVE,
 	};
@@ -19,6 +22,17 @@ public class EntityEvent extends CEvent
 	 */
 	public EntityEvent(Type type, Object source)
 	{
-		super(type, source);
+		super(source);
+
+		this.type = type;
+	}
+
+	/**
+	 * Returns the event type.
+	 * @return the type.
+	 */
+	public Type getType()
+	{
+		return type;
 	}
 }
