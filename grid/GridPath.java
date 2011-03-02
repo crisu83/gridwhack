@@ -46,6 +46,7 @@ public class GridPath extends Path
 	 * Renders the path (used for debug purposes).
 	 * @param g the graphics context.
 	 */
+	// TODO: Get the cell size from the grid.
 	public void render(Graphics2D g)
 	{
 		if( !steps.isEmpty() )

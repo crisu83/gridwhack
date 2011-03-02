@@ -186,12 +186,13 @@ public class GridWhack extends CGameEngine
 		{
 			player = (Player) CharacterFactory.factory(Character.Type.PLAYER, grid);
 		}
-		// TODO: Create an entity not found exception and throw that instead.
-		catch( Exception e )
+		catch( ClassNotFoundException e )
 		{
 			System.out.println(e.getMessage());
 			System.exit(1);
 		}
+
+		grid.setPlayer(10, 10, player);
 	}
 	
 	/**

@@ -16,7 +16,7 @@ public class TileFactory
 	 * @param grid the grid the tile belongs to.
 	 * @return the tile.
 	 */
-	public static GridTile factory(GridTile.Type type, Grid grid) throws Exception
+	public static GridTile factory(GridTile.Type type, Grid grid) throws ClassNotFoundException
 	{
 		GridTile tile;
 
@@ -32,7 +32,7 @@ public class TileFactory
 				break;
 
 			default:
-				throw new Exception("Failed to create tile, type '" + type + "' is invalid!");
+				throw new ClassNotFoundException("Failed to create tile, type '" + type + "' is invalid!");
 		}
 
 		// Initialize the tile.

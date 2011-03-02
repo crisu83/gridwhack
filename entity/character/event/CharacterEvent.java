@@ -8,6 +8,9 @@ import gridwhack.event.CEvent;
  */
 public class CharacterEvent extends CEvent
 {
+	private Type type;
+
+	// Character event types.
 	public static enum Type {
 		DEATH,
 		HEALTHGAIN,
@@ -23,6 +26,17 @@ public class CharacterEvent extends CEvent
 	 */
 	public CharacterEvent(Type type, Object source)
 	{
-		super(type, source);
+		super(source);
+
+		this.type = type;
+	}
+
+	/**
+	 * Returns the event type.
+	 * @return the type.
+	 */
+	public Type getType()
+	{
+		return type;
 	}
 }

@@ -8,8 +8,12 @@ import gridwhack.event.CEvent;
  */
 public class CharacterEffectEvent extends CEvent
 {
+	private Type type;
+
+	// Character effect event types.
 	public static enum Type {
-		REMOVE,
+		AFFECT,
+		FADE,
 	};
 
 	/**
@@ -19,6 +23,17 @@ public class CharacterEffectEvent extends CEvent
 	 */
 	public CharacterEffectEvent(Type type, Object source)
 	{
-		super(type, source);
+		super(source);
+
+		this.type = type;
+	}
+
+	/**
+	 * Returns the event type.
+	 * @return the type.
+	 */
+	public Type getType()
+	{
+		return type;
 	}
 }

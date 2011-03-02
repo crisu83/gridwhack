@@ -53,16 +53,6 @@ public class Player extends Character
 		setAttackCooldown(1000);
 		setMovementCooldown(1000);
 		setViewRange(10);
-
-		grid.setPlayer(10, 10, this);
-	}
-
-	public void updateFov()
-	{
-		super.updateFov();
-
-		// TODO: Think of a better way to call this. Maybe using event listeners?
-		grid.updateVisible();
 	}
 	
 	/**
@@ -223,7 +213,7 @@ public class Player extends Character
 			// Make sure we only notify player listeners.
 			if( listener instanceof IPlayerListener)
 			{
-				switch( (PlayerEvent.Type) e.getType() )
+				switch( e.getType() )
 				{
 					// Player has gained experience.
 					case EXPERIENCEGAIN:

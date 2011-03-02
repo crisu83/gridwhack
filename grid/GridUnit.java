@@ -1,6 +1,7 @@
 package gridwhack.grid;
 
 import gridwhack.fov.IViewer;
+import gridwhack.fov.RayTracing;
 import gridwhack.path.IMover;
 
 /**
@@ -10,7 +11,9 @@ import gridwhack.path.IMover;
 public abstract class GridUnit extends GridEntity implements IMover, IViewer
 {
 	public static enum Directions { LEFT, RIGHT, UP, DOWN }
-	
+
+	protected int viewRange = 0; // units are blind by default
+
 	protected GridFov fov;
 	protected GridPath path;
 	
@@ -22,18 +25,15 @@ public abstract class GridUnit extends GridEntity implements IMover, IViewer
 	public GridUnit(String filename, Grid grid)
 	{
 		super(filename, grid);
-
-		// create a new field of view for the unit.
-		fov = new GridFov(grid, this);
 	}
 
 	/**
-	 * Updates the unit's field of view.
-	 * @param range the view range.
+	 * Initializes the unit.
 	 */
-	public void updateFov(int range)
+	public void init()
 	{
-		fov.update(getGridX(), getGridY(), range);
+		// Create a new field of view for the unit.
+		fov = new RayTracing(viewRange, grid, this);
 	}
 
 	/**
@@ -45,7 +45,37 @@ public abstract class GridUnit extends GridEntity implements IMover, IViewer
 	 */
 	public GridPath getPath(int tgx, int tgy, int maxPathLength)
 	{
-		return grid.getPath(this.getGridX(), this.getGridY(), tgx, tgy, maxPathLength, this);
+		return grid.getPath(getGridX(), getGridY(), tgx, tgy, maxPathLength, this);
+	}
+
+	// TODO: Write doc
+	public void markMoved()
+	{
+		updateFov();
+	}
+
+	// TODO: Write doc
+	public void updateFov()
+	{
+		fov.update(getGridX(), getGridY());
+	}
+
+	/**
+	 * Sets this unit view range.
+	 * @param range the view range in grid cells.
+	 */
+	public void setViewRange(int range)
+	{
+		this.viewRange = range;
+	}
+
+	/**
+	 * Returns the unit view range in grid cells.
+	 * @return the view range.
+	 */
+	public int getViewRange()
+	{
+		return viewRange;
 	}
 
 	/**

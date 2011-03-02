@@ -1,7 +1,6 @@
 package gridwhack.map;
 
 import java.awt.Graphics2D;
-import java.util.ArrayList;
 
 import gridwhack.grid.Grid;
 
@@ -20,8 +19,8 @@ public class RandomDungeonMap extends GridMap
 	
 	public void init()
 	{
-		int width = grid.getGridWidth();
-		int height = grid.getGridHeight();
+		int width = grid.getWidthInCells();
+		int height = grid.getHeightInCells();
 		
 		dungeon = new RandomDungeon(width, height, grid);
 	}

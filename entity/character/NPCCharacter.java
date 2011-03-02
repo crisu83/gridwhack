@@ -31,22 +31,24 @@ public abstract class NPCCharacter extends Character
 	/**
 	 * @return the closest hostile character.
 	 */
-	public GridUnit getClosestVisibleHostileCharacters()
+	public Character getClosestVisibleHostileCharacter()
 	{		
-		GridUnit closest = null;
-		int lowestCost= 0;
+		Character closest = null;
+		int lowestCost = 0;
 		
 		ArrayList<GridUnit> units = grid.getVisibleUnits(this);
 		
 		// loop through all the visible units.
-		for( GridUnit target : units )
+		for( GridUnit unit : units )
 		{
-			if( target!=this )
+			if( unit!=this )
 			{
+				Character target = (Character) unit;
+
 				int cost = getDistanceCost(target);
 				
 				// make sure the character is hostile.
-				if( isHostile( (Character) target) )
+				if( isHostile(target) )
 				{
 					// check if we have no closest character or if the character is closer
 					// than the character currently marked as the closest character.
@@ -116,7 +118,7 @@ public abstract class NPCCharacter extends Character
 		int pathLength = path.getLength();
 		Step step = path.getStep(pathLength-1);
 		
-		GridUnit target = getTarget();
+		Character target = getTarget();
 		
 		// compare the coordinates of the last step in the path
 		// to the target coordinates.
@@ -168,17 +170,17 @@ public abstract class NPCCharacter extends Character
 	public void update(long timePassed)
 	{
 		// always engage the closest visible hostile character.
-		GridUnit target = getClosestVisibleHostileCharacters();
+		Character target = getClosestVisibleHostileCharacter();
 		
 		// we found a target.
 		if( target!=null )
 		{
-			setTarget( (Character) target );
+			setTarget(target);
 			
 			// create a path to the target unless the character already has a valid path.
 			if( path==null || !isPathValid() )
 			{
-				path = getPath(target.getGridX(), target.getGridY(), this.getViewRange());
+				path = getPath(target.getGridX(), target.getGridY(), getViewRange());
 			}
 		}
 		
@@ -216,7 +218,7 @@ public abstract class NPCCharacter extends Character
 	/**
 	 * @return the character to target.
 	 */
-	public GridUnit getTarget()
+	public Character getTarget()
 	{
 		return target;
 	}
