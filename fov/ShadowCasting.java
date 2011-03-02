@@ -1,13 +1,10 @@
 package gridwhack.fov;
 
 import gridwhack.grid.Grid;
+import gridwhack.grid.GridFov;
 
-public class ShadowCasting
+public class ShadowCasting extends GridFov
 {
-    protected Grid grid;
-    protected IViewer viewer;
-    protected boolean[][] visible;
-
     // Multipliers for transforming the coordinates into sections.
     protected int[][] multipliers = {
         {1, 0, 0, -1, -1, 0, 0, 1},
@@ -16,35 +13,31 @@ public class ShadowCasting
         {1, 0, 0, 1, -1, 0, 0, -1}
     };
 
-    public ShadowCasting(Grid grid, IViewer viewer)
+    public ShadowCasting(int radius, Grid grid, IViewer viewer)
     {
-        this.grid = grid;
-        this.viewer = viewer;
+        super(radius, grid, viewer);
     }
 
-    public boolean[][] getVisible(int sx, int sy, int radius)
+    public void update(int cx, int cy)
     {
         int section = 0;
 
-        while( section<8 )
+        while( section++<8 )
         {
-            castShadow(sx, sy, 1, 1.0, 0.0, radius,
+            castShadow(cx, cy, 1, 1.0, 0.0, getRadius(),
                     multipliers[0][section], multipliers[1][section],
                     multipliers[2][section], multipliers[3][section], 0);
-
-            ++section;
         }
-
-	    System.exit(0);
-
-	    return visible;
     }
 
     private void castShadow(int cx, int cy, int row, double startSlope, double endSlope, int radius, int xx, int xy, int yx, int yy, int depth)
     {
         if( startSlope>=endSlope )
         {
+	        Grid grid = getGrid();
+	        IViewer viewer = getViewer();
             double radiusSquared = radius * radius;
+
             for( int i=row; i<=radius; i++ )
             {
                 int dx = -i - 1;
@@ -60,8 +53,8 @@ public class ShadowCasting
                     int x = cx + dx * xx + dy * xy;
                     int y = cy + dx * yx + dy * yy;
 
-                    double leftSlope = (dx-0.5) / (dy+0.5);
-                    double rightSlope = (dx+0.5) / (dy-0.5);
+                    double leftSlope = (dx - 0.5) / (dy + 0.5);
+                    double rightSlope = (dx + 0.5) / (dy - 0.5);
 
                     if( startSlope<rightSlope )
                     {
@@ -74,12 +67,11 @@ public class ShadowCasting
 					else
                     {
 	                    // Mark visible squares.
-	                    if( ((dx*dx) + (dy*dy))<radiusSquared )
+	                    if( ( (dx * dx) + (dy * dy) )<radiusSquared )
 	                    {
-		                    setVisible(x, y);
+		                    visible[x][y] = true;
 	                    }
 	                    
-	                    /*
 	                    // Previous spot was solid.
 	                    if( solid )
 	                    {
@@ -102,12 +94,11 @@ public class ShadowCasting
 		                    if( grid.isSolid(x, y, viewer) && i<radius )
 		                    {
 			                    solid = true;
-			                    castShadow(cx, cy, i+1, startSlope, leftSlope, radius, xx, xy, yx, yy, depth+1);
+			                    castShadow(cx, cy, i + 1, startSlope, leftSlope, radius, xx, xy, yx, yy, depth + 1);
 
 			                    newStartSlope = rightSlope;
 		                    }
 	                    }
-	                    */
                     }
                 }
 
@@ -118,9 +109,4 @@ public class ShadowCasting
             }
         }
     }
-	
-	public void setVisible(int x, int y)
-	{
-		visible[x][y] = true;
-	}
 }
