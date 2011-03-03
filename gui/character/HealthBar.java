@@ -5,8 +5,9 @@ import java.awt.*;
 import gridwhack.entity.character.Character;
 import gridwhack.entity.character.NPCCharacter;
 import gridwhack.entity.character.event.CharacterEvent;
-import gridwhack.entity.character.event.ICharacterListener;
-import gridwhack.entity.character.player.event.IPlayerListener;
+import gridwhack.entity.character.event.ICharacterHealthListener;
+import gridwhack.entity.character.event.ICharacterMoveListener;
+import gridwhack.entity.character.player.event.IPlayerLevelListener;
 import gridwhack.entity.character.player.event.PlayerEvent;
 
 /**
@@ -14,7 +15,7 @@ import gridwhack.entity.character.player.event.PlayerEvent;
  * Allows for visualizing character health in the gui.
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
-public class HealthBar extends StatusBar implements ICharacterListener, IPlayerListener
+public class HealthBar extends StatusBar implements ICharacterHealthListener, ICharacterMoveListener, IPlayerLevelListener
 {
 	/**
 	 * Creates the bar.
@@ -60,18 +61,6 @@ public class HealthBar extends StatusBar implements ICharacterListener, IPlayerL
 	}
 
 	/**
-	 * Actions to be taken when the character dies.
-	 * @param e the event.
-	 */
-	public synchronized void onCharacterDeath(CharacterEvent e) {}
-
-	/**
-	 * Actions to be taken when the character is spawned.
-	 * @param e the event.
-	 */
-	public synchronized void onCharacterSpawn(CharacterEvent e) {}
-
-	/**
 	 * Actions to be taken when the character gains health.
 	 * @param e the event.
 	 */
@@ -102,12 +91,6 @@ public class HealthBar extends StatusBar implements ICharacterListener, IPlayerL
 			move();
 		}
 	}
-
-	/**
-	 * Actions to be taken when the player gains experience.
-	 * @param e the event.
-	 */
-	public void onPlayerGainExperience(PlayerEvent e) {}
 
 	/**
 	 * Actions to be taken when the player is gains a level.

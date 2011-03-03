@@ -2,6 +2,8 @@ package gridwhack.entity.character.player;
 
 import gridwhack.entity.character.Character;
 import gridwhack.entity.character.hostile.HostileCharacter;
+import gridwhack.entity.character.player.event.IPlayerExperienceListener;
+import gridwhack.entity.character.player.event.IPlayerLevelListener;
 import gridwhack.entity.character.player.event.IPlayerListener;
 import gridwhack.entity.character.player.event.PlayerEvent;
 import gridwhack.event.IEventListener;
@@ -211,22 +213,29 @@ public class Player extends Character
 		for( IEventListener listener : getListeners() )
 		{
 			// Make sure we only notify player listeners.
-			if( listener instanceof IPlayerListener)
+			if( listener instanceof IPlayerListener )
 			{
-				switch( e.getType() )
+				switch( (PlayerEvent.Type) e.getType() )
 				{
 					// Player has gained experience.
 					case EXPERIENCEGAIN:
-						( (IPlayerListener) listener ).onPlayerGainExperience(e);
+						if( listener instanceof IPlayerExperienceListener )
+						{
+							( (IPlayerExperienceListener) listener ).onPlayerGainExperience(e);
+						}
 						break;
 
 					// Player has gained a level.
 					case LEVELGAIN:
-						( (IPlayerListener) listener ).onPlayerGainLevel(e);
+						if( listener instanceof IPlayerLevelListener )
+						{
+							( (IPlayerLevelListener) listener ).onPlayerGainLevel(e);
+						}
 						break;
 
 					// Unknown event.
 					default:
+						System.out.println("Failed to fire player event, type '" + e.getType() + "' is invalid!");
 				}
 			}
 		}

@@ -3,6 +3,10 @@ package gridwhack.grid;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
+import gridwhack.entity.character.Character;
+import gridwhack.entity.character.event.CharacterEvent;
+import gridwhack.entity.character.event.ICharacterMoveListener;
+import gridwhack.entity.character.event.ICharacterSpawnListener;
 import gridwhack.fov.Fov;
 import gridwhack.fov.IViewer;
 
@@ -11,7 +15,7 @@ import gridwhack.fov.IViewer;
  * Allows for generating a field of view for grid entities.
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
-public abstract class GridFov extends Fov
+public abstract class GridFov extends Fov implements ICharacterMoveListener, ICharacterSpawnListener
 {
 	private Grid grid;
 	private IViewer viewer;
@@ -48,6 +52,26 @@ public abstract class GridFov extends Fov
 				}
 			}
 		}
+	}
+
+	/**
+	 * Actions to be taken when the character spawns.
+	 * @param e the event.
+	 */
+	public void onCharacterSpawn(CharacterEvent e)
+	{
+		Character character = (Character) e.getSource();
+		update(character.getGridX(), character.getGridY());
+	}
+
+	/**
+	 * Actions to be taken when the character moves.
+	 * @param e the event.
+	 */
+	public void onCharacterMove(CharacterEvent e)
+	{
+		Character character = (Character) e.getSource();
+		update(character.getGridX(), character.getGridY());
 	}
 
 	/**

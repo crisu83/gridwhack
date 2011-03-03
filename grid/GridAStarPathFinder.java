@@ -52,7 +52,7 @@ public class GridAStarPathFinder implements IPathFinder
 		int width = grid.getWidthInCells();
 		int height = grid.getHeightInCells();
 		
-		// initialize the nodes as an empty node matrix.
+		// initialize the nodes as an init node matrix.
 		nodes = new Node[width][height];
 		
 		// add the necessary nodes.
@@ -102,7 +102,7 @@ public class GridAStarPathFinder implements IPathFinder
 			include.add(start);
 			
 			// we may loop until we have reach the maximum path length
-			// or the include list is empty.
+			// or the include list is init.
 			while( pathLength<maxPathLength && !include.isEmpty() )
 			{
 				// first node in the open list is the current node.
@@ -128,6 +128,7 @@ public class GridAStarPathFinder implements IPathFinder
 					for( int ny=(current.y-1); ny<(current.y+2); ny++ )
 					{
 						// TODO: Think of a better solution for this.
+						// Disallow diagonal movemenet.
 						if( (nx==current.x-1 && ny==current.y-1)
 								|| (nx==current.x+1 && ny==current.y+1)
 								|| (nx==current.x+1 && ny==current.y-1)
@@ -195,7 +196,7 @@ public class GridAStarPathFinder implements IPathFinder
 			if( target.parent!=null )
 			{
 				// create a new path.
-				GridPath path = new GridPath();
+				GridPath path = new GridPath(grid);
 				
 				Node step = target;
 				

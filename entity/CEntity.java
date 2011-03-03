@@ -7,6 +7,7 @@ import gridwhack.CComponent;
 import gridwhack.RandomProvider;
 import gridwhack.entity.event.EntityEvent;
 import gridwhack.entity.event.IEntityListener;
+import gridwhack.entity.event.IEntityRemoveListener;
 import gridwhack.entity.sprite.CSprite;
 import gridwhack.entity.sprite.CSpriteManager;
 import gridwhack.event.IEventListener;
@@ -136,13 +137,13 @@ public abstract class CEntity extends CComponent
 		for( IEventListener listener : getListeners() )
 		{
 			// Make sure we only notify entity listeners.
-			if( listener instanceof IEntityListener )
+			if( listener instanceof IEntityListener)
 			{
 				switch( (EntityEvent.Type) e.getType() )
 				{
 					// Entity has been removed.
 					case REMOVE:
-						( (IEntityListener) listener ).onEntityRemove(e);
+						( (IEntityRemoveListener) listener ).onEntityRemove(e);
 						break;
 					
 					// Unknown event.

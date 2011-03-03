@@ -1,11 +1,11 @@
 package gridwhack.entity.character;
 
+import gridwhack.exception.ComponentNotFoundException;
 import gridwhack.entity.character.hostile.Kobold;
 import gridwhack.entity.character.hostile.Orc;
 import gridwhack.entity.character.hostile.Skeleton;
 import gridwhack.entity.character.player.Player;
 import gridwhack.grid.Grid;
-import gridwhack.grid.GridUnit;
 
 /**
  * Character factory class file.
@@ -20,7 +20,7 @@ public class CharacterFactory
 	 * @param grid the grid the character belongs to.
 	 * @return the character.
 	 */
-	public static Character factory(Character.Type type, Grid grid) throws ClassNotFoundException
+	public static Character factory(Character.Type type, Grid grid) throws ComponentNotFoundException
 	{
 		Character character = null;
 
@@ -44,7 +44,7 @@ public class CharacterFactory
 				break;
 
 			default:
-				throw new ClassNotFoundException("Failed to create character, type '" + type + "' is invalid!");
+				throw new ComponentNotFoundException("Failed to create character, type '" + type + "' is invalid!");
 		}
 
 		// Initialize the character.

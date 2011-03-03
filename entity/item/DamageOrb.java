@@ -1,5 +1,6 @@
 package gridwhack.entity.item;
 
+import gridwhack.exception.ComponentNotFoundException;
 import gridwhack.entity.character.effect.CharacterEffect;
 import gridwhack.entity.character.effect.CharacterEffectFactory;
 import gridwhack.entity.character.player.Player;
@@ -32,7 +33,7 @@ public class DamageOrb extends Item
 		{
 			effect = CharacterEffectFactory.factory(CharacterEffect.Type.DOUBLE_DAMAGE, player);
 		}
-		catch( Exception e )
+		catch( ComponentNotFoundException e )
 		{
 			System.out.println(e.getMessage());
 			System.exit(1);

@@ -2,8 +2,8 @@ package gridwhack.gui.character;
 
 import gridwhack.entity.character.Character;
 import gridwhack.entity.character.event.CharacterEvent;
-import gridwhack.entity.character.event.ICharacterListener;
-import gridwhack.entity.character.player.event.IPlayerListener;
+import gridwhack.entity.character.event.ICharacterHealthListener;
+import gridwhack.entity.character.player.event.IPlayerLevelListener;
 import gridwhack.entity.character.player.event.PlayerEvent;
 
 /**
@@ -11,7 +11,7 @@ import gridwhack.entity.character.player.event.PlayerEvent;
  * Allows for displaying character health values in the gui.
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
-public class HealthText extends StatusText implements ICharacterListener, IPlayerListener
+public class HealthText extends StatusText implements ICharacterHealthListener, IPlayerLevelListener
 {
 	private int current;
 	private int maximum;
@@ -51,18 +51,6 @@ public class HealthText extends StatusText implements ICharacterListener, IPlaye
 	}
 
 	/**
-	 * Actions to be taken when the character dies.
-	 * @param e the event.
-	 */
-	public synchronized void onCharacterDeath(CharacterEvent e) {}
-
-	/**
-	 * Actions to be taken when the character is spawned.
-	 * @param e the event.
-	 */
-	public synchronized void onCharacterSpawn(CharacterEvent e) {}
-
-	/**
 	 * Actions to be taken when the character gains health.
 	 * @param e the event.
 	 */
@@ -79,18 +67,6 @@ public class HealthText extends StatusText implements ICharacterListener, IPlaye
 	{
 		refresh();
 	}
-
-	/**
-	 * Actions to be taken when the character moves.
-	 * @param e the event.
-	 */
-	public synchronized void onCharacterMove(CharacterEvent e) {}
-
-	/**
-	 * Actions to be taken when the player gains experience.
-	 * @param e the event.
-	 */
-	public void onPlayerGainExperience(PlayerEvent e) {}
 
 	/**
 	 * Actions to be taken when the player is gains a level.

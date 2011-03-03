@@ -11,17 +11,20 @@ import gridwhack.path.Path;
  */
 public class GridPath extends Path
 {
+	private Grid grid;
 	private int currentIndex;
 	
 	/**
 	 * Creates the path.
+	 * @param grid the grid the path exists on.
 	 */
-	public GridPath() 
+	public GridPath(Grid grid)
 	{
 		super();
 		
-		// path always starts at the beginning.
-		currentIndex = 0;
+		this.grid = grid;
+
+		currentIndex = 0; // path always starts at the beginning.
 	}
 	
 	/**
@@ -46,15 +49,16 @@ public class GridPath extends Path
 	 * Renders the path (used for debug purposes).
 	 * @param g the graphics context.
 	 */
-	// TODO: Get the cell size from the grid.
 	public void render(Graphics2D g)
 	{
+		int cellSize = grid.getCellSize();
+
 		if( !steps.isEmpty() )
 		{
 			for( Step step : steps )
 			{
 				g.setColor(Color.green);
-				g.drawRect(step.getX()*32, step.getY()*32, 32, 32);
+				g.drawRect(step.getX()*cellSize, step.getY()*cellSize, cellSize, cellSize);
 			}
 		}
 	}

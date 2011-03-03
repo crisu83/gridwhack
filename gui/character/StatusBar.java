@@ -22,7 +22,7 @@ public abstract class StatusBar extends GuiCharacterElement implements IEventLis
 	 * @param y the y-coordinate.
 	 * @param width the width of the bar.
 	 * @param height the height of the bar.
-	 * @param empty whether the bar should be empty.
+	 * @param empty whether the bar should be init.
 	 * @param owner the character this bar belongs to.
 	 */
 	public StatusBar(int x, int y, int width, int height, boolean empty, Character owner)
@@ -33,7 +33,7 @@ public abstract class StatusBar extends GuiCharacterElement implements IEventLis
 
 		barWidth = !empty ? width : 0;
 
-		getOwner().addListener(this); // set the bar to listen to its owner.
+		owner.addListener(this); // set the bar to listen to its owner.
 	}
 
 	/**

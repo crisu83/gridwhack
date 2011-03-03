@@ -3,10 +3,10 @@ package gridwhack.map;
 import java.awt.Rectangle;
 
 import gridwhack.entity.character.event.CharacterEvent;
-import gridwhack.entity.character.event.ICharacterListener;
+import gridwhack.entity.character.event.ICharacterDeathListener;
 import gridwhack.grid.GridUnit;
 
-public class Camera implements ICharacterListener
+public class Camera implements ICharacterDeathListener
 {
 	protected int x;
 	protected int y;

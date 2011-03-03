@@ -1,6 +1,7 @@
 package gridwhack.entity.event;
 
 import gridwhack.event.CEvent;
+import gridwhack.event.IEventType;
 
 /**
  * Entity event class file.
@@ -8,10 +9,8 @@ import gridwhack.event.CEvent;
  */
 public class EntityEvent extends CEvent 
 {
-	private Type type;
-
 	// Entity event types.
-	public static enum Type {
+	public static enum Type implements IEventType {
 		REMOVE,
 	};
 
@@ -20,19 +19,8 @@ public class EntityEvent extends CEvent
 	 * @param type the type of this event.
 	 * @param source the source of this event.
 	 */
-	public EntityEvent(Type type, Object source)
+	public EntityEvent(IEventType type, Object source)
 	{
-		super(source);
-
-		this.type = type;
-	}
-
-	/**
-	 * Returns the event type.
-	 * @return the type.
-	 */
-	public Type getType()
-	{
-		return type;
+		super(type, source);
 	}
 }
