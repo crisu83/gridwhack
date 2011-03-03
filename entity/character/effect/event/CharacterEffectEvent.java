@@ -1,6 +1,7 @@
 package gridwhack.entity.character.effect.event;
 
 import gridwhack.event.CEvent;
+import gridwhack.event.IEventType;
 
 /**
  * Character effect event class file.
@@ -8,11 +9,10 @@ import gridwhack.event.CEvent;
  */
 public class CharacterEffectEvent extends CEvent
 {
-	private Type type;
-
 	// Character effect event types.
-	public static enum Type {
-		AFFECT,
+	public static enum Type implements IEventType {
+		APPLY,
+		TICK,
 		FADE,
 	};
 
@@ -21,19 +21,8 @@ public class CharacterEffectEvent extends CEvent
 	 * @param type the type of this event.
 	 * @param source the source of this event.
 	 */
-	public CharacterEffectEvent(Type type, Object source)
+	public CharacterEffectEvent(IEventType type, Object source)
 	{
-		super(source);
-
-		this.type = type;
-	}
-
-	/**
-	 * Returns the event type.
-	 * @return the type.
-	 */
-	public Type getType()
-	{
-		return type;
+		super(type, source);
 	}
 }

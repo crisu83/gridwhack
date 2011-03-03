@@ -1,6 +1,7 @@
 package gridwhack.entity.character.event;
 
 import gridwhack.event.CEvent;
+import gridwhack.event.IEventType;
 
 /**
  * Character event class file.
@@ -8,10 +9,8 @@ import gridwhack.event.CEvent;
  */
 public class CharacterEvent extends CEvent
 {
-	private Type type;
-
 	// Character event types.
-	public static enum Type {
+	public static enum Type implements IEventType {
 		DEATH,
 		HEALTHGAIN,
 		HEALTHLOSS,
@@ -24,19 +23,8 @@ public class CharacterEvent extends CEvent
 	 * @param type the type of this event.
 	 * @param source the source of this event.
 	 */
-	public CharacterEvent(Type type, Object source)
+	public CharacterEvent(IEventType type, Object source)
 	{
-		super(source);
-
-		this.type = type;
-	}
-
-	/**
-	 * Returns the event type.
-	 * @return the type.
-	 */
-	public Type getType()
-	{
-		return type;
+		super(type, source);
 	}
 }

@@ -1,6 +1,7 @@
 package gridwhack.entity.character.player.event;
 
 import gridwhack.event.CEvent;
+import gridwhack.event.IEventType;
 
 /**
  * Player event class file.
@@ -8,10 +9,8 @@ import gridwhack.event.CEvent;
  */
 public class PlayerEvent extends CEvent
 {
-	private Type type;
-
 	// Player event types.
-	public static enum Type {
+	public static enum Type implements IEventType {
 		EXPERIENCEGAIN,
 		LEVELGAIN,
 		MOVE,
@@ -23,19 +22,8 @@ public class PlayerEvent extends CEvent
 	 * @param type the type of this event.
 	 * @param source the source of this event.
 	 */
-	public PlayerEvent(Type type, Object source)
+	public PlayerEvent(IEventType type, Object source)
 	{
-		super(source);
-
-		this.type = type;
-	}
-
-	/**
-	 * Returns the event type.
-	 * @return the type.
-	 */
-	public Type getType()
-	{
-		return type;
+		super(type, source);
 	}
 }

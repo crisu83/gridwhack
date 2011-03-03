@@ -2,7 +2,7 @@ package gridwhack.gui.character.player;
 
 import gridwhack.entity.character.Character;
 import gridwhack.entity.character.player.Player;
-import gridwhack.entity.character.player.event.IPlayerListener;
+import gridwhack.entity.character.player.event.IPlayerExperienceListener;
 import gridwhack.entity.character.player.event.PlayerEvent;
 import gridwhack.gui.character.StatusBar;
 
@@ -13,7 +13,7 @@ import java.awt.*;
  * Allows for visualizing player experience in the gui.
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
-public class ExperienceBar extends StatusBar implements IPlayerListener
+public class ExperienceBar extends StatusBar implements IPlayerExperienceListener
 {
 	/**
 	 * Creates the bar.
@@ -64,10 +64,4 @@ public class ExperienceBar extends StatusBar implements IPlayerListener
 	{
 		refresh();
 	}
-
-	/**
-	 * Actions to be taken when the player is gains a level.
-	 * @param e the event.
-	 */
-	public synchronized void onPlayerGainLevel(PlayerEvent e) {}
 }

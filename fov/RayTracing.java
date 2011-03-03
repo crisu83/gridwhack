@@ -3,6 +3,10 @@ package gridwhack.fov;
 import gridwhack.grid.Grid;
 import gridwhack.grid.GridFov;
 
+/**
+ * Ray tracing field of view class file.
+ * @author Christoffer Niska <ChristofferNiska@gmail.com>
+ */
 public class RayTracing extends GridFov
 {
 	/**
@@ -22,7 +26,7 @@ public class RayTracing extends GridFov
 	 */
 	public void update(int cx, int cy)
 	{
-		empty();
+		init();
 
 		for( int x=0, width=getWidth(); x<width; x++ )
 		{

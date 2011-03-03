@@ -9,9 +9,4 @@ import gridwhack.event.IEventListener;
  */
 public interface ICharacterEffectListener extends IEventListener
 {
-	/**
-	 * Actions to be taken when a character effect is removed.
-	 * @param e the event.
-	 */
-	public void onCharacterEffectRemove(CharacterEffectEvent e);
 }

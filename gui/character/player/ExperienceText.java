@@ -2,7 +2,8 @@ package gridwhack.gui.character.player;
 
 import gridwhack.entity.character.Character;
 import gridwhack.entity.character.player.Player;
-import gridwhack.entity.character.player.event.IPlayerListener;
+import gridwhack.entity.character.player.event.IPlayerExperienceListener;
+import gridwhack.entity.character.player.event.IPlayerLevelListener;
 import gridwhack.entity.character.player.event.PlayerEvent;
 import gridwhack.gui.character.StatusText;
 
@@ -11,7 +12,7 @@ import gridwhack.gui.character.StatusText;
  * Allows for displaying player experience values in the gui.
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
-public class ExperienceText extends StatusText implements IPlayerListener
+public class ExperienceText extends StatusText implements IPlayerExperienceListener, IPlayerLevelListener
 {
 	private int current;
 	private int maximum;

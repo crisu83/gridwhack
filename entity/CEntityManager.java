@@ -4,14 +4,14 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 
 import gridwhack.entity.event.EntityEvent;
-import gridwhack.entity.event.IEntityListener;
+import gridwhack.entity.event.IEntityRemoveListener;
 
 /**
  * Core entity manager class file.
  * Allows for managing multiple entities of the same type.
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
-public class CEntityManager implements IEntityListener 
+public class CEntityManager implements IEntityRemoveListener
 {
 	private ArrayList<CEntity> entities;
 	

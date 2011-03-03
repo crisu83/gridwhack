@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Random;
 
+import gridwhack.exception.ComponentNotFoundException;
 import gridwhack.RandomProvider;
 import gridwhack.entity.*;
 import gridwhack.entity.character.*;
@@ -12,15 +13,13 @@ import gridwhack.entity.character.event.*;
 import gridwhack.entity.tile.*;
 import gridwhack.entity.character.player.Player;
 import gridwhack.fov.IViewer;
-import gridwhack.grid.event.GridEntityEvent;
-import gridwhack.grid.event.IGridEntityListener;
 import gridwhack.path.*;
 
 /**
  * Grid class file.
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
-public class Grid implements ICharacterListener
+public class Grid implements ICharacterDeathListener, ICharacterMoveListener, ICharacterSpawnListener
 {
 	private static final int CELL_SIZE = 32;
 	
@@ -45,7 +44,7 @@ public class Grid implements ICharacterListener
 		this.widthInCells = widthInCells;
 		this.heightInCells = heightInCells;
 		
-		// initialize the cells as an empty grid cell matrix.
+		// initialize the cells as an init grid cell matrix.
 		cells = new GridCell[widthInCells][heightInCells];
 		
 		// create a new path finder that uses the euclidean heuristic
@@ -130,7 +129,7 @@ public class Grid implements ICharacterListener
 					// Request the tile from the tile factory.
 					tile = TileFactory.factory(type, this);
 				}
-				catch( ClassNotFoundException e )
+				catch( ComponentNotFoundException e )
 				{
 					System.out.println(e.getMessage());
 					System.exit(1);
@@ -179,7 +178,7 @@ public class Grid implements ICharacterListener
 			// Request the unit from the unit factory.
 			unit = CharacterFactory.factory(type, this);
 		}
-		catch( ClassNotFoundException e )
+		catch( ComponentNotFoundException e )
 		{
 			System.out.println(e.getMessage());
 			System.exit(1);
@@ -300,7 +299,11 @@ public class Grid implements ICharacterListener
 		}
 	}
 
-	// TODO: Write doc
+	/**
+	 * Handles a collision between two units.
+	 * @param unit the unit colliding with the other unit.
+	 * @param other the unit other unit.
+	 */
 	private void handleUnitCollision(GridUnit unit, GridUnit other)
 	{
 		Character character = (Character) unit;
@@ -328,8 +331,7 @@ public class Grid implements ICharacterListener
 			this.player = player;
 			cell.setUnit(player);
 			player.addListener(this); // let the grid listen to the player.
-			player.updateFov();
-			updateVisible(); // we need to update the visible matrix for the grid after adding the player
+			player.markSpawned();
 		}
 		else
 		{
@@ -503,13 +505,43 @@ public class Grid implements ICharacterListener
 	 */
 	public void onCharacterDeath(CharacterEvent e)
 	{
-		GridUnit unit = (GridUnit) e.getSource();
-		GridCell cell = getCell(unit.getGridX(), unit.getGridY());
+		Character character = (Character) e.getSource();
+		GridCell cell = getCell(character.getGridX(), character.getGridY());
 
-		// make sure the cell exists.
+		// Make sure the cell exists.
 		if( cell!=null )
 		{
 			cell.removeUnit();
+		}
+	}
+
+	/**
+	 * Actions to be taken when the unit moves.
+	 * @param e the event.
+	 */
+	public void onCharacterMove(CharacterEvent e)
+	{
+		Character character = (Character) e.getSource();
+
+		// We only need to update the visible matrix when the player is moving.
+		if( character instanceof Player )
+		{
+			updateVisible();
+		}
+	}
+
+	/**
+	 * Actions to be taken when the character spawns.
+	 * @param e the event.
+	 */
+	public void onCharacterSpawn(CharacterEvent e)
+	{
+		Character character = (Character) e.getSource();
+
+		// We only need to update the visible matrix when the player is moving.
+		if( character instanceof Player )
+		{
+			updateVisible();
 		}
 	}
 
@@ -576,37 +608,5 @@ public class Grid implements ICharacterListener
 	public int getHeight()
 	{
 		return heightInCells * getCellSize();
-	}
-
-	/**
-	 * Actions to be taken when the unit is spawned.
-	 * @param e the event.
-	 */
-	public void onCharacterSpawn(CharacterEvent e) {}
-
-	/**
-	 * Actions to be taken when the unit gains health.
-	 * @param e the event.
-	 */
-	public void onCharacterHealthGain(CharacterEvent e) {}
-
-	/**
-	 * Actions to be taken when the unit loses health.
-	 * @param e the event.
-	 */
-	public void onCharacterHealthLoss(CharacterEvent e) {}
-
-	/**
-	 * Actions to be taken when the unit moves.
-	 * @param e the event.
-	 */
-	public void onCharacterMove(CharacterEvent e)
-	{
-		Character character = (Character) e.getSource();
-
-		if( character instanceof Player )
-		{
-			updateVisible();
-		}
 	}
 }

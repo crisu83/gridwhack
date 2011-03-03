@@ -1,7 +1,9 @@
 package gridwhack.grid;
 
+import gridwhack.exception.ComponentNotFoundException;
+import gridwhack.fov.Fov;
+import gridwhack.fov.FovFactory;
 import gridwhack.fov.IViewer;
-import gridwhack.fov.RayTracing;
 import gridwhack.path.IMover;
 
 /**
@@ -32,8 +34,18 @@ public abstract class GridUnit extends GridEntity implements IMover, IViewer
 	 */
 	public void init()
 	{
-		// Create a new field of view for the unit.
-		fov = new RayTracing(viewRange, grid, this);
+		try
+		{
+			// Create a new field of view for the unit.
+			fov = FovFactory.factory(Fov.Type.RAY_TRACING, viewRange, grid, this);
+		}
+		catch( ComponentNotFoundException e )
+		{
+			System.out.println(e.getMessage());
+			System.exit(1);
+		}
+
+		addListener(fov); // let the fov listen to this unit.
 	}
 
 	/**
@@ -46,18 +58,6 @@ public abstract class GridUnit extends GridEntity implements IMover, IViewer
 	public GridPath getPath(int tgx, int tgy, int maxPathLength)
 	{
 		return grid.getPath(getGridX(), getGridY(), tgx, tgy, maxPathLength, this);
-	}
-
-	// TODO: Write doc
-	public void markMoved()
-	{
-		updateFov();
-	}
-
-	// TODO: Write doc
-	public void updateFov()
-	{
-		fov.update(getGridX(), getGridY());
 	}
 
 	/**

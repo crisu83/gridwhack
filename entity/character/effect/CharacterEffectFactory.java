@@ -1,5 +1,6 @@
 package gridwhack.entity.character.effect;
 
+import gridwhack.exception.ComponentNotFoundException;
 import gridwhack.entity.character.Character;
 
 /**
@@ -15,7 +16,7 @@ public class CharacterEffectFactory
 	 * @param subject the character the effect belongs to.
 	 * @return the character effect.
 	 */
-	public static CharacterEffect factory(CharacterEffect.Type type, Character subject) throws Exception
+	public static CharacterEffect factory(CharacterEffect.Type type, Character subject) throws ComponentNotFoundException
 	{
 		CharacterEffect effect = null;
 
@@ -27,7 +28,7 @@ public class CharacterEffectFactory
 				break;
 
 			default:
-				throw new Exception("Failed to create character effect, type '" + type + "' is invalid!");
+				throw new ComponentNotFoundException("Failed to create character effect, type '" + type + "' is invalid!");
 		}
 
 		// Initialize the effect.

@@ -3,6 +3,7 @@ package gridwhack.fov;
 import gridwhack.grid.Grid;
 import gridwhack.grid.GridFov;
 
+// TODO: Implement checking of boundaries.
 public class ShadowCasting extends GridFov
 {
     // Multipliers for transforming the coordinates into sections.

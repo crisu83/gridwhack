@@ -4,15 +4,12 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
-import gridwhack.gui.event.IPanelListener;
-import gridwhack.gui.event.PanelEvent;
-
 /**
  * Graphical user interface class file.
  * Allows for rendering panels.
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
-public class Gui implements IPanelListener
+public class Gui
 {
 	protected static Gui instance = new Gui();
 
@@ -62,7 +59,6 @@ public class Gui implements IPanelListener
 	 */
 	public synchronized void addPanel(GuiPanel.Type type, GuiPanel panel)
 	{
-		panel.addListener(instance);
 		panels.put(type, panel);
 	}
 
@@ -82,8 +78,6 @@ public class Gui implements IPanelListener
 	 */
 	public synchronized void removePanel(GuiPanel.Type type)
 	{
-		// TODO: Figure out how to get the Gui to remove panels properly.
-		//panel.removeListener(instance);
 		panels.remove(type);
 	}
 	
@@ -109,14 +103,5 @@ public class Gui implements IPanelListener
 		{
 			panel.getValue().render(g);
 		}
-	}
-
-	/**
-	 * Actions to be taken when a panel is removed.
-	 * @param e the event.
-	 */
-	public synchronized void onPanelRemove(PanelEvent e)
-	{
-		//removePanel( (GuiPanel2) e.getSource() );
 	}
 }

@@ -1,5 +1,6 @@
 package gridwhack.entity.tile;
 
+import gridwhack.exception.ComponentNotFoundException;
 import gridwhack.grid.Grid;
 import gridwhack.grid.GridTile;
 
@@ -16,7 +17,7 @@ public class TileFactory
 	 * @param grid the grid the tile belongs to.
 	 * @return the tile.
 	 */
-	public static GridTile factory(GridTile.Type type, Grid grid) throws ClassNotFoundException
+	public static GridTile factory(GridTile.Type type, Grid grid) throws ComponentNotFoundException
 	{
 		GridTile tile;
 
@@ -32,7 +33,7 @@ public class TileFactory
 				break;
 
 			default:
-				throw new ClassNotFoundException("Failed to create tile, type '" + type + "' is invalid!");
+				throw new ComponentNotFoundException("Failed to create tile, type '" + type + "' is invalid!");
 		}
 
 		// Initialize the tile.

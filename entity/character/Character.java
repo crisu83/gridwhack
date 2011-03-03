@@ -1,9 +1,10 @@
 package gridwhack.entity.character;
 
 import gridwhack.entity.character.attack.BattleScenario;
-import gridwhack.entity.character.event.CharacterEvent;
-import gridwhack.entity.character.event.ICharacterListener;
-import gridwhack.entity.character.player.Player;
+import gridwhack.entity.character.effect.event.CharacterEffectEvent;
+import gridwhack.entity.character.effect.event.ICharacterEffectApplyListener;
+import gridwhack.entity.character.effect.event.ICharacterEffectFadeListener;
+import gridwhack.entity.character.event.*;
 import gridwhack.event.IEventListener;
 import gridwhack.grid.Grid;
 import gridwhack.grid.GridUnit;
@@ -18,7 +19,7 @@ import java.util.Map;
  * All characters must be extended from this class.
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
-public abstract class Character extends GridUnit
+public abstract class Character extends GridUnit implements ICharacterEffectApplyListener, ICharacterEffectFadeListener
 {
 	// Character types.
 	public static enum Type {
@@ -38,8 +39,8 @@ public abstract class Character extends GridUnit
 	protected int minimumDamage;
 	protected int maximumDamage;
 
-	protected int attackCooldown;
-	protected int movementCooldown = 0; // characters cannot move by default
+	protected int attackCooldown = 0; // milliseconds
+	protected int movementCooldown = 0; // milliseconds
 	protected long nextAttackTime;
 	protected long nextMoveTime;
 
@@ -69,16 +70,14 @@ public abstract class Character extends GridUnit
 	}
 
 	/**
-	 * Initializes the character.
+	 * Marks the character as spawned.
 	 */
-	public void init()
+	public void markSpawned()
 	{
-		super.init();
-
-		// Let all the character listeners know that the character has been spawned.
+		// Let all listeners know that this character has gained health.
 		fireCharacterEvent(new CharacterEvent(CharacterEvent.Type.SPAWN, this));
 	}
-
+	
 	/**
 	 * Sets the character health.
 	 * @param health the health.
@@ -239,8 +238,6 @@ public abstract class Character extends GridUnit
 	 */
 	public synchronized void markMoved()
 	{
-		super.markMoved();
-
 		// Let all listeners know that the character has moved.
 		fireCharacterEvent(new CharacterEvent(CharacterEvent.Type.MOVE, this));
 	}
@@ -292,40 +289,76 @@ public abstract class Character extends GridUnit
 		for( IEventListener listener : getListeners() )
 		{
 			// Make sure we only notify character listeners.
-			if( listener instanceof ICharacterListener)
+			if( listener instanceof ICharacterListener )
 			{
 				switch( (CharacterEvent.Type) e.getType() )
 				{
 					// Character has died.
 					case DEATH:
-						( (ICharacterListener) listener ).onCharacterDeath(e);
-						break;
-
-					// Character has been spawned.
-					case SPAWN:
-						( (ICharacterListener) listener ).onCharacterSpawn(e);
+						if( listener instanceof ICharacterDeathListener )
+						{
+							( (ICharacterDeathListener) listener ).onCharacterDeath(e);
+						}
 						break;
 
 					// Character has gained health.
 					case HEALTHGAIN:
-						( (ICharacterListener) listener ).onCharacterHealthGain(e);
+						if( listener instanceof ICharacterHealthListener )
+						{
+							( (ICharacterHealthListener) listener ).onCharacterHealthGain(e);
+						}
 						break;
 
 					// Character has lost health.
 					case HEALTHLOSS:
-						( (ICharacterListener) listener ).onCharacterHealthLoss(e);
+						if( listener instanceof ICharacterHealthListener )
+						{
+							( (ICharacterHealthListener) listener ).onCharacterHealthLoss(e);
+						}
 						break;
 
 					// Character has moved.
 					case MOVE:
-						( (ICharacterListener) listener ).onCharacterMove(e);
+						if( listener instanceof ICharacterMoveListener )
+						{
+							( (ICharacterMoveListener) listener ).onCharacterMove(e);
+						}
+						break;
+
+					// Character has spawned.
+					case SPAWN:
+						if( listener instanceof ICharacterSpawnListener )
+						{
+							( (ICharacterSpawnListener) listener ).onCharacterSpawn(e);
+						}
 						break;
 
 					// Unknown event.
 					default:
+						System.out.println("Failed to fire character event, type '" + e.getType() + "' is invalid!");
 				}
 			}
 		}
+	}
+
+	/**
+	 * Actions to be taken when a character effect starts affecting its subject.
+	 * @param e the event.
+	 */
+	public synchronized void onCharacterEffectApply(CharacterEffectEvent e)
+	{
+		CharacterEffect effect = (CharacterEffect) e.getSource();
+		addEffect(effect.getType(), effect);
+	}
+
+	/**
+	 * Actions to be taken when a character effect fades.
+	 * @param e the event.
+	 */
+	public synchronized void onCharacterEffectFade(CharacterEffectEvent e)
+	{
+		CharacterEffect effect = (CharacterEffect) e.getSource();
+		removeEffect(effect.getType());
 	}
 
 	/**

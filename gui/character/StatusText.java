@@ -24,7 +24,7 @@ public abstract class StatusText extends GuiCharacterElement implements IEventLi
 	{
 		super(x, y, width, height, owner);
 
-		getOwner().addListener(this); // set the element to listen to its owner.
+		owner.addListener(this); // set the element to listen to its owner.
 	}
 	
 	/**

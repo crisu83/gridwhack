@@ -31,13 +31,10 @@ public abstract class GuiElement extends CComponent
 	private int y;
 	private int width;
 	private int height;
-
 	private Font font;
 	private int lineHeight;
-
 	private	Color textColor;
 	private	Color backgroundColor;
-
 	private GuiElement parent;
 	private Map<GuiElement.Type, GuiElement> children;
 

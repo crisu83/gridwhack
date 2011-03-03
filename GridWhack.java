@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 import gridwhack.entity.character.Character;
 import gridwhack.entity.character.CharacterFactory;
 import gridwhack.entity.character.player.Player;
+import gridwhack.exception.ComponentNotFoundException;
 import gridwhack.grid.Grid;
 import gridwhack.grid.GridUnit;
 import gridwhack.gui.Gui;
@@ -186,7 +187,7 @@ public class GridWhack extends CGameEngine
 		{
 			player = (Player) CharacterFactory.factory(Character.Type.PLAYER, grid);
 		}
-		catch( ClassNotFoundException e )
+		catch( ComponentNotFoundException e )
 		{
 			System.out.println(e.getMessage());
 			System.exit(1);

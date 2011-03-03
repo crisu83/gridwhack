@@ -1,5 +1,7 @@
 package gridwhack.entity.item;
 
+import gridwhack.exception.ComponentNotFoundException;
+
 /**
  * Item factory class file.
  * Allows for creating items.
@@ -12,7 +14,7 @@ public class ItemFactory
 	 * @param type the item type.
 	 * @return the tile.
 	 */
-	public static Item factory(Item.Type type) throws Exception
+	public static Item factory(Item.Type type) throws ComponentNotFoundException
 	{
 		Item item;
 
@@ -28,7 +30,7 @@ public class ItemFactory
 				break;
 
 			default:
-				throw new Exception("Failed to create item, type '" + type + "' is invalid!");
+				throw new ComponentNotFoundException("Failed to create item, type '" + type + "' is invalid!");
 		}
 
 		// Initialze the item.
