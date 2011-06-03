@@ -1,13 +1,13 @@
 package gridwhack.gui.character;
 
-import gridwhack.entity.character.Character;
-import gridwhack.entity.character.event.CharacterEvent;
-import gridwhack.entity.character.event.ICharacterHealthListener;
-import gridwhack.entity.character.player.event.IPlayerLevelListener;
-import gridwhack.entity.character.player.event.PlayerEvent;
+import gridwhack.gameobject.character.Character;
+import gridwhack.gameobject.character.event.CharacterEvent;
+import gridwhack.gameobject.character.event.ICharacterHealthListener;
+import gridwhack.gameobject.character.player.event.IPlayerLevelListener;
+import gridwhack.gameobject.character.player.event.PlayerEvent;
 
 /**
- * Health status text class file.
+ * Health status text class.
  * Allows for displaying character health values in the gui.
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */

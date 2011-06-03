@@ -2,9 +2,10 @@ package gridwhack.gui.character;
 
 import java.awt.*;
 
-import gridwhack.entity.character.Character;
+import gridwhack.gameobject.character.Character;
 import gridwhack.event.IEventListener;
 import gridwhack.gui.GuiElement;
+import gridwhack.util.Vector2;
 
 /**
  * Status bar class.
@@ -76,15 +77,14 @@ public abstract class StatusBar extends GuiCharacterElement implements IEventLis
 	 */
 	public void move(int x, int y)
 	{
-		setX(x);
-		setY(y);
+		setPosition(new Vector2(x, y));
 	}
 
 	/**
-	 * Renders the status bar.
-	 * @param g the graphics context.
+	 * Draws this object.
+	 * @param g The graphics context.
 	 */
-	public void render(Graphics2D g)
+	public void draw(Graphics2D g)
 	{
 		// render a background for the bar.
 		g.setColor(getBackgroundColor());

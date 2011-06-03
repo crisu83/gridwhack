@@ -1,6 +1,6 @@
 package gridwhack.gui.character;
 
-import gridwhack.entity.character.Character;
+import gridwhack.gameobject.character.Character;
 import gridwhack.gui.GuiElement;
 
 public class GuiCharacterElement extends GuiElement

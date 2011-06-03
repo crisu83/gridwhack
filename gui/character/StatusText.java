@@ -2,11 +2,11 @@ package gridwhack.gui.character;
 
 import java.awt.Graphics2D;
 
-import gridwhack.entity.character.Character;
+import gridwhack.gameobject.character.Character;
 import gridwhack.event.IEventListener;
 
 /**
- * Status text class file.
+ * Status text class.
  * Allows for representing character values as text in the gui.
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
@@ -28,10 +28,10 @@ public abstract class StatusText extends GuiCharacterElement implements IEventLi
 	}
 	
 	/**
-	 * Renders the status text.
-	 * @param g the 2D graphics object.
+	 * Draws this object.
+	 * @param g The graphics context.
 	 */
-	public void render(Graphics2D g)
+	public void draw(Graphics2D g)
 	{
 		g.setFont(getFont());
 		g.setColor(getTextColor());

@@ -1,6 +1,9 @@
 package gridwhack.gui;
 
-import gridwhack.CComponent;
+import gridwhack.base.BaseObject;
+import gridwhack.gameobject.GameObject;
+import gridwhack.render.IDrawable;
+import gridwhack.util.Vector2;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -12,9 +15,9 @@ import java.util.Map;
  * All gui elements must be extended from this class.
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
-public abstract class GuiElement extends CComponent
+public abstract class GuiElement extends GameObject implements IDrawable
 {
-	public static enum Type {
+	public static enum GuiElementType {
 		PLAYER_DETAILS,
 		PLAYER_HEALTHDISPLAY,
 		PLAYER_EXPERIENCEDISPLAY,
@@ -27,8 +30,10 @@ public abstract class GuiElement extends CComponent
 		GAME_COMBATLOGBOX,
 	};
 
-	private int x;
-	private int y;
+	// ----------
+	// Properties
+	// ----------
+
 	private int width;
 	private int height;
 	private Font font;
@@ -36,9 +41,13 @@ public abstract class GuiElement extends CComponent
 	private	Color textColor;
 	private	Color backgroundColor;
 	private GuiElement parent;
-	private Map<GuiElement.Type, GuiElement> children;
+	private Map<GuiElementType, GuiElement> children;
 
-	protected volatile boolean visible = true; // elements are visible by default	
+	protected volatile boolean visible = true; // elements are visible by default
+
+	// -------
+	// Methods
+	// -------
 
 	/**
 	 * Creates the element.
@@ -49,13 +58,12 @@ public abstract class GuiElement extends CComponent
 	 */
 	public GuiElement(int x, int y, int width, int height)
 	{
-		this.x = x;
-		this.y = y;
+		this.position = new Vector2(x, y);
 		this.width = width;
 		this.height = height;
 
 		// We use the gui font by default.
-		this.font = font==null ? Gui.getInstance().getWindow().getFont() : font;
+		this.font = font == null ? Gui.getInstance().getWindow().getFont() : font;
 
 		// Line height is 1.5 times the font size.
 		this.lineHeight = (int) Math.round(font.getSize() * 1.5);
@@ -64,26 +72,26 @@ public abstract class GuiElement extends CComponent
 		this.textColor = textColor==null ? Color.white : textColor;
 
 		// Initialize the map for child elements.
-		children = new HashMap<GuiElement.Type, GuiElement>();
+		children = new HashMap<GuiElementType, GuiElement>();
 	}
 
 	/**
 	 * Adds a child element to this element.
-	 * @param type the element type.
-	 * @param element the element.
+	 * @param type The element type.
+	 * @param element The element.
 	 */
-	public synchronized void addChild(GuiElement.Type type, GuiElement element)
+	public synchronized void addChild(GuiElementType type, GuiElement element)
 	{
 		element.setParent(this); // set this element as the child elements parent.
 		children.put(type, element);
 	}
 
 	/**
-	 * Returns a specific child element.
-	 * @param type the element type.
-	 * @return the element.
+	 * Returns a child element from this element.
+	 * @param type The element type.
+	 * @return The element.
 	 */
-	public GuiElement getChild(GuiElement.Type type)
+	public GuiElement getChild(GuiElementType type)
 	{
 		// Make sure that the element exists.
 		return children.containsKey(type) ? children.get(type) : null;
@@ -91,21 +99,65 @@ public abstract class GuiElement extends CComponent
 
 	/**
 	 * Removes a child element from this element.
-	 * @param type the element type.
+	 * @param type The element type.
 	 */
-	public synchronized void removeChild(GuiElement.Type type)
+	public synchronized void removeChild(GuiElementType type)
 	{
 		children.remove(type);
 	}
 
+	// ------------------
+	// Overridden methods
+	// ------------------
+
 	/**
-	 * Sets the x-coordinate for this element.
-	 * @param x the x-coordinate.
+	 * Updates this object.
+	 * @param parent The parent object.
 	 */
-	public void setX(int x)
+	@Override
+	public void update(BaseObject parent)
 	{
-		this.x = x;
+		if (visible)
+		{
+			if (!children.isEmpty())
+			{
+				for (GuiElement child : children.values())
+				{
+					child.update(this);
+				}
+			}
+		}
 	}
+
+	/**
+	 * Draws this object.
+	 * @param g The graphics object
+	 */
+	@Override
+	public void draw(Graphics2D g)
+	{
+		if (visible)
+		{
+			// Set the background color if necessary.
+			if (backgroundColor != null)
+			{
+				g.setColor(backgroundColor);
+				g.fillRect(getX(), getY(), width, height);
+			}
+
+			if (!children.isEmpty())
+			{
+				for (GuiElement child : children.values())
+				{
+					child.draw(g);
+				}
+			}
+		}
+	}
+
+	// -------------------
+	// Getters and setters
+	// -------------------
 
 	/**
 	 * Calculates this elements absolute x-coordinate
@@ -114,23 +166,14 @@ public abstract class GuiElement extends CComponent
 	 */
 	public int getX()
 	{
-		int cx = x;
-		
-		if( parent!=null )
+		int cx = (int) position.x;
+
+		if (parent != null)
 		{
 			cx += parent.getX();
 		}
-		
-		return cx;
-	}
 
-	/**
-	 * Sets the y-coordinate for this element.
-	 * @param y the y-coordinate.
-	 */
-	public void setY(int y)
-	{
-		this.y = y;
+		return cx;
 	}
 
 	/**
@@ -140,13 +183,13 @@ public abstract class GuiElement extends CComponent
 	 */
 	public int getY()
 	{
-		int cy = y;
-		
-		if( parent!=null )
+		int cy = (int) position.y;
+
+		if (parent != null)
 		{
 			cy += parent.getY();
 		}
-		
+
 		return cy;
 	}
 
@@ -170,7 +213,7 @@ public abstract class GuiElement extends CComponent
 
 	/**
 	 * Returns the parent element for this element.
-	 * @return the parent element.
+	 * @return The parent element.
 	 */
 	public GuiElement getParent()
 	{
@@ -178,8 +221,8 @@ public abstract class GuiElement extends CComponent
 	}
 
 	/**
-	 * Sets the parent for this element.
-	 * @param parent the parent element.
+	 * Sets a new parent for this element.
+	 * @param parent The parent element.
 	 */
 	public void setParent(GuiElement parent)
 	{
@@ -187,17 +230,8 @@ public abstract class GuiElement extends CComponent
 	}
 
 	/**
-	 * Sets the font for this element.
-	 * @param font the font.
-	 */
-	public void setFont(Font font)
-	{
-		this.font = font;
-	}
-
-	/**
 	 * Returns the font for this element.
-	 * @return the font.
+	 * @return The font.
 	 */
 	public Font getFont()
 	{
@@ -205,8 +239,17 @@ public abstract class GuiElement extends CComponent
 	}
 
 	/**
+	 * Sets a new font for this element.
+	 * @param font The font.
+	 */
+	public void setFont(Font font)
+	{
+		this.font = font;
+	}
+
+	/**
 	 * Returns the font size for this element.
-	 * @return the font size.
+	 * @return The font size.
 	 */
 	public int getFontSize()
 	{
@@ -214,17 +257,8 @@ public abstract class GuiElement extends CComponent
 	}
 
 	/**
-	 * Sets the line height for this element.
-	 * @param lineHeight the line height.
-	 */
-	public void setLineHeight(int lineHeight)
-	{
-		this.lineHeight = lineHeight;
-	}
-
-	/**
 	 * Returns the line height for this element.
-	 * @return the line height.
+	 * @return The line height.
 	 */
 	public int getLineHeight()
 	{
@@ -232,17 +266,17 @@ public abstract class GuiElement extends CComponent
 	}
 
 	/**
-	 * Sets the text color for this element.
-	 * @param color the color.
+	 * Sets a new line height for this element.
+	 * @param lineHeight The line height.
 	 */
-	public void setTextColor(Color color)
+	public void setLineHeight(int lineHeight)
 	{
-		this.textColor = color;
+		this.lineHeight = lineHeight;
 	}
 
 	/**
 	 * Returns the text color for this element.
-	 * @return the color.
+	 * @return The color.
 	 */
 	public Color getTextColor()
 	{
@@ -250,12 +284,12 @@ public abstract class GuiElement extends CComponent
 	}
 
 	/**
-	 * Sets the background color for this element.
-	 * @param color the color.
+	 * Sets a new text color for this element.
+	 * @param color The color.
 	 */
-	public void setBackgroundColor(Color color) 
+	public void setTextColor(Color color)
 	{
-		this.backgroundColor = color;
+		this.textColor = color;
 	}
 
 	/**
@@ -268,48 +302,11 @@ public abstract class GuiElement extends CComponent
 	}
 
 	/**
-	 * Updates this element and its children if necessary.
-	 * @param timePassed the time that has passed.
+	 * Sets a new background color for this element.
+	 * @param backgroundColor The color.
 	 */
-	public void update(long timePassed)
+	public void setBackgroundColor(Color backgroundColor)
 	{
-		if( visible )
-		{
-			// Update the children if necessary.
-			if( !children.isEmpty() )
-			{
-				// Update the children.
-				for( Map.Entry<GuiElement.Type, GuiElement> element : children.entrySet() )
-				{
-					element.getValue().update(timePassed);
-				}
-			}
-		}
-	}
-	
-	/**
-	 * Renders this element and its children if necessary.
-	 * @param g the graphics context.
-	 */
-	public void render(Graphics2D g)
-	{
-		if( visible )
-		{
-			// Set a background color if necessary.
-			if( backgroundColor!=null )
-			{
-				g.setColor(backgroundColor);
-				g.fillRect(getX(), getY(), width, height);
-			}
-
-			// Render the children if necessary.
-			if( !children.isEmpty() )
-			{
-				for( Map.Entry<GuiElement.Type, GuiElement> element : children.entrySet() )
-				{
-					element.getValue().render(g);					
-				}
-			}
-		}
+		this.backgroundColor = backgroundColor;
 	}
 }

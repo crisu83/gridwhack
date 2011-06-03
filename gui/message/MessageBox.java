@@ -37,10 +37,10 @@ public abstract class MessageBox extends GuiElement
 	public void update(long timePassed) {}
 
 	/**
-	 * Renders this element.
-	 * @param g the graphics context.
+	 * Draws this object.
+	 * @param g The graphics context.
 	 */
-	public void render(Graphics2D g)
+	public void draw(Graphics2D g)
 	{
 		// set the font and bgColor.
 		g.setFont(getFont());

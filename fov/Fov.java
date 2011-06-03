@@ -1,17 +1,22 @@
 package gridwhack.fov;
 
+import gridwhack.base.BaseObject;
+
 /**
- * Field of view class file.
+ * Field of view class.
  * All field of views must be extended from this class.
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
-public abstract class Fov
+public abstract class Fov extends BaseObject
 {
-	// Field of view types.
-	public static enum Type {
+	public static enum FovType {
 		RAY_TRACING,
 		SHADOW_CASTING,
 	};
+
+	// ----------
+	// Properties
+	// ----------
 
 	private int width;
 	private int height;
@@ -19,11 +24,15 @@ public abstract class Fov
 	protected boolean[][] visible;
 	protected boolean[][] complete;
 
+	// -------
+	// Methods
+	// -------
+
 	/**
 	 * Creates the field of view.
-	 * @param width the field width.
-	 * @param height the field height.
-	 * @param radius the field radius.
+	 * @param width The field width.
+	 * @param height The field height.
+	 * @param radius The field radius.
 	 */
 	public Fov(int width, int height, int radius)
 	{
@@ -31,7 +40,7 @@ public abstract class Fov
 		this.height = height;
 		this.radius = radius;
 
-		init(); // Empty the field of view
+		init(); // empty the field of view
 	}
 
 	/**
@@ -45,19 +54,34 @@ public abstract class Fov
 
 	/**
 	 * Returns whether a specific node is visible.
-	 * @param x the x-coordinate.
-	 * @param y the y-coordinate.
-	 * @return whether the node is visible.
+	 * @param x The x-coordinate of the node.
+	 * @param y The y-coordinate of the node.
+	 * @return Whether the node is visible.
 	 */
 	public boolean isVisible(int x, int y)
 	{
 		return visible[x][y];
 	}
 
+	// ----------------
+	// Abstract methods
+	// ----------------
+	
+	/**
+	 * Refreshes the field of view.
+	 * @param cx The current x-coordinate.
+	 * @param cy The current y-coordinate.
+	 */
+	public abstract void refresh(int cx, int cy);
+
+	// -------------------
+	// Getters and setters
+	// -------------------
+
 	/**
 	 * Returns a matrix representation of which nodes are visible
 	 * taking into account the view range.
-	 * @return the visible matrix.
+	 * @return The visible matrix.
 	 *
 	 */
 	public boolean[][] getVisible()
@@ -68,7 +92,7 @@ public abstract class Fov
 	/**
 	 * Returns a matrix representation of which cells are visible
 	 * NOT taking into account the view range.
-	 * @return the complete matrix.
+	 * @return The complete matrix.
 	 */
 	public boolean[][] getComplete()
 	{
@@ -76,8 +100,7 @@ public abstract class Fov
 	}
 
 	/**
-	 * Returns the width of this field of view.
-	 * @return the width.
+	 * @return The width of this field of view.
 	 */
 	public int getWidth()
 	{
@@ -85,8 +108,7 @@ public abstract class Fov
 	}
 
 	/**
-	 * Returns the height of this field of view.
-	 * @return the height.
+	 * @return The height of this field of view.
 	 */
 	public int getHeight()
 	{
@@ -94,18 +116,10 @@ public abstract class Fov
 	}
 
 	/**
-	 * Returns the radius of this field of view.
-	 * @return the radius.
+	 * @return The radius of this field of view.
 	 */
 	public int getRadius()
 	{
 		return radius;
 	}
-
-	/**
-	 * Updates the field of view.
-	 * @param cx the current x-coordinate.
-	 * @param cy the current y-coordinate.
-	 */
-	public abstract void update(int cx, int cy);
 }

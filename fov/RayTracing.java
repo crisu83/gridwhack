@@ -1,18 +1,17 @@
 package gridwhack.fov;
 
-import gridwhack.grid.Grid;
-import gridwhack.grid.GridFov;
+import gridwhack.gameobject.grid.Grid;
 
 /**
- * Ray tracing field of view class file.
+ * Ray tracing field of view class.
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
 public class RayTracing extends GridFov
 {
 	/**
 	 * Creates the field of view.
-	 * @param viewer owner of this field of view.
-	 * @param grid the grid the viewer belongs to.
+	 * @param viewer The owner of this field of view.
+	 * @param grid The grid the viewer belongs to.
 	 */
 	public RayTracing(int radius, Grid grid, IViewer viewer)
 	{
@@ -21,20 +20,20 @@ public class RayTracing extends GridFov
 
 	/**
 	 * Updates the field of view.
-	 * @param cx the current x-coordinate.
-	 * @param cy the current y-coordinate.
+	 * @param cx The current x-coordinate.
+	 * @param cy The current y-coordinate.
 	 */
-	public void update(int cx, int cy)
+	public void refresh(int cx, int cy)
 	{
 		init();
 
-		for( int x=0, width=getWidth(); x<width; x++ )
+		for (int x = 0, width = getWidth(); x < width; x++)
 		{
-			for( int y=0, height=getHeight(); y<height; y++ )
+			for (int y = 0, height = getHeight(); y < height; y++)
 			{
-				if( (x==0 || y==0) || (x==width-1 || y==height-1) )
+				if ((x == 0 || y == 0) || (x == width-1 || y == height-1))
 				{
-					raytrace(cx, cy, x, y, getRadius());
+					castRay(cx, cy, x, y, getRadius());
 				}
 			}
 		}
@@ -50,7 +49,7 @@ public class RayTracing extends GridFov
 	 * @param ty the target y-coordinate.
 	 * @param range the view range in grid cells.
 	 */
-	public void raytrace(int sx, int sy, int tx, int ty, int range)
+	public void castRay(int sx, int sy, int tx, int ty, int range)
 	{
 		// Calculate the deltas.
 		int dx = Math.abs(tx - sx);
@@ -83,34 +82,34 @@ public class RayTracing extends GridFov
 		boolean solid = false;
 
 		// Loop while we have not hit anything solid.
-		while( !solid && n>0 )
+		while (!solid && n > 0)
 		{
 			// Check whether the ray hit something solid.
-			if( grid.isSolid(x, y, viewer) )
+			if (grid.isSolid(x, y, viewer))
 			{
 				solid = true;
 			}
 
 			// Mark grid cell within the range as visible.
-			if( !visible[x][y] && n>=(start - range) )
+			if (!visible[x][y] && n >= (start - range))
 			{
 				visible[x][y] = true;
 			}
 
 			// Add visible fields to the complete field of view if necessary.
-			if( !complete[x][y] )
+			if (!complete[x][y])
 			{
 				complete[x][y] = true;
 			}
 
 			// Move horizontally.
-			if( error>0 )
+			if (error > 0)
 			{
 				x += xi;
 				error -= dy;
 			}
 			// Move vertically.
-			else if( error<0 )
+			else if (error < 0)
 			{
 				y += yi;
 				error += dx;

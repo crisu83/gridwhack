@@ -41,7 +41,7 @@ public class Die
 	{		
 		int roll = 0;
 		
-		while( roll<min )
+		while (roll < min)
 		{
 			roll = roll();
 		}

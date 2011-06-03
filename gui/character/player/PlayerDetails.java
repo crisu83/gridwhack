@@ -1,12 +1,12 @@
 package gridwhack.gui.character.player;
 
-import gridwhack.entity.character.player.Player;
+import gridwhack.gameobject.character.player.Player;
 import gridwhack.gui.GuiElement;
 
 import java.awt.*;
 
 /**
- * Player details class file.
+ * Player details class.
  * Allows for visualizing player experience in the gui.
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
@@ -33,10 +33,10 @@ public class PlayerDetails extends GuiElement
 	public void update(long timePassed) {}
 
 	/**
-	 * Renders this element.
-	 * @param g the graphics context.
+	 * Draws this element.
+	 * @param g The graphics context.
 	 */
-	public void render(Graphics2D g)
+	public void draw(Graphics2D g)
 	{
 		g.setFont(getFont());
 		g.setColor(getTextColor());

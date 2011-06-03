@@ -1,12 +1,13 @@
 package gridwhack.gui.item;
 
-import gridwhack.entity.item.Item;
-import gridwhack.entity.character.player.Player;
-import gridwhack.grid.GridLoot;
+import gridwhack.base.BaseObject;
+import gridwhack.gameobject.character.player.Player;
+import gridwhack.gameobject.item.Item;
+import gridwhack.gameobject.loot.Loot;
 import gridwhack.gui.GuiElement;
+import gridwhack.util.SortedArrayList;
 
 import java.awt.*;
-import java.util.ArrayList;
 
 /**
  * Loot box class file.
@@ -14,7 +15,7 @@ import java.util.ArrayList;
  */
 public class LootBox extends GuiElement
 {
-	private GridLoot loot;
+	private Loot loot;
 	private Player owner;
 	private Color selectionColor;
 	private int selectedIndex;
@@ -26,7 +27,7 @@ public class LootBox extends GuiElement
 	 * @param loot the loot.
 	 * @param owner the owner.
 	 */
-	public LootBox(int x, int y, GridLoot loot, Player owner)
+	public LootBox(int x, int y, Loot loot, Player owner)
 	{
 		super(x, y, 110, 90);
 
@@ -43,21 +44,22 @@ public class LootBox extends GuiElement
 	 */
 	public void lootSelectedItem()
 	{
-		ArrayList<Item> items = loot.getItems();
+		SortedArrayList<BaseObject> items = loot.getItems();
 
 		// Make sure that we have items.
 		if( !items.isEmpty() )
 		{
-			Item item = items.get(selectedIndex);
+			Item item = (Item) items.get(selectedIndex);
 
 			item.loot(owner);
 			loot.removeItem(item);
+			loot.update(null); // TODO: Remove this hack
 
 			// We need to remove the loot and stop looting
 			// when the last item is looted.
 			if( items.isEmpty() )
 			{
-				loot.markRemoved();
+				loot.setRemoved(true);
 				owner.stopLooting();
 			}
 		}
@@ -70,10 +72,10 @@ public class LootBox extends GuiElement
 	public void update(long timePassed) {}
 
 	/**
-	 * Renders the loot box.
-	 * @param g the graphics context.
+	 * Draws this object.
+	 * @param g The graphics context.
 	 */
-	public void render(Graphics2D g)
+	public void draw(Graphics2D g)
 	{
 		Color textColor = getTextColor();
 		int lineHeight = getLineHeight();
@@ -81,7 +83,7 @@ public class LootBox extends GuiElement
 		g.setFont(getFont());
 		g.setColor(textColor);
 
-		ArrayList<Item> items = loot.getItems();
+		SortedArrayList<BaseObject> items = loot.getItems();
 
 		// Make sure that we have items.
 		if( !items.isEmpty() )
@@ -97,7 +99,9 @@ public class LootBox extends GuiElement
 					g.setColor(textColor);
 				}
 
-				g.drawString(items.get(i).getName(), getX() + 5, getY() + 15 + (i * lineHeight));
+				Item item = (Item) items.get(i);
+
+				g.drawString(item.getName(), getX() + 5, getY() + 15 + (i * lineHeight));
 			}
 		}
 	}

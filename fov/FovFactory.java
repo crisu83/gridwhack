@@ -1,46 +1,71 @@
 package gridwhack.fov;
 
-import gridwhack.exception.ComponentNotFoundException;
-import gridwhack.grid.Grid;
-import gridwhack.grid.GridFov;
+import gridwhack.base.BaseObject;
+import gridwhack.fov.Fov.FovType;
+import gridwhack.exception.InvalidObjectException;
+import gridwhack.gameobject.grid.Grid;
 
 /**
- * Field of view factory class file.
- * Allows for creating fields of view.
+ * Field of view factory class.
+ * Allows for creating fields of views.
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
-public class FovFactory
+public class FovFactory extends BaseObject
 {
+	// ----------
+	// Properties
+	// ----------
+
+	private static final FovFactory instance = new FovFactory();
+
+	// -------
+	// Methods
+	// -------
+
 	/**
-	 * Returns new field of view of the given type.
-	 * @param type the field of view type.
-	 * @param radius the radius of the field of view.
-	 * @param grid the grid the viewer belongs to.
-	 * @param viewer the owner of the field of view.
-	 * @return the field of view.
+	 * Creates the factory.
+	 * Private to enforce the singleton pattern.
 	 */
-	public static GridFov factory(Fov.Type type, int radius, Grid grid, IViewer viewer) throws ComponentNotFoundException
+	private FovFactory() {}
+
+	/**
+	 * Returns the single instance of this object.
+	 * @return The instance.
+	 */
+	public static FovFactory getInstance()
 	{
-		GridFov fov = null;
+		return instance;
+	}
+
+	/**
+	 * Creates a field of view of the given type.
+	 * @param type The field of view type.
+	 * @param radius The radius of the field of view.
+	 * @param grid The grid the viewer belongs to.
+	 * @param viewer The owner of the field of view.
+	 * @return The field of view.
+	 */
+	public GridFov create(FovType type, int radius, Grid grid, IViewer viewer) throws InvalidObjectException
+	{
+		GridFov object;
 
 		// return the requested type of character.
-		switch( type )
+		switch (type)
 		{
 			case RAY_TRACING:
-				fov = new RayTracing(radius, grid, viewer);
+				object = new RayTracing(radius, grid, viewer);
 				break;
 
 			case SHADOW_CASTING:
-				fov = new ShadowCasting(radius, grid, viewer);
+				object = new ShadowCasting(radius, grid, viewer);
 				break;
 
 			default:
-				throw new ComponentNotFoundException("Failed to create field of view, type '" + type + "' is invalid!");
+				throw new InvalidObjectException("Invalid object type.");
 		}
 
-		// Initialize the character.
-		fov.init();
+		object.init();
 
-		return fov;
+		return object;
 	}
 }

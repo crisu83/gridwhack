@@ -1,14 +1,14 @@
 package gridwhack.gui.character.player;
 
-import gridwhack.entity.character.Character;
-import gridwhack.entity.character.player.Player;
-import gridwhack.entity.character.player.event.IPlayerExperienceListener;
-import gridwhack.entity.character.player.event.IPlayerLevelListener;
-import gridwhack.entity.character.player.event.PlayerEvent;
+import gridwhack.gameobject.character.Character;
+import gridwhack.gameobject.character.player.Player;
+import gridwhack.gameobject.character.player.event.IPlayerExperienceListener;
+import gridwhack.gameobject.character.player.event.IPlayerLevelListener;
+import gridwhack.gameobject.character.player.event.PlayerEvent;
 import gridwhack.gui.character.StatusText;
 
 /**
- * Experience status text class.
+ * Experience status text.
  * Allows for displaying player experience values in the gui.
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
