@@ -3,13 +3,17 @@ package gridwhack;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.sql.*;
 
-import gridwhack.entity.character.Character;
-import gridwhack.entity.character.CharacterFactory;
-import gridwhack.entity.character.player.Player;
-import gridwhack.exception.ComponentNotFoundException;
-import gridwhack.grid.Grid;
-import gridwhack.grid.GridUnit;
+import gridwhack.core.Game;
+import gridwhack.gameobject.character.Character.CharacterType;
+import gridwhack.gameobject.character.CharacterFactory;
+import gridwhack.gameobject.character.player.Player;
+import gridwhack.gameobject.exception.InvalidGameObjectException;
+import gridwhack.gameobject.grid.Grid;
+import gridwhack.gameobject.map.Map;
+import gridwhack.gameobject.unit.Unit;
+import gridwhack.gameobject.map.MapFactory;
 import gridwhack.gui.Gui;
 import gridwhack.gui.GuiElement;
 import gridwhack.gui.GuiPanel;
@@ -18,24 +22,22 @@ import gridwhack.gui.message.CombatLogBox;
 import gridwhack.gui.message.MessageLogBox;
 import gridwhack.gui.character.player.ExperienceDisplay;
 import gridwhack.gui.character.HealthDisplay;
-//import gridwhack.map.Camera;
+//import gridwhack.gameobject.Camera;
 import gridwhack.gui.character.player.PlayerDetails;
-import gridwhack.map.GridMap;
-import gridwhack.map.MapFactory;
-import gridwhack.map.MapFactory.MapType;
+import gridwhack.gameobject.map.Map.MapType;
 
 /**
- * GridWhack class file.
+ * GridWhack game class file.
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
-public class GridWhack extends CGameEngine
+public class GridWhack extends Game
 {
 	private static final int DEFAULT_FPS = 80;
 
 	//public static final boolean DEBUG = true;
 	
 	private Player player;
-	private GridMap map;
+	private Map map;
 	private Gui gui;
 	//private Camera camera;
 
@@ -51,16 +53,15 @@ public class GridWhack extends CGameEngine
 	/**
 	 * Initializes the game.
 	 */
-	public void gameInit()
+	public void init()
 	{
 		gui = Gui.getInstance();
-		
-		Window w = screen.getFullScreenWindow();
+
+		Window w = getGameWindow();
 		w.setFont(new Font("Arial", Font.PLAIN, 12));
 		w.setBackground(Color.black);
 		w.setForeground(Color.white);
 		gui.setWindow(w);
-
 
 		createMap();
 		createPlayer();
@@ -71,6 +72,18 @@ public class GridWhack extends CGameEngine
 
 		// initialize the user interface.
 		initGui();
+
+		/*
+		try
+		{
+			sqlLiteTest();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			System.exit(1);
+		}
+		*/
 	}
 
 	/**
@@ -78,86 +91,89 @@ public class GridWhack extends CGameEngine
 	 */
 	public void registerKeyHandler()
 	{
-		// Add a key listener to listen for game related key presses.
-		addKeyListener(
-			new KeyAdapter()
-			{
-				/**
-				 * Actions to be taken when a key is pressed.
-				 * @param e the key event.
-				 */
-				public void keyPressed(KeyEvent e)
+		if (player != null)
+		{
+			// Add a key listener to listen for game related key presses.
+			addKeyListener(
+				new KeyAdapter()
 				{
-					// Looting keys.
-					if( player.isLooting() )
+					/**
+					 * Actions to be taken when a key is pressed.
+					 * @param e the key event.
+					 */
+					public void keyPressed(KeyEvent e)
 					{
-						LootBox lb = (LootBox) gui.getPanel(
-								GuiPanel.Type.WINDOW_PLAYER_LOOT).getChild(GuiElement.Type.PLAYER_LOOTBOX);
-						int index = lb.getSelectedIndex();
-
-						switch( e.getKeyCode() )
+						// Looting keys.
+						if( player.isLooting() )
 						{
-							// Move selection up.
-							case KeyEvent.VK_UP:
-								lb.setSelectedIndex(index - 1);
-								break;
+							LootBox lb = (LootBox) gui.getPanel(
+									GuiPanel.GuiPanelType.WINDOW_PLAYER_LOOT).getChild(GuiElement.GuiElementType.PLAYER_LOOTBOX);
+							int index = lb.getSelectedIndex();
 
-							// Move selection down.
-							case KeyEvent.VK_DOWN:
-								lb.setSelectedIndex(index + 1);
-								break;
+							switch( e.getKeyCode() )
+							{
+								// Move selection up.
+								case KeyEvent.VK_UP:
+									lb.setSelectedIndex(index - 1);
+									break;
 
-							case KeyEvent.VK_ENTER:
-								player.lootSelectedItem();
-								break;
+								// Move selection down.
+								case KeyEvent.VK_DOWN:
+									lb.setSelectedIndex(index + 1);
+									break;
 
-							// Close loot window.
-							case KeyEvent.VK_ESCAPE:
-								player.stopLooting();
-								break;
+								case KeyEvent.VK_ENTER:
+									player.lootSelectedItem();
+									break;
 
-							default:
+								// Close loot window.
+								case KeyEvent.VK_ESCAPE:
+									player.stopLooting();
+									break;
+
+								default:
+							}
 						}
-					}
-					// In-game keys.
-					else
-					{
-						switch( e.getKeyCode() )
+						// In-game keys.
+						else
 						{
-							// Move player left.
-							case KeyEvent.VK_LEFT:
-								player.move(GridUnit.Directions.LEFT);
-								break;
+							switch( e.getKeyCode() )
+							{
+								// Move player left.
+								case KeyEvent.VK_LEFT:
+									player.move(Unit.Directions.LEFT);
+									break;
 
-							// Move player right.
-							case KeyEvent.VK_RIGHT:
-								player.move(GridUnit.Directions.RIGHT);
-								break;
+								// Move player right.
+								case KeyEvent.VK_RIGHT:
+									player.move(Unit.Directions.RIGHT);
+									break;
 
-							// Move player up.
-							case KeyEvent.VK_UP:
-								player.move(GridUnit.Directions.UP);
-								break;
+								// Move player up.
+								case KeyEvent.VK_UP:
+									player.move(Unit.Directions.UP);
+									break;
 
-							// Move player down.
-							case KeyEvent.VK_DOWN:
-								player.move(GridUnit.Directions.DOWN);
-								break;
+								// Move player down.
+								case KeyEvent.VK_DOWN:
+									player.move(Unit.Directions.DOWN);
+									break;
 
-							// Player loot.
-							case KeyEvent.VK_PERIOD:
-								player.openLootWindow();
-								break;
+								// Player loot.
+								case KeyEvent.VK_PERIOD:
+									player.openLootWindow();
+									break;
 
-							default:
-								//System.out.println("Key pressed: " + e.getKeyCode());
+								default:
+									//System.out.println("Key pressed: " + e.getKeyCode());
+							}
 						}
-					}
 
-					e.consume();
+						e.consume();
+					}
 				}
-			}
-		);
+			);
+		}
 	}
 
 	/**
@@ -173,7 +189,16 @@ public class GridWhack extends CGameEngine
 	 */
 	protected void createMap()
 	{
-		map = MapFactory.factory(MapType.DUNGEON);
+		try
+		{
+			map = MapFactory.getInstance().create(MapType.DUNGEON, 60, 30);
+		}
+		catch (InvalidGameObjectException e)
+		{
+			System.out.print(e.getMessage());
+			e.printStackTrace();
+			System.exit(1);
+		}
 	}
 	
 	/**
@@ -182,18 +207,7 @@ public class GridWhack extends CGameEngine
 	protected void createPlayer()
 	{
 		Grid grid = map.getGrid();
-		
-		try
-		{
-			player = (Player) CharacterFactory.factory(Character.Type.PLAYER, grid);
-		}
-		catch( ComponentNotFoundException e )
-		{
-			System.out.println(e.getMessage());
-			System.exit(1);
-		}
-
-		grid.setPlayer(10, 10, player);
+		player = grid.getPlayer();
 	}
 	
 	/**
@@ -225,10 +239,10 @@ public class GridWhack extends CGameEngine
 	private void createPlayerPanel()
 	{
 		GuiPanel playerPanel = new GuiPanel(0, 0, 200, 70);
-		playerPanel.addChild(GuiElement.Type.PLAYER_DETAILS, new PlayerDetails(10, 5, player));
-		playerPanel.addChild(GuiElement.Type.PLAYER_HEALTHDISPLAY, new HealthDisplay(5, 15, player));
-		playerPanel.addChild(GuiElement.Type.PLAYER_EXPERIENCEDISPLAY, new ExperienceDisplay(5, 25, player));
-		gui.addPanel(GuiPanel.Type.PANEL_PLAYER_INFO, playerPanel);
+		playerPanel.addChild(GuiElement.GuiElementType.PLAYER_DETAILS, new PlayerDetails(10, 5, player));
+		playerPanel.addChild(GuiElement.GuiElementType.PLAYER_HEALTHDISPLAY, new HealthDisplay(5, 15, player));
+		playerPanel.addChild(GuiElement.GuiElementType.PLAYER_EXPERIENCEDISPLAY, new ExperienceDisplay(5, 25, player));
+		gui.addPanel(GuiPanel.GuiPanelType.PANEL_PLAYER_INFO, playerPanel);
 	}
 
 	/**
@@ -236,10 +250,10 @@ public class GridWhack extends CGameEngine
 	 */
 	private void createMessageLog()
 	{
-		Window w = screen.getFullScreenWindow();
+		Window w = getGameWindow();
 		GuiPanel messageLog = new GuiPanel(0, w.getHeight()-100, 500, 100);
-		messageLog.addChild(GuiElement.Type.GAME_MESSAGELOGBOX, new MessageLogBox(5, 5, 290, 90));
-		gui.addPanel(GuiPanel.Type.PANEL_MESSAGELOG, messageLog);
+		messageLog.addChild(GuiElement.GuiElementType.GAME_MESSAGELOGBOX, new MessageLogBox(5, 5, 290, 90));
+		gui.addPanel(GuiPanel.GuiPanelType.PANEL_MESSAGELOG, messageLog);
 	}
 
 	/**
@@ -247,90 +261,73 @@ public class GridWhack extends CGameEngine
 	 */
 	private void createCombatLog()
 	{
-		Window w = screen.getFullScreenWindow();
+		Window w = getGameWindow();
 		GuiPanel combatLog = new GuiPanel(w.getWidth()-500, w.getHeight()-100, 500, 100);
-		combatLog.addChild(GuiElement.Type.GAME_COMBATLOGBOX, new CombatLogBox(5, 5, 290, 90));
-		gui.addPanel(GuiPanel.Type.PANEL_COMBATLOG, combatLog);
+		combatLog.addChild(GuiElement.GuiElementType.GAME_COMBATLOGBOX, new CombatLogBox(5, 5, 290, 90));
+		gui.addPanel(GuiPanel.GuiPanelType.PANEL_COMBATLOG, combatLog);
 	}
 
+	// ------------------
+	// Overridden methods
+	// ------------------
+
 	/**
-	 * @param timePassed the time that has passed.
+	 * Updates the game logic.
 	 */
-	public void gameUpdate(long timePassed)
+	@Override
+	public void updateLogic()
 	{
-		//camera.update(timePassed);
-		
-		// update the map.
-		map.update(timePassed);
-		
-		// update the gui.
-		gui.update(timePassed);
-
-		// Make sure that the player is not dead.
-		if( player.getDead() )
-		{
-			System.out.println("Player has died!");
-			gameStop();
-		}
+		map.update(null);
+		gui.update(null);
 	}
 
 	/**
-	 * Renders the game.
-	 * @param g the graphics object.
+	 * Draws a single frame of the game.
+	 *
+	 * @param g The graphics context.
 	 */
-	public void gameRender(Graphics2D g)
-	{			
-		Window w = screen.getFullScreenWindow();
-		
-		// get the camera offset.
-		//int cx = (int) Math.round( Math.round(camera.getX()) );
-		//int cy = (int) Math.round( Math.round(camera.getY()) );
-		
-		//g.translate(-cx, -cy);
-		
-		// set a black background.
-		g.setColor(Color.BLACK);
-		g.fillRect(0, 0, w.getWidth(), w.getHeight());
-		
-		// render the map.
-		map.render(g);
-		
-		//g.translate(cx, cy);
-		
-		// render the gui last.
-		gui.render(g);
-	}
-	
-	/**
-	 * Renders the application.
-	 * @param g the graphics object.
-	 */
-	/*
-	public void paint(Graphics g)
+	@Override
+	public void drawFrame(Graphics2D g)
 	{
-		if( g instanceof Graphics2D )
-		{
-			Graphics2D g2d = (Graphics2D) g;
-			g2d.setRenderingHint(
-					RenderingHints.KEY_TEXT_ANTIALIASING, 
-					RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-		}
+		map.draw(g);
+		gui.draw(g);
 	}
-	*/
-	
+
+	public void sqlLiteTest() throws Exception
+	{
+		Class.forName("org.sqlite.JDBC");
+
+		Connection conn = DriverManager.getConnection("jdbc:sqlite:gridwhack/db/dungeon.sqlite");
+
+		Statement stmt = conn.createStatement();
+		ResultSet rs = stmt.executeQuery("select * from Hostiles;");
+		while (rs.next())
+		{
+			System.out.println("Name: " + rs.getString("name"));
+			System.out.println("Minimum damage: " + rs.getInt("damageMin"));
+			System.out.println("Maximum damage: " + rs.getInt("damageMax"));
+			System.out.println("Health: " + rs.getInt("health"));
+			System.out.println("Attack cooldown: " + rs.getInt("attackCooldown"));
+			System.out.println("Movement cooldown: " + rs.getInt("movementCooldown"));
+			System.out.println("View range: " + rs.getInt("viewRange"));
+			System.out.println("Experience: " + rs.getInt("experience"));
+			System.out.println("Image: " + rs.getString("image"));
+		}
+
+		conn.close();
+	}
+
+	// -----------
+	// Main method
+	// -----------
+
 	/**
 	 * Main method.
-	 * @param args the application arguments.
+	 * @param args The application arguments.
 	 */
 	public static void main(String[] args)
 	{
 		int fps = DEFAULT_FPS;
-		
-		if( args.length!=0 )
-		{
-			fps = Integer.parseInt(args[0]);
-		}
-		
 		long period = (long) 1000.0/fps;
 		
 		System.out.println("fps: " + fps + "; period: " + period + " ms");

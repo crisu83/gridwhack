@@ -69,7 +69,7 @@ public class CScreenManager
 		}
 		catch( Exception e )
 		{
-			// Could not create buffer strategy.
+			// Could not spawn buffer strategy.
 			System.out.println("Error while creating buffer strategy");
 		}
 		

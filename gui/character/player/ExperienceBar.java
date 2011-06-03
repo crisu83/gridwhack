@@ -1,15 +1,15 @@
 package gridwhack.gui.character.player;
 
-import gridwhack.entity.character.Character;
-import gridwhack.entity.character.player.Player;
-import gridwhack.entity.character.player.event.IPlayerExperienceListener;
-import gridwhack.entity.character.player.event.PlayerEvent;
+import gridwhack.gameobject.character.Character;
+import gridwhack.gameobject.character.player.Player;
+import gridwhack.gameobject.character.player.event.IPlayerExperienceListener;
+import gridwhack.gameobject.character.player.event.PlayerEvent;
 import gridwhack.gui.character.StatusBar;
 
 import java.awt.*;
 
 /**
- * Experience bar class file.
+ * Experience bar class.
  * Allows for visualizing player experience in the gui.
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */

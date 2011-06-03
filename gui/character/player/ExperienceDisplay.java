@@ -1,7 +1,6 @@
 package gridwhack.gui.character.player;
 
-import gridwhack.entity.character.Character;
-import gridwhack.gui.GuiElement;
+import gridwhack.gameobject.character.Character;
 import gridwhack.gui.character.GuiCharacterElement;
 
 /**
@@ -22,8 +21,8 @@ public class ExperienceDisplay extends GuiCharacterElement
 		super(x, y, 170, 20, owner);
 
 		// Create a experience bar and text to represent the player experience.
-		addChild(GuiElement.Type.PLAYER_EXPERIENCEBAR, new ExperienceBar(x, y, 100, 10, owner));
-		addChild(GuiElement.Type.PLAYER_EXPERIENCETEXT, new ExperienceText(
-				x + getChild(GuiElement.Type.PLAYER_EXPERIENCEBAR).getWidth() + 10, y, getWidth(), getHeight(), owner));
+		addChild(GuiElementType.PLAYER_EXPERIENCEBAR, new ExperienceBar(x, y, 100, 10, owner));
+		addChild(GuiElementType.PLAYER_EXPERIENCETEXT, new ExperienceText(
+				x + getChild(GuiElementType.PLAYER_EXPERIENCEBAR).getWidth() + 10, y, getWidth(), getHeight(), owner));
 	}
 }

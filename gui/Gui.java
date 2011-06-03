@@ -1,5 +1,9 @@
 package gridwhack.gui;
 
+import gridwhack.base.BaseObject;
+import gridwhack.gui.GuiPanel.GuiPanelType;
+import gridwhack.render.IDrawable;
+
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,25 +13,32 @@ import java.util.Map;
  * Allows for rendering panels.
  * @author Christoffer Niska <ChristofferNiska@gmail.com>
  */
-public class Gui
+public class Gui extends BaseObject implements IDrawable
 {
+	// ----------
+	// Properties
+	// ----------
+
 	protected static Gui instance = new Gui();
-
-	protected HashMap<GuiPanel.Type, GuiPanel> panels;
-
+	protected Map<GuiPanelType, GuiPanel> panels;
 	protected Window window;
 
+	// -------
+	// Methods
+	// -------
+
 	/**
-	 * Private constructor enforces the singleton pattern.
+	 * Creates the factory.
+	 * Private to enforce the singleton pattern.
 	 */
 	private Gui()
 	{
-		// Initialize the map for the panels.
-		panels = new HashMap<GuiPanel.Type, GuiPanel>();
+		panels = new HashMap<GuiPanelType, GuiPanel>();
 	}
 	
 	/**
-	 * @return the single gui instance.
+	 * Returns the single instance of this object.
+	 * @return The instance.
 	 */
 	public static Gui getInstance()
 	{
@@ -35,8 +46,71 @@ public class Gui
 	}
 
 	/**
-	 * Sets the window for this gui.
-	 * @param window the window.
+	 * Adds a panel to the gui.
+	 * @param type The panel type.
+	 * @param panel The panel to add.
+	 */
+	public synchronized void addPanel(GuiPanel.GuiPanelType type, GuiPanel panel)
+	{
+		panels.put(type, panel);
+	}
+
+	/**
+	 * Returns a panel in the gui.
+	 * @param type The panel type.
+	 * @return The panel or null if the panel was not found.
+	 */
+	public GuiPanel getPanel(GuiPanel.GuiPanelType type)
+	{
+		return panels.containsKey(type) ? panels.get(type) : null;
+	}
+
+	/**
+	 * Removes a panel from the gui.
+	 * @param type the panel type.
+	 */
+	public synchronized void removePanel(GuiPanel.GuiPanelType type)
+	{
+		panels.remove(type);
+	}
+
+	// ------------------
+	// Overridden methods
+	// ------------------
+
+	/**
+	 * Updates this object.
+	 * @param parent The parent object.
+	 */
+	@Override
+	public void update(BaseObject parent)
+	{
+		for(GuiPanel panel : panels.values())
+		{
+			panel.update(this);
+		}
+	}
+
+	/**
+	 * Draws the object.
+	 * @param g The graphics context.
+	 */
+	@Override
+	public void draw(Graphics2D g)
+	{
+		for(GuiPanel panel : panels.values())
+		{
+			panel.draw(g);
+		}
+	}
+
+	// -------------------
+	// Getters and setters
+	// -------------------
+
+	/**
+	 * Sets a new window for this gui.
+	 * @param window The window.
 	 */
 	public void setWindow(Window window)
 	{
@@ -45,63 +119,10 @@ public class Gui
 
 	/**
 	 * Returns the window for this gui.
-	 * @return the window.
+	 * @return The window.
 	 */
 	public Window getWindow()
 	{
 		return window;
-	}
-
-	/**
-	 * Adds a panel to the gui.
-	 * @param type the panel type.
-	 * @param panel the panel.
-	 */
-	public synchronized void addPanel(GuiPanel.Type type, GuiPanel panel)
-	{
-		panels.put(type, panel);
-	}
-
-	/**
-	 * Returns a specific panel in the gui.
-	 * @param type the panel type.
-	 * @return the panel.
-	 */
-	public GuiPanel getPanel(GuiPanel.Type type)
-	{
-		return panels.containsKey(type) ? panels.get(type) : null;
-	}
-	
-	/**
-	 * Removes a panel from the gui.
-	 * @param type the panel type.
-	 */
-	public synchronized void removePanel(GuiPanel.Type type)
-	{
-		panels.remove(type);
-	}
-	
-	/**
-	 * Updates all panels in the gui.
-	 * @param timePassed the time that has passed.
-	 */
-	public synchronized void update(long timePassed)
-	{
-		for( Map.Entry<GuiPanel.Type, GuiPanel> panel : panels.entrySet() )
-		{
-			panel.getValue().update(timePassed);
-		}
-	}
-	
-	/**
-	 * Renders all panels in the gui.
-	 * @param g the graphics context.
-	 */
-	public synchronized void render(Graphics2D g)
-	{
-		for( Map.Entry<GuiPanel.Type, GuiPanel> panel : panels.entrySet() )
-		{
-			panel.getValue().render(g);
-		}
 	}
 }

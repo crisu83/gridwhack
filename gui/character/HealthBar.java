@@ -2,13 +2,14 @@ package gridwhack.gui.character;
 
 import java.awt.*;
 
-import gridwhack.entity.character.Character;
-import gridwhack.entity.character.NPCCharacter;
-import gridwhack.entity.character.event.CharacterEvent;
-import gridwhack.entity.character.event.ICharacterHealthListener;
-import gridwhack.entity.character.event.ICharacterMoveListener;
-import gridwhack.entity.character.player.event.IPlayerLevelListener;
-import gridwhack.entity.character.player.event.PlayerEvent;
+import gridwhack.gameobject.character.Character;
+import gridwhack.gameobject.character.NPCCharacter;
+import gridwhack.gameobject.character.event.CharacterEvent;
+import gridwhack.gameobject.character.event.ICharacterHealthListener;
+import gridwhack.gameobject.character.event.ICharacterMoveListener;
+import gridwhack.gameobject.character.player.event.IPlayerLevelListener;
+import gridwhack.gameobject.character.player.event.PlayerEvent;
+import gridwhack.util.Vector2;
 
 /**
  * Health bar class.
@@ -52,9 +53,11 @@ public class HealthBar extends StatusBar implements ICharacterHealthListener, IC
 	{
 		Character owner = getOwner();
 
+		Vector2 position = owner.getPosition();
+
 		// calculate the new position for the bar.
-		int x = (int) Math.round(owner.getX()+1);
-		int y = (int) Math.round(owner.getY()+1);
+		int x = (int) position.x + 1;
+		int y = (int) position.y + 1;
 		
 		// move the bar with the character.
 		super.move(x, y);

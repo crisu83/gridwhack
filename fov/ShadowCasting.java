@@ -1,7 +1,6 @@
 package gridwhack.fov;
 
-import gridwhack.grid.Grid;
-import gridwhack.grid.GridFov;
+import gridwhack.gameobject.grid.Grid;
 
 // TODO: Implement checking of boundaries.
 public class ShadowCasting extends GridFov
@@ -19,7 +18,7 @@ public class ShadowCasting extends GridFov
         super(radius, grid, viewer);
     }
 
-    public void update(int cx, int cy)
+    public void refresh(int cx, int cy)
     {
         int section = 0;
 
